@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { EnrollmentBadge } from "@/components/EnrollmentBadge";
 import { requireRole } from "@/lib/auth";
 import { instructorNav } from "@/lib/nav";
-import { getCourseById } from "@/lib/db";
+import { getCourseById, listRosterByCourse } from "@/lib/db";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -16,28 +18,69 @@ export default async function CourseRosterPage({ params }: PageProps) {
     notFound();
   }
 
+  const roster = await listRosterByCourse(course.id);
+
   return (
     <AppShell
       user={session}
-      title={`Roster · ${course.title}`}
-      subtitle="Monitor enrollments and lesson progress — completion here triggers automatic certification."
+      title="Roster and progress"
+      subtitle={course.title}
       nav={instructorNav}
-    >
-      <div className="mb-6">
+      actions={
         <Link
           href={`/instructor/courses/${course.id}`}
-          className="text-sm text-amber-core hover:text-amber-dark"
+          className="btn btn-secondary"
         >
-          ← Back to course
+          <ArrowLeft aria-hidden="true" size={16} />
+          Back to course
         </Link>
-      </div>
-      <div className="rounded-2xl border border-dashed border-ink/15 bg-white p-10 text-center">
-        <p className="font-medium">No enrollments yet</p>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-ink/70">
-          When students enroll, their progress appears here. Completing all lessons
-          triggers Integration 2 — certificate auto-issued with a verification number.
-        </p>
-      </div>
+      }
+    >
+      {roster.length === 0 ? (
+        <div className="card px-5 py-10">
+          <p className="text-sm font-medium">No enrollments yet</p>
+          <p className="mt-1 max-w-md text-sm text-muted">
+            Students who enroll in this course will appear here with their
+            lesson progress.
+          </p>
+        </div>
+      ) : (
+        <section aria-labelledby="roster-title" className="card">
+          <div className="border-b border-line px-5 py-4">
+            <h2 id="roster-title" className="section-title">
+              {roster.length} student{roster.length === 1 ? "" : "s"}
+            </h2>
+          </div>
+          <ul className="divide-y divide-line">
+            {roster.map(({ enrollment, student, summary, certificate }) => (
+              <li
+                key={enrollment.id}
+                className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">
+                    {student.firstName} {student.lastName}
+                  </p>
+                  <p className="mt-0.5 truncate text-sm text-muted">
+                    {student.email}
+                    {enrollment.enrolledAt
+                      ? ` · enrolled ${new Date(enrollment.enrolledAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
+                      : ""}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <p className="text-sm tabular-nums text-muted">
+                    {certificate
+                      ? certificate.referenceNumber
+                      : `${summary.percent}% complete`}
+                  </p>
+                  <EnrollmentBadge status={enrollment.status} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </AppShell>
   );
 }

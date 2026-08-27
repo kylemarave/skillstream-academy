@@ -1,94 +1,74 @@
-import { BookOpen, Clock, Search } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { JourneyStepper } from "@/components/dashboard/JourneyStepper";
-import { StatusBadge } from "@/components/StatusBadge";
-import { studentJourneySteps } from "@/components/dashboard/constants";
+import { CourseCover } from "@/components/dashboard/CourseCover";
+import { EnrollButton } from "@/components/EnrollButton";
 import { requireRole } from "@/lib/auth";
-import { listCourses } from "@/lib/db";
+import { listCourses, listEnrollments } from "@/lib/db";
 import { studentNav } from "@/lib/nav";
 
 export default async function StudentCoursesPage() {
   const session = await requireRole(["student"]);
-  const courses = await listCourses({ status: "published" });
+  const [courses, enrollments] = await Promise.all([
+    listCourses({ status: "published" }),
+    listEnrollments({ studentId: session.id }),
+  ]);
+  const enrolledIds = new Set(enrollments.map((item) => item.courseId));
 
   return (
     <AppShell
       user={session}
       title="Course catalog"
-      subtitle="Step 01 of your journey — enroll in a published course. Your LMS account provisions automatically on confirmation."
+      subtitle="Confirm a place on a published course. Access is provisioned as soon as you enroll."
       nav={studentNav}
     >
-      <div className="mb-8">
-        <JourneyStepper steps={studentJourneySteps} activeStepId="enroll" />
-      </div>
-
       {courses.length === 0 ? (
-        <div className="surface px-6 py-14 text-center">
-          <span className="mx-auto grid size-12 place-items-center rounded-xl bg-surface-muted text-amber-dark">
-            <Search aria-hidden="true" size={21} />
-          </span>
-          <p className="mt-4 font-medium">No courses are open for enrollment</p>
-          <p className="mx-auto mt-2 max-w-lg text-sm text-muted">
-            Instructors publish courses from their dashboard. Once live, they appear here
-            for instant enrollment and LMS provisioning.
+        <div className="card px-5 py-10">
+          <p className="text-sm font-medium">Nothing is open for enrollment</p>
+          <p className="mt-1 max-w-md text-sm text-muted">
+            Instructors publish courses from their own workspace. Published
+            courses show up here straight away.
           </p>
         </div>
       ) : (
-        <section className="surface overflow-hidden">
-          <div className="flex flex-col gap-3 border-b border-line px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <div>
-              <h2 className="font-display text-xl font-semibold">Open courses</h2>
-              <p className="mt-1 text-sm text-muted">
-                {courses.length} course{courses.length === 1 ? "" : "s"} available
-              </p>
-            </div>
-            <div className="flex min-h-11 items-center gap-2 rounded-lg border border-line bg-surface-muted px-3 text-sm text-muted">
-              <Search aria-hidden="true" size={16} />
-              Search and filters are planned
-            </div>
+        <section aria-labelledby="catalog-title" className="card">
+          <div className="border-b border-line px-5 py-4">
+            <h2 id="catalog-title" className="section-title">
+              {courses.length} course{courses.length === 1 ? "" : "s"}
+            </h2>
           </div>
 
-          <div className="divide-y divide-line">
-          {courses.map((course) => (
-            <article
-              key={course.id}
-                className="group grid gap-5 px-5 py-6 sm:px-6 lg:grid-cols-[48px_minmax(0,1fr)_180px] lg:items-center"
-            >
-                <span className="grid size-12 place-items-center rounded-xl bg-amber-tint text-amber-dark">
-                  <BookOpen aria-hidden="true" size={20} strokeWidth={1.8} />
-                </span>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h3 className="font-display text-xl font-semibold">{course.title}</h3>
-                    <StatusBadge status={course.status} />
+          <ul className="divide-y divide-line">
+            {courses.map((course) => (
+              <li
+                key={course.id}
+                className="grid gap-4 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start"
+              >
+                <div className="flex min-w-0 gap-3">
+                  <CourseCover title={course.title} status={course.status} />
+                  <div className="min-w-0">
+                    <h3 className="text-base font-medium">{course.title}</h3>
+                    <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted">
+                      {course.description || "No description yet."}
+                    </p>
+                    <p className="mt-2 text-xs text-muted">
+                      Self-paced · access granted on enrollment
+                    </p>
                   </div>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-                    {course.description || "Course description coming soon."}
-                  </p>
-                  <p className="mt-3 flex items-center gap-2 text-xs font-medium text-muted">
-                    <Clock aria-hidden="true" size={14} />
-                    Self-paced · LMS access on enrollment
-                  </p>
                 </div>
-                <div>
-                  <p className="font-display text-2xl font-semibold text-ink">
-                  ${course.price.toFixed(2)}
+
+                <div className="sm:w-48">
+                  <p className="text-lg font-semibold tabular-nums sm:text-right">
+                    ${course.price.toFixed(2)}
                   </p>
-                <button
-                  type="button"
-                  disabled
-                    aria-describedby={`enrollment-status-${course.id}`}
-                    className="mt-2 min-h-11 w-full rounded-lg border border-line bg-surface-muted px-4 text-sm font-semibold text-muted"
-                >
-                    Enrollment coming soon
-                </button>
-                  <p id={`enrollment-status-${course.id}`} className="sr-only">
-                    Enrollment and payment are not implemented yet.
-                  </p>
-              </div>
-            </article>
-          ))}
-          </div>
+                  <div className="mt-2">
+                    <EnrollButton
+                      courseId={course.id}
+                      enrolled={enrolledIds.has(course.id)}
+                    />
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
     </AppShell>

@@ -1,57 +1,61 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 
 interface QuickActionCardProps {
   title: string;
   description: string;
   href: string;
-  step?: string;
+  icon: LucideIcon;
   disabled?: boolean;
+  disabledLabel?: string;
 }
 
 export function QuickActionCard({
   title,
   description,
   href,
-  step,
+  icon: Icon,
   disabled,
+  disabledLabel = "Not available yet",
 }: QuickActionCardProps) {
-  const className = `group flex min-h-28 items-start justify-between gap-5 border-b border-line px-1 py-5 last:border-b-0 ${
-    disabled
-      ? "cursor-not-allowed opacity-50"
-      : "hover:text-amber-dark"
-  }`;
-
   const content = (
-    <div>
-      {step ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-amber-core">
-          {step}
-        </p>
-      ) : null}
-      <h3 className={`font-semibold ${step ? "mt-1.5" : ""}`}>{title}</h3>
-      <p className="mt-1 max-w-xl text-sm leading-6 text-muted">{description}</p>
+    <div className="flex min-w-0 items-start gap-3">
+      <span
+        aria-hidden="true"
+        className={`mt-0.5 grid size-9 shrink-0 place-items-center rounded-lg ${
+          disabled ? "bg-subtle text-muted" : "bg-brand-soft text-brand-strong"
+        }`}
+      >
+        <Icon size={18} strokeWidth={1.8} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-sm font-medium">{title}</p>
+        <p className="mt-0.5 text-sm text-muted">{description}</p>
+      </div>
     </div>
   );
 
   if (disabled) {
     return (
-      <div className={className}>
+      <div className="flex items-center justify-between gap-4 px-5 py-4 opacity-60">
         {content}
-        <span className="rounded-md bg-surface-muted px-2 py-1 text-xs font-medium text-muted">
-          Coming soon
+        <span className="shrink-0 text-xs font-medium text-muted">
+          {disabledLabel}
         </span>
       </div>
     );
   }
 
   return (
-    <Link href={href} className={className}>
+    <Link
+      href={href}
+      className="group flex items-center justify-between gap-4 px-5 py-4 hover:bg-subtle"
+    >
       {content}
-      <ArrowUpRight
+      <ChevronRight
         aria-hidden="true"
-        size={19}
-        className="mt-1 shrink-0 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-amber-dark"
+        size={17}
+        className="shrink-0 text-muted group-hover:text-brand"
       />
     </Link>
   );

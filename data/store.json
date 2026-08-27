@@ -45,6 +45,16 @@
       "status": "draft",
       "createdAt": "2026-02-01T08:00:00.000Z",
       "updatedAt": "2026-02-01T08:00:00.000Z"
+    },
+    {
+      "instructorId": "user-instructor-1",
+      "title": "asdd",
+      "description": "addsd",
+      "price": 49.99,
+      "status": "draft",
+      "id": "f2114a62-517c-496e-a85a-a27390dd5843",
+      "createdAt": "2026-08-27T06:00:24.415Z",
+      "updatedAt": "2026-08-27T06:00:24.415Z"
     }
   ],
   "modules": [
@@ -61,6 +71,20 @@
       "title": "Building Layouts",
       "sequenceOrder": 2,
       "createdAt": "2026-01-16T09:00:00.000Z"
+    },
+    {
+      "courseId": "f2114a62-517c-496e-a85a-a27390dd5843",
+      "title": "Test",
+      "sequenceOrder": 1,
+      "id": "3e83e3ee-20b6-4d62-9d07-475b8767b068",
+      "createdAt": "2026-08-27T06:00:31.779Z"
+    },
+    {
+      "courseId": "course-1",
+      "title": "asda",
+      "sequenceOrder": 3,
+      "id": "62762f96-4384-497f-9eaa-601e563a72ee",
+      "createdAt": "2026-08-27T09:42:17.678Z"
     }
   ],
   "lessons": [
@@ -83,6 +107,102 @@
       "contentRef": "https://example.com/lesson-2",
       "durationMinutes": 20,
       "createdAt": "2026-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "lesson-3",
+      "moduleId": "module-2",
+      "title": "The CSS box model",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "",
+      "durationMinutes": 18,
+      "createdAt": "2026-01-16T09:30:00.000Z"
+    },
+    {
+      "moduleId": "62762f96-4384-497f-9eaa-601e563a72ee",
+      "title": "asdad",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "",
+      "durationMinutes": null,
+      "id": "1601954c-09a9-4de3-acd9-16e048105596",
+      "createdAt": "2026-08-27T09:42:23.013Z"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "studentId": "user-student-1",
+      "courseId": "course-1",
+      "status": "completed",
+      "enrolledAt": "2026-08-27T09:29:19.885Z",
+      "completedAt": "2026-08-27T09:41:51.925Z",
+      "createdAt": "2026-08-27T09:29:19.885Z",
+      "updatedAt": "2026-08-27T09:41:51.925Z"
+    }
+  ],
+  "lmsAccounts": [
+    {
+      "id": "be91edbc-5a74-4af8-8d98-81747f83fe68",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "provisionedAt": "2026-08-27T09:29:19.885Z",
+      "syncStatus": "provisioned",
+      "externalLmsId": "lms-3638ae28",
+      "createdAt": "2026-08-27T09:29:19.885Z",
+      "updatedAt": "2026-08-27T09:29:19.885Z"
+    }
+  ],
+  "lessonProgress": [
+    {
+      "id": "1a62bf5c-f147-4be0-b935-2e5369d659c5",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "lessonId": "lesson-1",
+      "status": "completed",
+      "completedAt": "2026-08-27T09:40:36.002Z",
+      "score": null,
+      "createdAt": "2026-08-27T09:40:33.871Z",
+      "updatedAt": "2026-08-27T09:40:36.002Z"
+    },
+    {
+      "id": "0ce41321-2c7e-4ece-b65d-b91bf9073f33",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "lessonId": "lesson-2",
+      "status": "completed",
+      "completedAt": "2026-08-27T09:41:51.925Z",
+      "score": null,
+      "createdAt": "2026-08-27T09:41:00.026Z",
+      "updatedAt": "2026-08-27T09:41:51.925Z"
+    },
+    {
+      "id": "e55fce11-74d7-4473-955a-398dd15f2ce5",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "lessonId": "lesson-3",
+      "status": "completed",
+      "completedAt": "2026-08-27T09:41:50.259Z",
+      "score": null,
+      "createdAt": "2026-08-27T09:41:48.582Z",
+      "updatedAt": "2026-08-27T09:41:50.259Z"
+    },
+    {
+      "id": "2f73ad7f-625f-4ca8-b7c8-70a1e06abe5c",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "lessonId": "1601954c-09a9-4de3-acd9-16e048105596",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-08-27T09:42:57.862Z",
+      "updatedAt": "2026-08-27T09:42:57.862Z"
+    }
+  ],
+  "certificates": [
+    {
+      "id": "8022718c-0492-463f-a04f-1b8ddba1c076",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "referenceNumber": "SSA-2026-U9FJQD",
+      "issuedAt": "2026-08-27T09:41:51.925Z",
+      "fileUrl": "/verify/SSA-2026-U9FJQD",
+      "verificationStatus": "valid",
+      "createdAt": "2026-08-27T09:50:35.112Z"
     }
   ]
 }

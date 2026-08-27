@@ -1,22 +1,47 @@
 import Link from "next/link";
+import { Award, BookOpen, ClipboardCheck } from "lucide-react";
+
+const path = [
+  { label: "Enroll", icon: ClipboardCheck },
+  { label: "Learn", icon: BookOpen },
+  { label: "Certify", icon: Award },
+] as const;
 
 export function CtaSection() {
   return (
-    <section className="py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="rounded-2xl bg-ink px-8 py-14 text-center text-paper shadow-[0_24px_60px_rgb(28_29_27/0.14)] md:px-16 md:py-20">
-          <h2 className="font-display text-4xl font-medium tracking-[-0.03em]">
-            Start your first course today
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl leading-7 text-paper/60">
-            Join Skillstream Academy and experience enrollment, learning, and
-            certification as one connected journey.
-          </p>
-          <Link
-            href="/login"
-            className="mt-8 inline-flex min-h-12 items-center rounded-lg bg-amber-core px-8 text-sm font-semibold text-paper hover:bg-amber-dark"
-          >
-            Get Started
+    <section className="py-16 md:py-20">
+      <div className="mx-auto max-w-5xl px-5 sm:px-7">
+        <div className="card flex flex-wrap items-center justify-between gap-6 px-6 py-8">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight">
+              Start your first course
+            </h2>
+            <p className="mt-1.5 max-w-md text-sm text-muted">
+              Sign in with a demo account to see the student and instructor
+              workspaces.
+            </p>
+            <ul className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+              {path.map((step, index) => {
+                const Icon = step.icon;
+                return (
+                  <li
+                    key={step.label}
+                    className="flex items-center gap-4 text-sm text-muted"
+                  >
+                    {index > 0 ? (
+                      <span aria-hidden="true" className="h-px w-4 bg-line" />
+                    ) : null}
+                    <span className="flex items-center gap-1.5">
+                      <Icon aria-hidden="true" size={15} strokeWidth={1.8} />
+                      {step.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <Link href="/login" className="btn btn-primary">
+            Sign in
           </Link>
         </div>
       </div>

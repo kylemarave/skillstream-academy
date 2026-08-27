@@ -1,54 +1,60 @@
-import { ArrowDown, ArrowRight, Bot, Link2 } from "lucide-react";
+import { ArrowRight, Award, Bot, GraduationCap } from "lucide-react";
 import { integrations } from "./constants";
+
+const flowIcons = {
+  "registration-lms": GraduationCap,
+  "lms-cert": Award,
+  "portal-ai": Bot,
+} as const;
 
 export function IntegrationFlow() {
   return (
-    <aside className="surface overflow-hidden">
-      <div className="border-b border-line bg-ink px-5 py-5 text-paper">
-        <div className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-lg bg-amber-core">
-            <Link2 aria-hidden="true" size={18} strokeWidth={1.9} />
-          </span>
-          <div>
-            <h2 className="font-display text-xl font-semibold">Connected systems</h2>
-            <p className="mt-0.5 text-xs text-paper/55">Automated handoffs</p>
-          </div>
-        </div>
-      </div>
+    <section aria-labelledby="automations-title" className="card p-5">
+      <h2 id="automations-title" className="section-title">
+        Automated handoffs
+      </h2>
+      <p className="mt-1 text-sm text-muted">
+        What the platform is designed to do without manual work.
+      </p>
 
-      <ol className="divide-y divide-line">
-        {integrations.map((integration) => (
-          <li
-            key={integration.id}
-            className="relative px-5 py-5"
-          >
-            <div className="flex items-center gap-3">
-              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-amber-tint text-amber-dark">
-                {integration.id === "portal-ai" ? (
-                  <Bot aria-hidden="true" size={16} />
-                ) : (
-                  <ArrowDown aria-hidden="true" size={16} />
-                )}
+      <ul className="mt-4 divide-y divide-line border-t border-line">
+        {integrations.map((integration) => {
+          const Icon = flowIcons[integration.id];
+          const [from, to] = integration.label.split(" → ");
+
+          return (
+            <li key={integration.id} className="flex gap-3 py-4">
+              <span
+                aria-hidden="true"
+                className="grid size-9 shrink-0 place-items-center rounded-lg bg-subtle text-muted"
+              >
+                <Icon size={18} strokeWidth={1.8} />
               </span>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold">
-                  {integration.from}{" "}
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium">
+                  <span>{from}</span>
                   <ArrowRight
                     aria-hidden="true"
                     size={14}
-                    className="mx-1 inline text-amber-core"
-                  />{" "}
-                  {integration.to}
-                </p>
-                <p className="mt-0.5 text-xs text-muted">{integration.trigger}</p>
+                    className="text-brand"
+                  />
+                  <span>{to}</span>
+                  <span
+                    className={`text-xs font-medium ${
+                      integration.status === "Live"
+                        ? "text-success"
+                        : "text-muted"
+                    }`}
+                  >
+                    {integration.status}
+                  </span>
+                </div>
+                <p className="mt-0.5 text-sm text-muted">{integration.detail}</p>
               </div>
-            </div>
-            <p className="mt-3 pl-11 text-sm leading-5 text-muted">
-              {integration.outcome}
-            </p>
-          </li>
-        ))}
-      </ol>
-    </aside>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }

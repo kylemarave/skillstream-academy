@@ -3,7 +3,7 @@ import { LoginForm } from "@/components/LoginForm";
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-paper" />}>
+    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
       <LoginForm />
     </Suspense>
   );

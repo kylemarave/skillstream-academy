@@ -2,17 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CheckCircle2, Eye, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import type { CourseStatus } from "@/lib/types";
 
 interface CoursePublishControlProps {
   courseId: string;
   status: CourseStatus;
+  hasContent: boolean;
 }
 
 export function CoursePublishControl({
   courseId,
   status,
+  hasContent,
 }: CoursePublishControlProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -40,8 +42,8 @@ export function CoursePublishControl({
 
       setMessage(
         nextStatus === "published"
-          ? "Course published to the student catalog."
-          : "Course returned to draft.",
+          ? "Published. Students can now see this course."
+          : "Returned to draft. Students can no longer see it.",
       );
       router.refresh();
     } catch {
@@ -52,71 +54,41 @@ export function CoursePublishControl({
   }
 
   return (
-    <section className="surface overflow-hidden">
-      <div className="border-b border-line px-5 py-5 sm:px-6">
-        <h2 className="font-display text-xl font-semibold">Catalog visibility</h2>
-        <p className="mt-1 text-sm text-muted">
-          {isPublished
-            ? "Students can discover this course and see its enrollment status."
-            : "This draft is visible only in your instructor workspace."}
+    <section aria-labelledby="visibility-title" className="card p-5">
+      <h2 id="visibility-title" className="section-title">
+        Catalog visibility
+      </h2>
+      <p className="mt-1 text-sm text-muted">
+        {isPublished
+          ? "This course is listed in the student catalog."
+          : "This draft is only visible to you."}
+      </p>
+
+      {!isPublished && !hasContent ? (
+        <p className="mt-3 rounded-lg bg-warn-soft px-3 py-2 text-sm text-warn">
+          This course has no lessons yet. Add content before publishing.
         </p>
-      </div>
+      ) : null}
 
-      <div className="flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <div className="flex items-center gap-3">
-          <span
-            className={`grid size-10 place-items-center rounded-lg ${
-              isPublished
-                ? "bg-success/10 text-success"
-                : "bg-amber-tint text-amber-dark"
-            }`}
-          >
-            {isPublished ? (
-              <CheckCircle2 aria-hidden="true" size={19} />
-            ) : (
-              <Eye aria-hidden="true" size={19} />
-            )}
-          </span>
-          <div>
-            <p className="text-sm font-semibold">
-              {isPublished ? "Published" : "Draft"}
-            </p>
-            <p className="text-xs text-muted">
-              {isPublished ? "Live in the student catalog" : "Not visible to students"}
-            </p>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          disabled={saving}
-          onClick={() => updateStatus(isPublished ? "draft" : "published")}
-          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold disabled:opacity-60 ${
-            isPublished
-              ? "border border-line bg-surface hover:bg-surface-muted"
-              : "bg-amber-core text-paper shadow-[0_5px_14px_rgb(122_95_30/0.2)] hover:bg-amber-dark"
-          }`}
-        >
-          {saving ? (
-            <LoaderCircle aria-hidden="true" size={17} className="animate-spin" />
-          ) : null}
-          {saving ? "Updating…" : isPublished ? "Return to draft" : "Publish course"}
-        </button>
-      </div>
+      <button
+        type="button"
+        disabled={saving}
+        onClick={() => updateStatus(isPublished ? "draft" : "published")}
+        className={`mt-4 ${isPublished ? "btn btn-secondary" : "btn btn-primary"}`}
+      >
+        {saving ? (
+          <LoaderCircle aria-hidden="true" size={16} className="animate-spin" />
+        ) : null}
+        {saving ? "Saving…" : isPublished ? "Return to draft" : "Publish course"}
+      </button>
 
       {message ? (
-        <p
-          role="status"
-          className="border-t border-line bg-success/5 px-5 py-3 text-sm font-medium text-success sm:px-6"
-        >
+        <p role="status" className="mt-3 text-sm text-success">
           {message}
         </p>
       ) : null}
       {error ? (
-        <p
-          role="alert"
-          className="border-t border-line bg-danger/5 px-5 py-3 text-sm font-medium text-danger sm:px-6"
-        >
+        <p role="alert" className="mt-3 text-sm text-danger">
           {error}
         </p>
       ) : null}

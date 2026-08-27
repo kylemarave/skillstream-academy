@@ -1,6 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Plus } from "lucide-react";
+import {
+  BookOpen,
+  MessageSquareText,
+  PenLine,
+  Plus,
+} from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { CourseCover } from "@/components/dashboard/CourseCover";
 import { IntegrationFlow } from "@/components/dashboard/IntegrationFlow";
 import { JourneyStepper } from "@/components/dashboard/JourneyStepper";
 import { QuickActionCard } from "@/components/dashboard/QuickActionCard";
@@ -21,140 +27,136 @@ export default async function InstructorDashboardPage() {
     <AppShell
       user={session}
       title={`Welcome, ${session.firstName}`}
-      subtitle="Author courses, monitor student progress, and handle AI escalations — all connected to enrollment and certification."
+      subtitle="Author courses, publish them to the catalog, and support the students taking them."
       nav={instructorNav}
+      actions={
+        <Link href="/instructor/courses/new" className="btn btn-primary">
+          <Plus aria-hidden="true" size={16} />
+          New course
+        </Link>
+      }
     >
-      <div className="space-y-8">
+      <div className="space-y-6">
         <JourneyStepper
           steps={instructorJourneySteps}
-          activeStepId={publishedCount > 0 ? "support" : draftCount > 0 ? "publish" : "create"}
+          activeStepId={
+            publishedCount > 0 ? "support" : draftCount > 0 ? "publish" : "create"
+          }
         />
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="space-y-6">
-            <section className="surface grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-              <StatCard
-                label="Draft courses"
-                value={draftCount}
-                hint="Awaiting publish"
-                accent="light"
-              />
-              <StatCard
-                label="Published"
-                value={publishedCount}
-                hint="Live in student catalog"
-                accent="core"
-              />
-              <StatCard
-                label="Escalations"
-                value={0}
-                hint="AI handoffs pending"
-                accent="dark"
-              />
-            </section>
+        <section
+          aria-label="Your numbers"
+          className="card grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+        >
+          <StatCard
+            label="Drafts"
+            value={draftCount}
+            hint="Not yet published"
+            icon={PenLine}
+            tone="warn"
+          />
+          <StatCard
+            label="Published"
+            value={publishedCount}
+            hint="Live in the catalog"
+            icon={BookOpen}
+            tone="success"
+          />
+          <StatCard
+            label="Escalations"
+            value={0}
+            hint="Waiting on you"
+            icon={MessageSquareText}
+            tone="muted"
+          />
+        </section>
 
-            <section className="surface px-5 py-2 sm:px-6">
-              <div className="border-b border-line py-4">
-                <h2 className="font-display text-xl font-semibold">Teaching workspace</h2>
-                <p className="mt-1 text-sm text-muted">
-                  Create content first, then monitor the students using it.
-                </p>
-              </div>
-              <div>
-                <QuickActionCard
-                  step="Step 01"
-                  title="Create a course"
-                  description="Add title, modules, and lessons for your students."
-                  href="/instructor/courses/new"
-                />
-                <QuickActionCard
-                  step="Step 02"
-                  title="Manage courses"
-                  description="Edit content and publish to the student catalog."
-                  href="/instructor/courses"
-                />
-                <QuickActionCard
-                  step="Step 03"
-                  title="Escalation inbox"
-                  description="Resolve queries the AI assistant couldn't handle."
-                  href="/instructor/escalations"
-                />
-              </div>
-            </section>
-
-            <section className="surface overflow-hidden">
-              <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-5 sm:px-6">
-                <div>
-                  <h2 className="font-display text-xl font-semibold">Your courses</h2>
-                  <p className="mt-1 text-sm text-muted">
-                    Draft, publish, and review course content.
-                  </p>
-                </div>
-                <Link
-                  href="/instructor/courses/new"
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-amber-core px-4 text-sm font-semibold text-paper shadow-[0_5px_14px_rgb(122_95_30/0.22)] hover:bg-amber-dark"
-                >
-                  <Plus aria-hidden="true" size={17} />
-                  Create course
-                </Link>
-              </div>
-
-              {courses.length === 0 ? (
-                <div className="px-6 py-12 text-center">
-                  <span className="mx-auto grid size-12 place-items-center rounded-xl bg-surface-muted text-amber-dark">
-                    <BookOpen aria-hidden="true" size={21} />
-                  </span>
-                  <p className="mt-4 font-medium">Create your first course</p>
-                  <p className="mx-auto mt-1 max-w-sm text-sm text-muted">
-                    Start with a title and outline. You can add modules and lessons next.
-                  </p>
-                  <Link
-                    href="/instructor/courses/new"
-                    className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-amber-dark"
-                  >
-                    Start course setup
-                    <ArrowRight aria-hidden="true" size={16} />
-                  </Link>
-                </div>
-              ) : (
-                <ul className="divide-y divide-line">
-                  {courses.map((course) => (
-                    <li key={course.id}>
-                      <Link
-                        href={`/instructor/courses/${course.id}`}
-                        className="group flex items-center gap-4 px-5 py-4 hover:bg-amber-tint/20 sm:px-6"
-                      >
-                        <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-surface-muted text-amber-dark">
-                          <BookOpen aria-hidden="true" size={18} />
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate font-medium group-hover:text-amber-dark">
-                            {course.title}
-                          </p>
-                          <p className="mt-0.5 text-sm text-muted">
-                            ${course.price.toFixed(2)} · Updated{" "}
-                            {new Date(course.updatedAt).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </p>
-                        </div>
-                        <StatusBadge status={course.status} />
-                        <ArrowRight
-                          aria-hidden="true"
-                          size={17}
-                          className="hidden text-muted group-hover:text-amber-dark sm:block"
-                        />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
+        <section aria-labelledby="courses-title" className="card">
+          <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-4">
+            <h2 id="courses-title" className="section-title">
+              Your courses
+            </h2>
+            <Link
+              href="/instructor/courses"
+              className="text-sm font-medium text-brand hover:text-brand-strong"
+            >
+              View all
+            </Link>
           </div>
 
-          <IntegrationFlow />
-        </div>
+          {courses.length === 0 ? (
+            <div className="px-5 py-8">
+              <p className="text-sm font-medium">No courses yet</p>
+              <p className="mt-1 max-w-md text-sm text-muted">
+                Create one with a title and price, then add modules and lessons
+                before publishing it.
+              </p>
+              <Link
+                href="/instructor/courses/new"
+                className="btn btn-secondary mt-4"
+              >
+                <Plus aria-hidden="true" size={16} />
+                Create your first course
+              </Link>
+            </div>
+          ) : (
+            <ul className="divide-y divide-line">
+              {courses.slice(0, 5).map((course) => (
+                <li key={course.id}>
+                  <Link
+                    href={`/instructor/courses/${course.id}`}
+                    className="flex items-center gap-3 px-5 py-4 hover:bg-subtle"
+                  >
+                    <CourseCover title={course.title} status={course.status} />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">
+                        {course.title}
+                      </p>
+                      <p className="mt-0.5 text-sm text-muted tabular-nums">
+                        ${course.price.toFixed(2)} · updated{" "}
+                        {new Date(course.updatedAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </p>
+                    </div>
+                    <StatusBadge status={course.status} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section aria-labelledby="teaching-title" className="card">
+          <div className="border-b border-line px-5 py-4">
+            <h2 id="teaching-title" className="section-title">
+              Teaching tasks
+            </h2>
+          </div>
+          <div className="divide-y divide-line">
+            <QuickActionCard
+              title="Create a course"
+              description="Set the title, description, and price."
+              href="/instructor/courses/new"
+              icon={PenLine}
+            />
+            <QuickActionCard
+              title="Manage course content"
+              description="Add modules and lessons, then publish."
+              href="/instructor/courses"
+              icon={BookOpen}
+            />
+            <QuickActionCard
+              title="Escalation inbox"
+              description="Answer questions the AI assistant could not."
+              href="/instructor/escalations"
+              icon={MessageSquareText}
+            />
+          </div>
+        </section>
+
+        <IntegrationFlow />
       </div>
     </AppShell>
   );

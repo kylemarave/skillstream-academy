@@ -1,47 +1,54 @@
 @import "tailwindcss";
 
+/*
+  Colour is functional, not decorative. Each hue maps to one meaning:
+  brand = interactive, success = completed/live, warn = unfinished, danger = failed.
+*/
 :root {
-  --ink: #1c1d1b;
-  --paper: #faf8f3;
+  --canvas: #f8fafc;
   --surface: #ffffff;
-  --surface-muted: #f4f1e9;
-  --line: #ddd8cb;
-  --muted: #686960;
-  --amber-core: #b08d2f;
-  --amber-tint: #f4ead2;
-  --amber-light: #dcc078;
-  --amber-dark: #7a5f1e;
-  --amber-desaturated: #8c5a3e;
-  --success: #3f6b50;
-  --danger: #8c4337;
-  --background: var(--paper);
+  --subtle: #f1f5f9;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --ink: #0f172a;
+  --muted: #475569;
+
+  --brand: #0f766e;
+  --brand-strong: #115e59;
+  --brand-soft: #eefbf8;
+
+  --success: #15803d;
+  --success-soft: #f0fdf4;
+  --warn: #b45309;
+  --warn-soft: #fffbeb;
+  --danger: #b91c1c;
+  --danger-soft: #fef2f2;
+
+  --background: var(--canvas);
   --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ink: var(--ink);
-  --color-paper: var(--paper);
+  --color-canvas: var(--canvas);
   --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
+  --color-subtle: var(--subtle);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
-  --color-amber-core: var(--amber-core);
-  --color-amber-tint: var(--amber-tint);
-  --color-amber-light: var(--amber-light);
-  --color-amber-dark: var(--amber-dark);
-  --color-amber-desaturated: var(--amber-desaturated);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
   --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
   --font-sans: var(--font-geist-sans);
-  --font-display: var(--font-newsreader);
   --font-mono: var(--font-geist-mono);
-}
-
-html {
-  scroll-behavior: smooth;
-  scrollbar-color: var(--amber-core) var(--surface-muted);
 }
 
 body {
@@ -50,30 +57,17 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--amber-light);
-  color: var(--ink);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
 }
 
 :focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--amber-core) 70%, transparent);
-  outline-offset: 3px;
-}
-
-button,
-a,
-input,
-textarea,
-select {
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    opacity 160ms ease;
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
 }
 
 button:not(:disabled),
@@ -85,66 +79,133 @@ button:disabled {
   cursor: not-allowed;
 }
 
+button,
+a,
 input,
 textarea,
 select {
-  min-height: 44px;
-}
-
-.font-display {
-  font-family: var(--font-newsreader), Georgia, serif;
-}
-
-.surface {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease;
 }
 
 .page-title {
-  max-width: 22ch;
-  font-family: var(--font-newsreader), Georgia, serif;
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.section-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.02;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+}
+
+.btn-primary {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--brand-strong);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--subtle);
+}
+
+.btn-quiet {
+  color: var(--muted);
+}
+
+.btn-quiet:hover:not(:disabled) {
+  background: var(--subtle);
+  color: var(--ink);
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.hint {
+  font-size: 0.8125rem;
+  color: var(--muted);
 }
 
 .field {
   width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  min-height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
   background: var(--surface);
-  padding: 0.7rem 0.85rem;
+  padding: 0.625rem 0.75rem;
   color: var(--ink);
-  box-shadow: 0 1px 2px rgb(28 29 27 / 0.04);
+  font-size: 0.9375rem;
 }
 
 .field::placeholder {
-  color: #77786f;
+  color: #94a3b8;
 }
 
-.field:hover {
-  border-color: #beb7a7;
+.field:hover:not(:disabled) {
+  border-color: #94a3b8;
 }
 
 .field:focus {
-  border-color: var(--amber-core);
-  box-shadow: 0 0 0 3px rgb(176 141 47 / 0.14);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgb(15 118 110 / 0.12);
   outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
 }

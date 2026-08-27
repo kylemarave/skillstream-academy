@@ -1,88 +1,121 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { CoursePublishControl } from "@/components/CoursePublishControl";
 import { StatusBadge } from "@/components/StatusBadge";
 import { requireRole } from "@/lib/auth";
 import { instructorNav } from "@/lib/nav";
-import { getCourseById } from "@/lib/db";
+import { getCourseWithContent, listEnrollments } from "@/lib/db";
 
 type PageProps = { params: Promise<{ id: string }> };
-
-const pipelineSteps = [
-  { label: "Student enrolls", detail: "Registration confirms payment" },
-  { label: "LMS provisioned", detail: "Integration 1 — instant access" },
-  { label: "Student learns", detail: "Lessons + AI assistant" },
-  { label: "Certificate issued", detail: "Integration 2 — on completion" },
-];
 
 export default async function InstructorCourseDetailPage({ params }: PageProps) {
   const session = await requireRole(["instructor"]);
   const { id } = await params;
-  const course = await getCourseById(id);
+  const course = await getCourseWithContent(id);
 
   if (!course || course.instructorId !== session.id) {
     notFound();
   }
 
+  const lessonCount = course.modules.reduce(
+    (total, module) => total + module.lessons.length,
+    0,
+  );
+  const enrollments = await listEnrollments({ courseId: course.id });
+
   return (
     <AppShell
       user={session}
       title={course.title}
-      subtitle={course.description || "Manage this course and its connected lifecycle."}
+      subtitle={course.description || "No description yet."}
       nav={instructorNav}
+      actions={<StatusBadge status={course.status} />}
     >
-      <div className="mb-8 flex flex-wrap items-center gap-3">
-        <StatusBadge status={course.status} />
-        <span className="text-sm text-ink/60">${course.price.toFixed(2)}</span>
-      </div>
+      <div className="space-y-6">
+        <section
+          aria-label="Course summary"
+          className="card grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4"
+        >
+          <div className="px-5 py-4">
+            <p className="text-sm text-muted">Price</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums">
+              ${course.price.toFixed(2)}
+            </p>
+          </div>
+          <div className="px-5 py-4">
+            <p className="text-sm text-muted">Modules</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums">
+              {course.modules.length}
+            </p>
+          </div>
+          <div className="px-5 py-4">
+            <p className="text-sm text-muted">Lessons</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums">
+              {lessonCount}
+            </p>
+          </div>
+          <div className="px-5 py-4">
+            <p className="text-sm text-muted">Enrolled</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums">
+              {enrollments.length}
+            </p>
+          </div>
+        </section>
 
-      <section className="mb-8 rounded-2xl border border-ink/10 bg-amber-tint/20 p-6">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-amber-core">
-          Connected lifecycle for this course
-        </p>
-        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {pipelineSteps.map((step, index) => (
-            <li
-              key={step.label}
-              className="rounded-xl border border-ink/10 bg-white p-4"
+        <section aria-labelledby="manage-title" className="card">
+          <div className="border-b border-line px-5 py-4">
+            <h2 id="manage-title" className="section-title">
+              Manage
+            </h2>
+          </div>
+          <div className="divide-y divide-line">
+            <Link
+              href={`/instructor/courses/${course.id}/modules`}
+              className="group flex items-center justify-between gap-4 px-5 py-4 hover:bg-subtle"
             >
-              <p className="text-xs font-semibold text-amber-core">
-                {String(index + 1).padStart(2, "0")}
-              </p>
-              <p className="mt-1 font-medium">{step.label}</p>
-              <p className="mt-1 text-xs text-ink/60">{step.detail}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
+              <div>
+                <p className="text-sm font-medium">Modules and lessons</p>
+                <p className="mt-0.5 text-sm text-muted">
+                  {course.modules.length === 0
+                    ? "No content yet — add the first module."
+                    : `${course.modules.length} module${course.modules.length === 1 ? "" : "s"}, ${lessonCount} lesson${lessonCount === 1 ? "" : "s"}.`}
+                </p>
+              </div>
+              <ChevronRight
+                aria-hidden="true"
+                size={17}
+                className="shrink-0 text-muted group-hover:text-brand"
+              />
+            </Link>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Link
-          href={`/instructor/courses/${course.id}/modules`}
-          className="rounded-2xl border border-ink/10 bg-white p-6 hover:border-amber-core/40"
-        >
-          <p className="text-xs font-medium text-amber-core">Step 01 · Create</p>
-          <h2 className="mt-2 font-semibold">Modules & lessons</h2>
-          <p className="mt-2 text-sm text-ink/70">
-            Build the content students will learn — organized into modules.
-          </p>
-        </Link>
+            <Link
+              href={`/instructor/courses/${course.id}/roster`}
+              className="group flex items-center justify-between gap-4 px-5 py-4 hover:bg-subtle"
+            >
+              <div>
+                <p className="text-sm font-medium">Roster and progress</p>
+                <p className="mt-0.5 text-sm text-muted">
+                  {enrollments.length === 0
+                    ? "No students enrolled yet."
+                    : `${enrollments.length} student${enrollments.length === 1 ? "" : "s"} enrolled.`}
+                </p>
+              </div>
+              <ChevronRight
+                aria-hidden="true"
+                size={17}
+                className="shrink-0 text-muted group-hover:text-brand"
+              />
+            </Link>
+          </div>
+        </section>
 
-        <Link
-          href={`/instructor/courses/${course.id}/roster`}
-          className="rounded-2xl border border-ink/10 bg-white p-6 hover:border-amber-core/40"
-        >
-          <p className="text-xs font-medium text-amber-core">Step 03 · Support</p>
-          <h2 className="mt-2 font-semibold">Roster & progress</h2>
-          <p className="mt-2 text-sm text-ink/70">
-            View enrolled students and monitor lesson completion.
-          </p>
-        </Link>
-      </div>
-
-      <div className="mt-6">
-        <CoursePublishControl courseId={course.id} status={course.status} />
+        <CoursePublishControl
+          courseId={course.id}
+          status={course.status}
+          hasContent={lessonCount > 0}
+        />
       </div>
     </AppShell>
   );

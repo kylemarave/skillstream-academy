@@ -1,9 +1,9 @@
 import type { CourseStatus } from "@/lib/types";
 
 const styles: Record<CourseStatus, string> = {
-  draft: "border-amber-light/70 bg-amber-tint/60 text-amber-dark",
-  published: "border-success/25 bg-success/10 text-success",
-  archived: "border-line bg-surface-muted text-muted",
+  draft: "border-warn/25 bg-warn-soft text-warn",
+  published: "border-success/25 bg-success-soft text-success",
+  archived: "border-line bg-subtle text-muted",
 };
 
 const labels: Record<CourseStatus, string> = {
@@ -15,7 +15,7 @@ const labels: Record<CourseStatus, string> = {
 export function StatusBadge({ status }: { status: CourseStatus }) {
   return (
     <span
-      className={`inline-flex items-center rounded-md border px-2 py-1 text-xs font-semibold ${styles[status]}`}
+      className={`inline-flex shrink-0 items-center rounded-md border px-1.5 py-0.5 text-xs font-medium ${styles[status]}`}
     >
       {labels[status]}
     </span>

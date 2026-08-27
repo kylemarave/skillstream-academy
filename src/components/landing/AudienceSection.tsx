@@ -1,56 +1,63 @@
+import { GraduationCap, PenLine } from "lucide-react";
+
 const audiences = [
   {
-    id: "students",
     title: "For students",
-    description:
-      "One dashboard for courses, progress, AI help, and certificates.",
+    icon: GraduationCap,
     items: [
       "Browse and enroll in published courses",
       "Track lesson progress in one place",
-      "Get 24/7 AI support with instructor escalation",
-      "Download and verify certificates",
+      "Ask for help and reach an instructor when needed",
+      "Download and share verified certificates",
     ],
   },
   {
-    id: "for-instructors",
     title: "For instructors",
-    description:
-      "Roster, progress monitoring, and an AI escalation inbox.",
+    icon: PenLine,
     items: [
-      "Create courses with modules and lessons",
-      "Monitor student progress per course",
-      "Handle AI handoffs from your inbox",
-      "Publish courses to the student catalog",
+      "Build courses from modules and lessons",
+      "Publish to the catalog when the content is ready",
+      "Follow student progress per course",
+      "Answer escalated questions from one inbox",
     ],
   },
 ];
 
 export function AudienceSection() {
   return (
-    <section id="for-instructors" className="border-t border-ink/10 bg-white py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-6">
-        <h2 className="font-display text-4xl font-medium tracking-[-0.03em]">
-          Built for students and instructors
+    <section id="roles" className="border-t border-line bg-surface py-16 md:py-20">
+      <div className="mx-auto max-w-5xl px-5 sm:px-7">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Built for both sides of the course
         </h2>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-2">
-          {audiences.map((audience) => (
-            <article
-              key={audience.title}
-              className="border-t border-line py-8 md:border-t-0 md:border-l md:px-8"
-            >
-              <h3 className="font-display text-2xl font-semibold">{audience.title}</h3>
-              <p className="mt-3 text-muted">{audience.description}</p>
-              <ul className="mt-6 space-y-3">
-                {audience.items.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm text-ink/80">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-core" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
+        <div className="mt-10 grid gap-10 md:grid-cols-2">
+          {audiences.map((audience) => {
+            const Icon = audience.icon;
+
+            return (
+              <div key={audience.title}>
+                <span
+                  aria-hidden="true"
+                  className="grid size-11 place-items-center rounded-lg bg-brand-soft text-brand-strong"
+                >
+                  <Icon size={20} strokeWidth={1.8} />
+                </span>
+                <h3 className="mt-4 font-medium">{audience.title}</h3>
+                <ul className="mt-4 space-y-2.5">
+                  {audience.items.map((item) => (
+                    <li key={item} className="flex gap-3 text-sm text-muted">
+                      <span
+                        aria-hidden="true"
+                        className="mt-2 size-1 shrink-0 rounded-full bg-brand"
+                      />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

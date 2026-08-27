@@ -1,66 +1,60 @@
 export const studentJourneySteps = [
   {
     id: "enroll",
-    number: "01",
     title: "Enroll",
-    description: "Confirm enrollment — your LMS account is provisioned automatically.",
+    description: "Pick a published course.",
   },
   {
     id: "learn",
-    number: "02",
     title: "Learn",
-    description: "Track lessons and progress with 24/7 AI support along the way.",
+    description: "Work through lessons at your pace.",
   },
   {
     id: "certify",
-    number: "03",
     title: "Get certified",
-    description: "Course completion auto-issues a verifiable certificate.",
+    description: "Completion issues your certificate.",
   },
 ] as const;
 
 export const instructorJourneySteps = [
   {
     id: "create",
-    number: "01",
     title: "Create",
-    description: "Author courses with modules and lessons for your students.",
+    description: "Author modules and lessons.",
   },
   {
     id: "publish",
-    number: "02",
     title: "Publish",
-    description: "Students enroll — LMS accounts provision on confirmation.",
+    description: "Open the course for enrollment.",
   },
   {
     id: "support",
-    number: "03",
     title: "Support",
-    description: "Monitor rosters, progress, and AI escalations from your inbox.",
+    description: "Track progress and answer escalations.",
   },
 ] as const;
 
+/*
+  Enrollment and certification run in this prototype. AI escalation does not.
+*/
 export const integrations = [
   {
     id: "registration-lms",
-    from: "Registration",
-    to: "LMS",
-    trigger: "Enrollment confirmed",
-    outcome: "LMS account auto-provisioned",
+    label: "Enrollment → LMS access",
+    detail: "Confirming enrollment provisions the course account.",
+    status: "Live",
   },
   {
     id: "lms-cert",
-    from: "LMS",
-    to: "Certificates",
-    trigger: "Course completed",
-    outcome: "Verifiable certificate issued",
+    label: "Completion → Certificate",
+    detail: "Finishing every lesson issues a verifiable credential.",
+    status: "Live",
   },
   {
     id: "portal-ai",
-    from: "Student Portal",
-    to: "AI Assistant",
-    trigger: "Student asks for help",
-    outcome: "Progress-aware support · escalates to you",
+    label: "AI assistant → Instructor",
+    detail: "Unanswered questions escalate to the course instructor.",
+    status: "Planned",
   },
 ] as const;
 

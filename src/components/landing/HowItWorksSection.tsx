@@ -1,49 +1,68 @@
-const steps = [
+import { Award, BookOpen, ClipboardCheck, type LucideIcon } from "lucide-react";
+
+const steps: { title: string; description: string; icon: LucideIcon }[] = [
   {
-    number: "01",
     title: "Enroll",
     description:
-      "Confirm enrollment and your LMS account is provisioned automatically.",
+      "Choose a published course and confirm your place. Course access is set up for you.",
+    icon: ClipboardCheck,
   },
   {
-    number: "02",
     title: "Learn",
     description:
-      "Track lessons and progress, with 24/7 AI support along the way.",
+      "Work through modules and lessons at your own pace, with help available as you go.",
+    icon: BookOpen,
   },
   {
-    number: "03",
     title: "Get certified",
     description:
-      "Course completion auto-issues a verifiable certificate.",
+      "Finishing every lesson issues a certificate other people can verify.",
+    icon: Award,
   },
 ];
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="border-t border-ink/10 bg-white py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="max-w-2xl">
-          <h2 className="font-display text-4xl font-medium tracking-[-0.03em]">How it works</h2>
-          <p className="mt-3 text-muted">
-            Three steps, one connected system — no manual handoffs in between.
-          </p>
-        </div>
+    <section
+      id="how-it-works"
+      className="border-t border-line bg-surface py-16 md:py-20"
+    >
+      <div className="mx-auto max-w-5xl px-5 sm:px-7">
+        <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
+        <p className="mt-2 max-w-xl text-muted">
+          Three steps, with nothing to chase in between.
+        </p>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-3">
-          {steps.map((step) => (
-            <article
-              key={step.number}
-              className="border-t border-line py-6 md:border-t-0 md:border-l md:px-6"
-            >
-              <p className="text-sm font-semibold text-amber-core">{step.number}</p>
-              <h3 className="mt-3 font-display text-2xl font-semibold">{step.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-muted">
-                {step.description}
-              </p>
-            </article>
-          ))}
-        </div>
+        <ol className="mt-10 flex flex-col gap-8 md:flex-row md:items-start md:gap-0">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+
+            return (
+              <li
+                key={step.title}
+                className="flex md:min-w-0 md:flex-1 md:flex-col"
+              >
+                <div className="flex items-center md:w-full">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-full bg-brand text-white">
+                    <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
+                  </span>
+                  {index < steps.length - 1 ? (
+                    <span
+                      aria-hidden="true"
+                      className="mx-3 hidden h-0.5 flex-1 bg-brand md:block"
+                    />
+                  ) : null}
+                </div>
+                <div className="ml-4 min-w-0 md:ml-0 md:mt-4">
+                  <h3 className="font-medium">{step.title}</h3>
+                  <p className="mt-1.5 text-sm leading-6 text-muted">
+                    {step.description}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

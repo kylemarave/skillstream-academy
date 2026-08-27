@@ -1,28 +1,42 @@
+import type { LucideIcon } from "lucide-react";
+
 interface StatCardProps {
   label: string;
   value: string | number;
   hint: string;
-  accent?: "core" | "light" | "dark";
+  icon: LucideIcon;
+  tone?: "brand" | "success" | "warn" | "muted";
 }
 
-const accentStyles = {
-  core: "text-amber-dark",
-  light: "text-amber-core",
-  dark: "text-ink",
+const tones = {
+  brand: "bg-brand-soft text-brand-strong",
+  success: "bg-success-soft text-success",
+  warn: "bg-warn-soft text-warn",
+  muted: "bg-subtle text-muted",
 };
 
-export function StatCard({ label, value, hint, accent = "core" }: StatCardProps) {
+export function StatCard({
+  label,
+  value,
+  hint,
+  icon: Icon,
+  tone = "brand",
+}: StatCardProps) {
   return (
-    <div className="px-5 py-5 sm:px-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
-        {label}
-      </p>
-      <p
-        className={`mt-2 font-display text-4xl font-semibold leading-none tabular-nums ${accentStyles[accent]}`}
-      >
+    <div className="px-5 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-sm text-muted">{label}</p>
+        <span
+          aria-hidden="true"
+          className={`grid size-9 place-items-center rounded-lg ${tones[tone]}`}
+        >
+          <Icon size={18} strokeWidth={1.8} />
+        </span>
+      </div>
+      <p className="mt-3 text-3xl font-semibold tabular-nums tracking-tight">
         {value}
       </p>
-      <p className="mt-2 text-sm text-muted">{hint}</p>
+      <p className="mt-1 text-xs text-muted">{hint}</p>
     </div>
   );
 }

@@ -2,20 +2,46 @@
 
 Updated: August 27, 2026
 
-## Completed in the professional UI pass
+## Design system
 
-- Replaced the basic top navigation with a responsive, role-aware application shell.
-- Added an academic editorial display typeface while keeping a legible UI sans-serif.
-- Standardized color, border, spacing, focus, form, selection, and motion tokens.
-- Redesigned the student and instructor dashboards around their primary workflows.
-- Reworked dashboard statistics, journey progress, connected-system explanations, and quick actions.
-- Improved the login experience with role selection, clearer product context, and accessible feedback.
-- Improved the course catalog, course library, course setup form, and module editor.
-- Added a working draft-to-published course control for instructors.
-- Added loading, disabled, empty, and error treatment to core authoring interactions.
-- Added branded loading and not-found routes.
-- Removed dead footer links and labeled the project status honestly.
-- Added visible focus states, a skip link, minimum control heights, and reduced-motion support.
+The palette is functional: every hue has exactly one job, so colour carries
+meaning rather than decoration.
+
+| Role | Token | Value | Used for |
+| --- | --- | --- | --- |
+| Brand | `--brand` | `#0F766E` | Links, primary buttons, current step, active nav |
+| Complete | `--success` | `#15803D` | Published courses, finished steps, certification |
+| Unfinished | `--warn` | `#B45309` | Drafts and "not ready to publish" warnings |
+| Failed | `--danger` | `#B91C1C` | Errors only |
+| Text | `--ink` / `--muted` | `#0F172A` / `#475569` | Primary and secondary text |
+| Structure | `--canvas` / `--surface` / `--line` | `#F8FAFC` / `#FFFFFF` / `#E2E8F0` | Page, cards, hairline borders |
+
+Teal is the base because the product is a learning platform whose payoff is a
+credential: green reads as "achieved" and stays reserved for that, so the
+interactive colour has to sit next to it without competing. Slate neutrals keep
+the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
+`--surface`.
+
+## Completed in the minimal redesign
+
+- Replaced the amber "Ink & Paper" palette with the functional teal/slate system above.
+- Dropped the serif display face; one sans family now carries the whole hierarchy.
+- Added shared `.btn`, `.card`, `.field`, and `.label` primitives so controls stop drifting.
+- Converted the dark sidebar to a light one and merged the breadcrumb strip into a single page header with an actions slot.
+- Reduced the journey stepper to one progress row and removed it from the four pages that only repeated it.
+- Replaced the decorative "connected systems" panel with a plain list that labels each handoff as planned.
+- Replaced the course detail pipeline graphic with real counts of modules and lessons.
+- Removed the drag handle in the module editor, which implied reordering that does not exist.
+- Removed the fake dashboard and certificate mockups from the landing page.
+- Warned before publishing a course that has no lessons.
+- Kept visible focus states, the skip link, 44px control heights, and reduced-motion support.
+
+### Behaviour changes worth knowing
+
+- "Publish immediately" was removed from course creation; publishing now happens
+  from the course page, where the empty-content warning can be shown.
+- The landing navigation no longer has a mobile menu; the section links are
+  hidden below `md` and the page is short enough to scroll.
 
 ## P0 — Required for a usable capstone demo
 
@@ -112,7 +138,7 @@ Updated: August 27, 2026
 
 ### Production design-system work
 
-- Extract shared button, field, empty-state, data-list, and page-header components.
+- Extract empty-state and data-list components (button, field, card, and page header are done).
 - Add Storybook or an equivalent component reference.
 - Document responsive, content, and accessibility rules.
 

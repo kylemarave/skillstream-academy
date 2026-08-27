@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ModuleEditor } from "@/components/ModuleEditor";
 import { requireRole } from "@/lib/auth";
@@ -20,18 +21,19 @@ export default async function CourseModulesPage({ params }: PageProps) {
   return (
     <AppShell
       user={session}
-      title={`Modules · ${course.title}`}
-      subtitle="Build lesson content — students track progress here during Step 02 (Learn)."
+      title="Modules and lessons"
+      subtitle={course.title}
       nav={instructorNav}
-    >
-      <div className="mb-6">
+      actions={
         <Link
           href={`/instructor/courses/${course.id}`}
-          className="text-sm text-amber-core hover:text-amber-dark"
+          className="btn btn-secondary"
         >
-          ← Back to course
+          <ArrowLeft aria-hidden="true" size={16} />
+          Back to course
         </Link>
-      </div>
+      }
+    >
       <ModuleEditor courseId={course.id} initialModules={course.modules} />
     </AppShell>
   );
