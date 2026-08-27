@@ -1,0 +1,88 @@
+{
+  "users": [
+    {
+      "id": "user-student-1",
+      "email": "student@skillstream.academy",
+      "password": "password123",
+      "firstName": "Alex",
+      "lastName": "Rivera",
+      "role": "student"
+    },
+    {
+      "id": "user-instructor-1",
+      "email": "instructor@skillstream.academy",
+      "password": "password123",
+      "firstName": "Jordan",
+      "lastName": "Chen",
+      "role": "instructor"
+    },
+    {
+      "id": "user-admin-1",
+      "email": "admin@skillstream.academy",
+      "password": "password123",
+      "firstName": "Sam",
+      "lastName": "Okonkwo",
+      "role": "admin"
+    }
+  ],
+  "courses": [
+    {
+      "id": "course-1",
+      "instructorId": "user-instructor-1",
+      "title": "Intro to Web Development",
+      "description": "Learn HTML, CSS, and JavaScript fundamentals through hands-on projects.",
+      "price": 49.99,
+      "status": "published",
+      "createdAt": "2026-01-15T08:00:00.000Z",
+      "updatedAt": "2026-01-20T10:00:00.000Z"
+    },
+    {
+      "id": "course-2",
+      "instructorId": "user-instructor-1",
+      "title": "Database Design Basics",
+      "description": "ERDs, normalization, and SQL for application developers.",
+      "price": 59.99,
+      "status": "draft",
+      "createdAt": "2026-02-01T08:00:00.000Z",
+      "updatedAt": "2026-02-01T08:00:00.000Z"
+    }
+  ],
+  "modules": [
+    {
+      "id": "module-1",
+      "courseId": "course-1",
+      "title": "Getting Started",
+      "sequenceOrder": 1,
+      "createdAt": "2026-01-15T09:00:00.000Z"
+    },
+    {
+      "id": "module-2",
+      "courseId": "course-1",
+      "title": "Building Layouts",
+      "sequenceOrder": 2,
+      "createdAt": "2026-01-16T09:00:00.000Z"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "moduleId": "module-1",
+      "title": "What is the Web?",
+      "sequenceOrder": 1,
+      "contentType": "video",
+      "contentRef": "https://example.com/lesson-1",
+      "durationMinutes": 12,
+      "createdAt": "2026-01-15T09:30:00.000Z"
+    },
+    {
+      "id": "lesson-2",
+      "moduleId": "module-1",
+      "title": "Your First HTML Page",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "https://example.com/lesson-2",
+      "durationMinutes": 20,
+      "createdAt": "2026-01-15T10:00:00.000Z"
+    }
+  ]
+}
