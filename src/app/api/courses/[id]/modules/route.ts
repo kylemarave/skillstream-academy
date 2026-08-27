@@ -45,11 +45,11 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   const existing = await listModulesByCourse(id);
-  const module = await createModule({
+  const courseModule = await createModule({
     courseId: id,
     title: body.title.trim(),
     sequenceOrder: existing.length + 1,
   });
 
-  return NextResponse.json(module, { status: 201 });
+  return NextResponse.json(courseModule, { status: 201 });
 }

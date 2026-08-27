@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { GraduationCap, Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "#how-it-works", label: "How it works" },
@@ -13,10 +14,13 @@ export function LandingNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/95 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="text-sm font-semibold tracking-tight text-ink">
-          Skillstream Academy
+    <header className="sticky top-0 z-50 border-b border-line bg-paper/95 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-7">
+        <Link href="/" className="flex items-center gap-3 text-ink">
+          <span className="grid size-10 place-items-center rounded-xl bg-ink text-paper">
+            <GraduationCap aria-hidden="true" size={20} strokeWidth={1.8} />
+          </span>
+          <span className="font-display text-lg font-semibold">Skillstream Academy</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -24,7 +28,7 @@ export function LandingNav() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-ink/70 transition hover:text-ink"
+              className="inline-flex min-h-11 items-center text-sm font-medium text-muted hover:text-ink"
             >
               {link.label}
             </a>
@@ -34,13 +38,13 @@ export function LandingNav() {
         <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/login"
-            className="text-sm font-medium text-ink/70 hover:text-ink"
+            className="inline-flex min-h-11 items-center px-3 text-sm font-semibold text-muted hover:text-ink"
           >
             Log in
           </Link>
           <Link
             href="/login"
-            className="rounded-lg bg-amber-core px-4 py-2 text-sm font-medium text-paper hover:bg-amber-dark"
+            className="inline-flex min-h-11 items-center rounded-lg bg-amber-core px-4 text-sm font-semibold text-paper shadow-[0_5px_14px_rgb(122_95_30/0.2)] hover:bg-amber-dark"
           >
             Get started
           </Link>
@@ -48,35 +52,34 @@ export function LandingNav() {
 
         <button
           type="button"
-          aria-label="Toggle menu"
-          className="rounded-lg border border-ink/15 p-2 md:hidden"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          className="grid size-11 place-items-center rounded-lg border border-line bg-surface md:hidden"
           onClick={() => setOpen((current) => !current)}
         >
-          <span className="block h-0.5 w-5 bg-ink" />
-          <span className="mt-1 block h-0.5 w-5 bg-ink" />
-          <span className="mt-1 block h-0.5 w-5 bg-ink" />
+          {open ? <X aria-hidden="true" size={20} /> : <Menu aria-hidden="true" size={20} />}
         </button>
       </div>
 
       {open ? (
-        <div className="border-t border-ink/10 px-6 py-4 md:hidden">
-          <nav className="flex flex-col gap-4">
+        <div className="border-t border-line bg-surface px-5 py-4 shadow-lg md:hidden">
+          <nav className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm text-ink/70"
+                className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-muted hover:bg-surface-muted hover:text-ink"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
               </a>
             ))}
-            <Link href="/login" className="text-sm font-medium">
+            <Link href="/login" className="flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold">
               Log in
             </Link>
             <Link
               href="/login"
-              className="rounded-lg bg-amber-core px-4 py-2 text-center text-sm font-medium text-paper"
+              className="mt-2 inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-core px-4 text-sm font-semibold text-paper"
             >
               Get started
             </Link>

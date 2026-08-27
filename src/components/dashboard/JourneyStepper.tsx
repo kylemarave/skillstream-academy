@@ -1,3 +1,5 @@
+import { Check } from "lucide-react";
+
 interface JourneyStepperProps {
   steps: ReadonlyArray<{
     id: string;
@@ -12,15 +14,17 @@ export function JourneyStepper({ steps, activeStepId }: JourneyStepperProps) {
   const activeIndex = steps.findIndex((step) => step.id === activeStepId);
 
   return (
-    <div className="rounded-2xl border border-ink/10 bg-white p-6 md:p-8">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-amber-core">
-        Your connected journey
-      </p>
-      <p className="mt-2 text-sm text-ink/70">
-        Three steps, one system — no manual handoffs in between.
-      </p>
+    <section className="surface overflow-hidden" aria-labelledby="journey-title">
+      <div className="flex flex-col justify-between gap-2 border-b border-line px-5 py-4 sm:flex-row sm:items-center sm:px-6">
+        <h2 id="journey-title" className="font-display text-xl font-semibold">
+          Your connected journey
+        </h2>
+        <p className="text-sm text-muted">
+          Three steps, one system
+        </p>
+      </div>
 
-      <ol className="mt-8 grid gap-6 md:grid-cols-3">
+      <ol className="grid md:grid-cols-3">
         {steps.map((step, index) => {
           const isActive = step.id === activeStepId;
           const isComplete = index < activeIndex;
@@ -28,40 +32,51 @@ export function JourneyStepper({ steps, activeStepId }: JourneyStepperProps) {
           return (
             <li
               key={step.id}
-              className={`relative rounded-xl border p-5 transition ${
-                isActive
-                  ? "border-amber-core bg-amber-tint/40"
-                  : isComplete
-                    ? "border-amber-light/50 bg-amber-tint/20"
-                    : "border-ink/10 bg-paper"
-              }`}
+              aria-current={isActive ? "step" : undefined}
+              className={`relative min-h-40 px-5 py-5 sm:px-6 ${
+                index < steps.length - 1
+                  ? "border-b border-line md:border-b-0 md:border-r"
+                  : ""
+              } ${isActive ? "bg-amber-tint/45" : "bg-surface"}`}
             >
-              {index < steps.length - 1 ? (
+              <div className="flex items-center justify-between">
                 <span
-                  aria-hidden
-                  className="absolute -right-3 top-1/2 hidden h-px w-6 -translate-y-1/2 bg-amber-core/30 md:block"
-                />
-              ) : null}
-              <p
-                className={`text-sm font-semibold ${
-                  isActive || isComplete ? "text-amber-core" : "text-ink/40"
+                  className={`grid size-8 place-items-center rounded-full text-xs font-semibold ${
+                    isComplete
+                      ? "bg-success text-white"
+                      : isActive
+                        ? "bg-amber-core text-paper"
+                        : "border border-line bg-surface-muted text-muted"
+                  }`}
+                >
+                  {isComplete ? (
+                    <Check aria-label="Complete" size={15} strokeWidth={2.5} />
+                  ) : (
+                    step.number
+                  )}
+                </span>
+                <span
+                  className={`text-xs font-semibold uppercase tracking-[0.14em] ${
+                    isActive ? "text-amber-dark" : "text-muted"
+                  }`}
+                >
+                  {isActive ? "Current" : isComplete ? "Complete" : "Up next"}
+                </span>
+              </div>
+              <h3
+                className={`mt-5 text-base font-semibold ${
+                  isActive ? "text-amber-dark" : "text-ink"
                 }`}
               >
-                {step.number}
-              </p>
-              <h3 className="mt-2 font-semibold">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink/70">
+                {step.title}
+              </h3>
+              <p className="mt-1.5 text-sm leading-6 text-muted">
                 {step.description}
               </p>
-              {isActive ? (
-                <p className="mt-3 text-xs font-medium uppercase tracking-wide text-amber-dark">
-                  You are here
-                </p>
-              ) : null}
             </li>
           );
         })}
       </ol>
-    </div>
+    </section>
   );
 }

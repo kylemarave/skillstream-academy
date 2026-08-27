@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, BookOpen, Plus } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { IntegrationFlow } from "@/components/dashboard/IntegrationFlow";
 import { JourneyStepper } from "@/components/dashboard/JourneyStepper";
@@ -23,15 +24,15 @@ export default async function InstructorDashboardPage() {
       subtitle="Author courses, monitor student progress, and handle AI escalations — all connected to enrollment and certification."
       nav={instructorNav}
     >
-      <div className="space-y-10">
+      <div className="space-y-8">
         <JourneyStepper
           steps={instructorJourneySteps}
           activeStepId={publishedCount > 0 ? "support" : draftCount > 0 ? "publish" : "create"}
         />
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
-            <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="space-y-6">
+            <section className="surface grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               <StatCard
                 label="Draft courses"
                 value={draftCount}
@@ -50,11 +51,16 @@ export default async function InstructorDashboardPage() {
                 hint="AI handoffs pending"
                 accent="dark"
               />
-            </div>
+            </section>
 
-            <section className="rounded-2xl border border-ink/10 bg-white p-6">
-              <h2 className="font-semibold">Quick actions</h2>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <section className="surface px-5 py-2 sm:px-6">
+              <div className="border-b border-line py-4">
+                <h2 className="font-display text-xl font-semibold">Teaching workspace</h2>
+                <p className="mt-1 text-sm text-muted">
+                  Create content first, then monitor the students using it.
+                </p>
+              </div>
+              <div>
                 <QuickActionCard
                   step="Step 01"
                   title="Create a course"
@@ -73,48 +79,72 @@ export default async function InstructorDashboardPage() {
                   description="Resolve queries the AI assistant couldn't handle."
                   href="/instructor/escalations"
                 />
-                <QuickActionCard
-                  title="View rosters"
-                  description="Monitor enrollment and lesson progress per course."
-                  href="/instructor/courses"
-                />
               </div>
             </section>
 
-            <section className="rounded-2xl border border-ink/10 bg-white p-6">
-              <div className="flex items-center justify-between gap-4">
-                <h2 className="font-semibold">Your courses</h2>
+            <section className="surface overflow-hidden">
+              <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-5 sm:px-6">
+                <div>
+                  <h2 className="font-display text-xl font-semibold">Your courses</h2>
+                  <p className="mt-1 text-sm text-muted">
+                    Draft, publish, and review course content.
+                  </p>
+                </div>
                 <Link
                   href="/instructor/courses/new"
-                  className="rounded-lg bg-amber-core px-4 py-2 text-sm font-medium text-paper hover:bg-amber-dark"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-amber-core px-4 text-sm font-semibold text-paper shadow-[0_5px_14px_rgb(122_95_30/0.22)] hover:bg-amber-dark"
                 >
+                  <Plus aria-hidden="true" size={17} />
                   Create course
                 </Link>
               </div>
 
               {courses.length === 0 ? (
-                <div className="mt-6 rounded-xl border border-dashed border-ink/15 bg-paper p-8 text-center">
-                  <p className="text-ink/70">No courses yet.</p>
+                <div className="px-6 py-12 text-center">
+                  <span className="mx-auto grid size-12 place-items-center rounded-xl bg-surface-muted text-amber-dark">
+                    <BookOpen aria-hidden="true" size={21} />
+                  </span>
+                  <p className="mt-4 font-medium">Create your first course</p>
+                  <p className="mx-auto mt-1 max-w-sm text-sm text-muted">
+                    Start with a title and outline. You can add modules and lessons next.
+                  </p>
                   <Link
                     href="/instructor/courses/new"
-                    className="mt-3 inline-block text-sm font-medium text-amber-core"
+                    className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-amber-dark"
                   >
-                    Create your first course →
+                    Start course setup
+                    <ArrowRight aria-hidden="true" size={16} />
                   </Link>
                 </div>
               ) : (
-                <ul className="mt-6 space-y-3">
+                <ul className="divide-y divide-line">
                   {courses.map((course) => (
                     <li key={course.id}>
                       <Link
                         href={`/instructor/courses/${course.id}`}
-                        className="flex items-center justify-between rounded-xl border border-ink/10 bg-paper px-4 py-3 hover:border-amber-core/40"
+                        className="group flex items-center gap-4 px-5 py-4 hover:bg-amber-tint/20 sm:px-6"
                       >
-                        <div>
-                          <p className="font-medium">{course.title}</p>
-                          <p className="text-sm text-ink/60">${course.price.toFixed(2)}</p>
+                        <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-surface-muted text-amber-dark">
+                          <BookOpen aria-hidden="true" size={18} />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-medium group-hover:text-amber-dark">
+                            {course.title}
+                          </p>
+                          <p className="mt-0.5 text-sm text-muted">
+                            ${course.price.toFixed(2)} · Updated{" "}
+                            {new Date(course.updatedAt).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </p>
                         </div>
                         <StatusBadge status={course.status} />
+                        <ArrowRight
+                          aria-hidden="true"
+                          size={17}
+                          className="hidden text-muted group-hover:text-amber-dark sm:block"
+                        />
                       </Link>
                     </li>
                   ))}

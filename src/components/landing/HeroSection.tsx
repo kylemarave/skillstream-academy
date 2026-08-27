@@ -8,16 +8,16 @@ const trustItems = [
 
 export function HeroSection() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-      <div className="grid items-center gap-12 lg:grid-cols-2">
+    <section className="mx-auto max-w-7xl px-5 py-16 sm:px-7 md:py-24 lg:py-28">
+      <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(380px,0.95fr)]">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-amber-core">
+          <p className="text-sm font-semibold text-amber-dark">
             Enroll · Learn · Get certified
           </p>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
+          <h1 className="mt-5 max-w-3xl font-display text-5xl font-medium leading-[0.98] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
             One connected journey from enrollment to certification
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-ink/70">
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-muted">
             Skillstream Academy removes the manual handoffs between enrolling,
             learning, and earning a verifiable credential — with 24/7 AI support
             along the way.
@@ -26,19 +26,19 @@ export function HeroSection() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/login"
-              className="rounded-lg bg-amber-core px-6 py-3 text-center text-sm font-medium text-paper hover:bg-amber-dark"
+              className="inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-core px-6 text-sm font-semibold text-paper shadow-[0_6px_18px_rgb(122_95_30/0.22)] hover:bg-amber-dark"
             >
               Start learning
             </Link>
             <a
               href="#how-it-works"
-              className="rounded-lg border border-ink/15 px-6 py-3 text-center text-sm font-medium hover:bg-amber-tint/40"
+              className="inline-flex min-h-12 items-center justify-center rounded-lg border border-line bg-surface px-6 text-sm font-semibold hover:border-amber-light hover:bg-amber-tint/30"
             >
               See how it works
             </a>
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-x-4 gap-y-2 text-sm text-ink/60">
+          <div className="mt-10 flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium text-muted">
             {trustItems.map((item, index) => (
               <span key={item} className="flex items-center gap-4">
                 {index > 0 ? <span className="hidden text-ink/30 sm:inline">·</span> : null}
@@ -48,7 +48,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
+        <div className="surface p-5 shadow-[0_24px_60px_rgb(28_29_27/0.1)] sm:p-7">
           <div className="space-y-4">
             <div className="rounded-xl bg-amber-tint/60 p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-amber-dark">

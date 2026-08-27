@@ -17,7 +17,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-paper text-ink">
       <LandingNav />
-      <main>
+      <main id="main-content">
         <HeroSection />
         <HowItWorksSection />
         <FeaturesSection />

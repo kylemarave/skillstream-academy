@@ -1,30 +1,27 @@
 import Link from "next/link";
 
-const footerLinks = [
-  { href: "#", label: "Privacy Policy" },
-  { href: "#", label: "Terms of Service" },
-  { href: "#", label: "Contact Support" },
-];
-
 export function LandingFooter() {
   return (
-    <footer className="border-t border-ink/10 bg-white py-10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
-        <p className="text-sm font-medium text-ink">Skillstream Academy</p>
+    <footer className="border-t border-line bg-surface py-10">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-5 sm:px-7 md:flex-row">
+        <div>
+          <p className="font-display text-lg font-semibold text-ink">
+            Skillstream Academy
+          </p>
+          <p className="mt-1 text-xs text-muted">
+            Academic capstone project · Privacy and terms documentation is planned.
+          </p>
+        </div>
 
-        <nav className="flex flex-wrap justify-center gap-6">
-          {footerLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="text-sm text-ink/60 hover:text-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <p className="text-sm text-ink/50">© 2026 Skillstream Academy</p>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/login"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-amber-dark hover:text-ink"
+          >
+            Sign in
+          </Link>
+          <p className="text-sm text-muted">© 2026 Skillstream Academy</p>
+        </div>
       </div>
     </footer>
   );

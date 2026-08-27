@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
+import { CoursePublishControl } from "@/components/CoursePublishControl";
 import { StatusBadge } from "@/components/StatusBadge";
 import { requireRole } from "@/lib/auth";
 import { instructorNav } from "@/lib/nav";
@@ -78,6 +79,10 @@ export default async function InstructorCourseDetailPage({ params }: PageProps) 
             View enrolled students and monitor lesson completion.
           </p>
         </Link>
+      </div>
+
+      <div className="mt-6">
+        <CoursePublishControl courseId={course.id} status={course.status} />
       </div>
     </AppShell>
   );

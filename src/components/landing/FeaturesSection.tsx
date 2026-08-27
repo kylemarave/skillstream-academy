@@ -51,10 +51,10 @@ export function FeaturesSection() {
     <section id="features" className="py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="max-w-2xl">
-          <h2 className="text-3xl font-semibold tracking-tight">
+          <h2 className="font-display text-4xl font-medium tracking-[-0.03em]">
             One connected learning journey
           </h2>
-          <p className="mt-3 text-ink/70">
+          <p className="mt-3 text-muted">
             Three systems working as one, so nothing falls through the cracks.
           </p>
         </div>
@@ -63,11 +63,11 @@ export function FeaturesSection() {
           {features.map((feature) => (
             <article
               key={feature.title}
-              className="rounded-2xl border border-ink/10 bg-white p-6"
+              className="surface p-6 shadow-[0_12px_32px_rgb(28_29_27/0.05)]"
             >
               <p className="text-sm font-semibold text-amber-core">{feature.number}</p>
-              <h3 className="mt-3 text-xl font-semibold">{feature.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ink/70">
+              <h3 className="mt-3 font-display text-2xl font-semibold">{feature.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-muted">
                 {feature.description}
               </p>
               {feature.mock}

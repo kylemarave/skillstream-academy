@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { BookOpen, Clock, Search } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { JourneyStepper } from "@/components/dashboard/JourneyStepper";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -23,58 +23,73 @@ export default async function StudentCoursesPage() {
       </div>
 
       {courses.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-ink/15 bg-white p-10 text-center">
-          <p className="font-medium text-ink/80">No published courses available yet</p>
-          <p className="mt-2 text-sm text-ink/60">
+        <div className="surface px-6 py-14 text-center">
+          <span className="mx-auto grid size-12 place-items-center rounded-xl bg-surface-muted text-amber-dark">
+            <Search aria-hidden="true" size={21} />
+          </span>
+          <p className="mt-4 font-medium">No courses are open for enrollment</p>
+          <p className="mx-auto mt-2 max-w-lg text-sm text-muted">
             Instructors publish courses from their dashboard. Once live, they appear here
             for instant enrollment and LMS provisioning.
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <section className="surface overflow-hidden">
+          <div className="flex flex-col gap-3 border-b border-line px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div>
+              <h2 className="font-display text-xl font-semibold">Open courses</h2>
+              <p className="mt-1 text-sm text-muted">
+                {courses.length} course{courses.length === 1 ? "" : "s"} available
+              </p>
+            </div>
+            <div className="flex min-h-11 items-center gap-2 rounded-lg border border-line bg-surface-muted px-3 text-sm text-muted">
+              <Search aria-hidden="true" size={16} />
+              Search and filters are planned
+            </div>
+          </div>
+
+          <div className="divide-y divide-line">
           {courses.map((course) => (
             <article
               key={course.id}
-              className="flex flex-col rounded-2xl border border-ink/10 bg-white p-6"
+                className="group grid gap-5 px-5 py-6 sm:px-6 lg:grid-cols-[48px_minmax(0,1fr)_180px] lg:items-center"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-amber-core">
-                    Ready to enroll
-                  </p>
-                  <h2 className="mt-1 text-lg font-semibold">{course.title}</h2>
-                </div>
-                <StatusBadge status={course.status} />
-              </div>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/70">
-                {course.description || "No description provided."}
-              </p>
-
-              <div className="mt-4 rounded-xl bg-amber-tint/40 p-4 text-sm text-ink/70">
-                <p className="font-medium text-ink">After enrollment:</p>
-                <ul className="mt-2 space-y-1 text-xs">
-                  <li>→ LMS account provisioned instantly</li>
-                  <li>→ Learn with AI support 24/7</li>
-                  <li>→ Certificate issued on completion</li>
-                </ul>
-              </div>
-
-              <div className="mt-6 flex items-center justify-between border-t border-ink/10 pt-6">
-                <span className="text-xl font-semibold text-amber-core">
-                  ${course.price.toFixed(2)}
+                <span className="grid size-12 place-items-center rounded-xl bg-amber-tint text-amber-dark">
+                  <BookOpen aria-hidden="true" size={20} strokeWidth={1.8} />
                 </span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h3 className="font-display text-xl font-semibold">{course.title}</h3>
+                    <StatusBadge status={course.status} />
+                  </div>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+                    {course.description || "Course description coming soon."}
+                  </p>
+                  <p className="mt-3 flex items-center gap-2 text-xs font-medium text-muted">
+                    <Clock aria-hidden="true" size={14} />
+                    Self-paced · LMS access on enrollment
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-2xl font-semibold text-ink">
+                  ${course.price.toFixed(2)}
+                  </p>
                 <button
                   type="button"
                   disabled
-                  className="rounded-lg bg-amber-core px-5 py-2.5 text-sm font-medium text-paper opacity-50"
-                  title="Enrollment flow coming soon"
+                    aria-describedby={`enrollment-status-${course.id}`}
+                    className="mt-2 min-h-11 w-full rounded-lg border border-line bg-surface-muted px-4 text-sm font-semibold text-muted"
                 >
-                  Enroll
+                    Enrollment coming soon
                 </button>
+                  <p id={`enrollment-status-${course.id}`} className="sr-only">
+                    Enrollment and payment are not implemented yet.
+                  </p>
               </div>
             </article>
           ))}
-        </div>
+          </div>
+        </section>
       )}
     </AppShell>
   );

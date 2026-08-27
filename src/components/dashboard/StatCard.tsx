@@ -6,17 +6,23 @@ interface StatCardProps {
 }
 
 const accentStyles = {
-  core: "border-amber-core/30 bg-amber-tint/30",
-  light: "border-amber-light/40 bg-amber-tint/20",
-  dark: "border-amber-dark/30 bg-amber-tint/40",
+  core: "text-amber-dark",
+  light: "text-amber-core",
+  dark: "text-ink",
 };
 
 export function StatCard({ label, value, hint, accent = "core" }: StatCardProps) {
   return (
-    <div className={`rounded-xl border p-5 ${accentStyles[accent]}`}>
-      <p className="text-xs font-medium uppercase tracking-wide text-ink/50">{label}</p>
-      <p className="mt-2 text-3xl font-semibold tabular-nums">{value}</p>
-      <p className="mt-2 text-sm text-ink/60">{hint}</p>
+    <div className="px-5 py-5 sm:px-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+        {label}
+      </p>
+      <p
+        className={`mt-2 font-display text-4xl font-semibold leading-none tabular-nums ${accentStyles[accent]}`}
+      >
+        {value}
+      </p>
+      <p className="mt-2 text-sm text-muted">{hint}</p>
     </div>
   );
 }

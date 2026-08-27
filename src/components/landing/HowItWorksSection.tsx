@@ -24,8 +24,8 @@ export function HowItWorksSection() {
     <section id="how-it-works" className="border-t border-ink/10 bg-white py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="max-w-2xl">
-          <h2 className="text-3xl font-semibold tracking-tight">How it works</h2>
-          <p className="mt-3 text-ink/70">
+          <h2 className="font-display text-4xl font-medium tracking-[-0.03em]">How it works</h2>
+          <p className="mt-3 text-muted">
             Three steps, one connected system — no manual handoffs in between.
           </p>
         </div>
@@ -34,11 +34,11 @@ export function HowItWorksSection() {
           {steps.map((step) => (
             <article
               key={step.number}
-              className="rounded-2xl border border-ink/10 bg-paper p-6"
+              className="border-t border-line py-6 md:border-t-0 md:border-l md:px-6"
             >
               <p className="text-sm font-semibold text-amber-core">{step.number}</p>
-              <h3 className="mt-3 text-xl font-semibold">{step.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ink/70">
+              <h3 className="mt-3 font-display text-2xl font-semibold">{step.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-muted">
                 {step.description}
               </p>
             </article>

@@ -62,12 +62,16 @@ export async function PUT(request: Request, context: RouteContext) {
     status?: "draft" | "published" | "archived";
   };
 
-  const course = await updateCourse(id, {
-    title: body.title?.trim(),
-    description: body.description?.trim(),
-    price: body.price !== undefined ? Number(body.price) : undefined,
-    status: body.status,
-  });
+  const updates: Parameters<typeof updateCourse>[1] = {};
+
+  if (body.title !== undefined) updates.title = body.title.trim();
+  if (body.description !== undefined) {
+    updates.description = body.description.trim();
+  }
+  if (body.price !== undefined) updates.price = Number(body.price);
+  if (body.status !== undefined) updates.status = body.status;
+
+  const course = await updateCourse(id, updates);
 
   return NextResponse.json(course);
 }

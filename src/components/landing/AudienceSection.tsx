@@ -29,7 +29,7 @@ export function AudienceSection() {
   return (
     <section id="for-instructors" className="border-t border-ink/10 bg-white py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-6">
-        <h2 className="text-3xl font-semibold tracking-tight">
+        <h2 className="font-display text-4xl font-medium tracking-[-0.03em]">
           Built for students and instructors
         </h2>
 
@@ -37,10 +37,10 @@ export function AudienceSection() {
           {audiences.map((audience) => (
             <article
               key={audience.title}
-              className="rounded-2xl border border-ink/10 bg-paper p-8"
+              className="border-t border-line py-8 md:border-t-0 md:border-l md:px-8"
             >
-              <h3 className="text-xl font-semibold">{audience.title}</h3>
-              <p className="mt-3 text-ink/70">{audience.description}</p>
+              <h3 className="font-display text-2xl font-semibold">{audience.title}</h3>
+              <p className="mt-3 text-muted">{audience.description}</p>
               <ul className="mt-6 space-y-3">
                 {audience.items.map((item) => (
                   <li key={item} className="flex gap-3 text-sm text-ink/80">

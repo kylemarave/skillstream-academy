@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { getUserById } from "./db";
 import {
   decodeSession,
-  encodeSession,
   roleHomePath,
   SESSION_COOKIE,
 } from "./session";

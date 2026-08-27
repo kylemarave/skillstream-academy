@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { IntegrationFlow } from "@/components/dashboard/IntegrationFlow";
 import { JourneyStepper } from "@/components/dashboard/JourneyStepper";
@@ -21,12 +22,12 @@ export default async function StudentDashboardPage() {
       subtitle="Your learning journey is connected from enrollment to certification — with AI support at every step."
       nav={studentNav}
     >
-      <div className="space-y-10">
+      <div className="space-y-8">
         <JourneyStepper steps={studentJourneySteps} activeStepId="enroll" />
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
-            <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="space-y-6">
+            <section className="surface grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               <StatCard
                 label="Enrolled"
                 value={0}
@@ -45,11 +46,16 @@ export default async function StudentDashboardPage() {
                 hint="Verifiable credentials earned"
                 accent="dark"
               />
-            </div>
+            </section>
 
-            <section className="rounded-2xl border border-ink/10 bg-white p-6">
-              <h2 className="font-semibold">Quick actions</h2>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <section className="surface px-5 py-2 sm:px-6">
+              <div className="border-b border-line py-4">
+                <h2 className="font-display text-xl font-semibold">What to do next</h2>
+                <p className="mt-1 text-sm text-muted">
+                  Start with enrollment. The rest of the journey unlocks automatically.
+                </p>
+              </div>
+              <div>
                 <QuickActionCard
                   step="Step 01"
                   title="Browse catalog"
@@ -70,73 +76,75 @@ export default async function StudentDashboardPage() {
                   href="/student/courses"
                   disabled
                 />
-                <QuickActionCard
-                  title="AI Learning Assistant"
-                  description="24/7 progress-aware help — escalates to your instructor when needed."
-                  href="/student/courses"
-                  disabled
-                />
               </div>
             </section>
 
-            <section className="rounded-2xl border border-dashed border-amber-core/30 bg-amber-tint/20 p-6">
-              <h2 className="font-semibold">What happens when you enroll</h2>
-              <ol className="mt-4 space-y-3 text-sm text-ink/70">
-                <li className="flex gap-3">
-                  <span className="font-semibold text-amber-core">1.</span>
-                  Payment confirms your enrollment
-                </li>
-                <li className="flex gap-3">
-                  <span className="font-semibold text-amber-core">2.</span>
-                  Your LMS account is auto-provisioned — instant course access
-                </li>
-                <li className="flex gap-3">
-                  <span className="font-semibold text-amber-core">3.</span>
-                  Complete all lessons → certificate auto-issued with verification number
-                </li>
-              </ol>
+            <section className="surface flex flex-col gap-5 bg-ink p-6 text-paper sm:flex-row sm:items-center">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-amber-core">
+                <Sparkles aria-hidden="true" size={20} strokeWidth={1.8} />
+              </span>
+              <div className="flex-1">
+                <h2 className="font-display text-xl font-semibold">AI support follows your progress</h2>
+                <p className="mt-1 text-sm leading-6 text-paper/60">
+                  Ask questions in context. If the assistant cannot resolve one,
+                  it sends the conversation to your instructor.
+                </p>
+              </div>
+              <span className="rounded-md border border-paper/15 px-3 py-1.5 text-xs font-medium text-paper/65">
+                Unlocks after enrollment
+              </span>
             </section>
           </div>
 
           <IntegrationFlow />
         </div>
 
-        <section>
-          <div className="flex items-end justify-between gap-4">
+        <section className="surface overflow-hidden">
+          <div className="flex items-end justify-between gap-4 border-b border-line px-5 py-5 sm:px-6">
             <div>
-              <h2 className="text-xl font-semibold">Available courses</h2>
-              <p className="mt-1 text-sm text-ink/70">
+              <h2 className="font-display text-xl font-semibold">Available courses</h2>
+              <p className="mt-1 text-sm text-muted">
                 {courses.length} published course{courses.length === 1 ? "" : "s"} ready to enroll
               </p>
             </div>
             <Link
               href="/student/courses"
-              className="text-sm font-medium text-amber-core hover:text-amber-dark"
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-amber-dark hover:text-ink"
             >
-              View all →
+              View catalog
+              <ArrowRight aria-hidden="true" size={16} />
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="divide-y divide-line">
             {courses.slice(0, 2).map((course) => (
-              <article
+              <Link
                 key={course.id}
-                className="rounded-2xl border border-ink/10 bg-white p-6"
+                href="/student/courses"
+                className="group flex flex-col gap-4 px-5 py-5 hover:bg-amber-tint/20 sm:flex-row sm:items-center sm:px-6"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-semibold">{course.title}</h3>
-                  <StatusBadge status={course.status} />
+                <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-surface-muted text-amber-dark">
+                  <BookOpen aria-hidden="true" size={19} strokeWidth={1.8} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h3 className="font-semibold group-hover:text-amber-dark">{course.title}</h3>
+                    <StatusBadge status={course.status} />
+                  </div>
+                  <p className="mt-1 line-clamp-1 text-sm text-muted">{course.description}</p>
                 </div>
-                <p className="mt-2 line-clamp-2 text-sm text-ink/70">{course.description}</p>
-                <p className="mt-4 text-lg font-semibold text-amber-core">
+                <p className="text-base font-semibold text-ink">
                   ${course.price.toFixed(2)}
                 </p>
-              </article>
+              </Link>
             ))}
             {courses.length === 0 ? (
-              <p className="text-sm text-ink/60 md:col-span-2">
-                No published courses yet. Check back soon.
-              </p>
+              <div className="px-6 py-10 text-center">
+                <p className="font-medium">No courses are open yet</p>
+                <p className="mt-1 text-sm text-muted">
+                  Published courses will appear here.
+                </p>
+              </div>
             ) : null}
           </div>
         </section>

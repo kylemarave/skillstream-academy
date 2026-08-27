@@ -99,14 +99,14 @@ export async function createModule(
   input: Omit<CourseModule, "id" | "createdAt">,
 ): Promise<CourseModule> {
   const store = await readStore();
-  const module: CourseModule = {
+  const courseModule: CourseModule = {
     ...input,
     id: randomUUID(),
     createdAt: new Date().toISOString(),
   };
-  store.modules.push(module);
+  store.modules.push(courseModule);
   await writeStore(store);
-  return module;
+  return courseModule;
 }
 
 export async function listLessonsByModule(moduleId: string): Promise<Lesson[]> {
