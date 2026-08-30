@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { LandingFooter } from "@/components/landing/LandingFooter";
-import { LandingNav } from "@/components/landing/LandingNav";
+import { PublicShell } from "@/components/landing/PublicShell";
 import { CertificateRecord } from "@/components/certificate/CertificateRecord";
 import { VerifyForm } from "@/components/certificate/VerifyForm";
 import { getPublicCertificate } from "@/lib/db";
@@ -23,22 +22,21 @@ export default async function VerifyCertificatePage({ params }: PageProps) {
   const record = await getPublicCertificate(lookup);
 
   return (
-    <div className="min-h-screen bg-canvas text-ink">
-      <LandingNav />
+    <PublicShell active="verify">
       <main
         id="main-content"
-        className="mx-auto w-full max-w-2xl px-5 py-12 sm:px-7 lg:py-16"
+        className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-5 py-10 sm:px-7"
       >
         {record ? (
           <>
-            <h1 className="page-title">
+            <h1 className="page-title text-center">
               {record.certificate.verificationStatus === "revoked"
                 ? "This certificate was revoked"
                 : "Certificate verified"}
             </h1>
-            <p className="mt-2 text-sm leading-6 text-muted">
-              This record was issued by Skillstream Academy. No PDF file is
-              stored in this prototype — the reference is the credential.
+            <p className="mx-auto mt-2 max-w-xl text-center text-sm leading-6 text-muted">
+              Issued by Skillstream Academy. No PDF is stored in this prototype
+              — the reference is the credential.
             </p>
             <div className="mt-8">
               <CertificateRecord
@@ -52,17 +50,17 @@ export default async function VerifyCertificatePage({ params }: PageProps) {
           </>
         ) : (
           <>
-            <h1 className="page-title">No matching certificate</h1>
-            <p className="mt-2 text-sm leading-6 text-muted">
+            <h1 className="page-title text-center">No matching certificate</h1>
+            <p className="mx-auto mt-2 max-w-xl text-center text-sm leading-6 text-muted">
               Nothing in the registry matches that reference. Check the
               characters and try again.
             </p>
           </>
         )}
 
-        <div className="card mt-8 px-5 py-6">
+        <div className="mx-auto mt-10 w-full max-w-[28rem]">
           <p className="section-title">Check another</p>
-          <div className="mt-4">
+          <div className="mt-3">
             <VerifyForm
               defaultValue={lookup}
               error={
@@ -74,13 +72,12 @@ export default async function VerifyCertificatePage({ params }: PageProps) {
           </div>
         </div>
 
-        <p className="mt-6 text-sm text-muted">
-          <Link href="/" className="font-medium text-brand hover:text-brand-strong">
+        <p className="mt-8 text-center text-sm text-muted">
+          <Link href="/" className="font-semibold text-brand hover:text-brand-strong">
             Back to home
           </Link>
         </p>
       </main>
-      <LandingFooter />
-    </div>
+    </PublicShell>
   );
 }

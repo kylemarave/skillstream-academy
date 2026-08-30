@@ -27,7 +27,7 @@ export default async function StudentCertificateDetailPage({
   return (
     <AppShell
       user={session}
-      title={course.title}
+      title="Certificate"
       subtitle="Share the reference number. Anyone can confirm this credential without signing in."
       nav={studentNav}
       actions={
@@ -37,7 +37,7 @@ export default async function StudentCertificateDetailPage({
         </Link>
       }
     >
-      <div className="space-y-6">
+      <div className="mx-auto max-w-3xl">
         <CertificateRecord
           studentName={studentName}
           courseTitle={course.title}
@@ -46,22 +46,16 @@ export default async function StudentCertificateDetailPage({
           status={certificate.verificationStatus}
         />
 
-        <section className="card px-5 py-5">
-          <p className="section-title">Share and verify</p>
-          <p className="mt-1 text-sm text-muted">
-            This prototype does not store a PDF. The public page is the
-            verifiable record.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <CopyReferenceButton referenceNumber={certificate.referenceNumber} />
-            <Link
-              href={certificate.fileUrl}
-              className="btn btn-primary"
-            >
-              Open public verification
-            </Link>
-          </div>
-        </section>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          <CopyReferenceButton referenceNumber={certificate.referenceNumber} />
+          <Link href={certificate.fileUrl} className="btn btn-primary">
+            Open public verification
+          </Link>
+        </div>
+        <p className="mt-3 text-center text-sm text-muted">
+          This prototype does not store a PDF. The public page is the
+          verifiable record.
+        </p>
       </div>
     </AppShell>
   );
