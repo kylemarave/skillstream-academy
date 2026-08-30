@@ -29,8 +29,8 @@ export function CertificateRecord({
         aria-hidden="true"
       />
       <div className="px-6 py-8 sm:px-8">
-        <p className="eyebrow">Skillstream Academy</p>
-        <h2 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
+        <p className="text-sm font-semibold">Skillstream Academy</p>
+        <h2 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
           Certificate of completion
         </h2>
         <p className="mt-6 text-sm text-muted">This certifies that</p>

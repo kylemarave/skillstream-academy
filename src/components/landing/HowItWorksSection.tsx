@@ -1,23 +1,23 @@
-import { Award, BookOpen, ClipboardCheck, type LucideIcon } from "lucide-react";
+import { ScopeBadge } from "@/components/landing/ScopeBadge";
 
-const steps: { title: string; description: string; icon: LucideIcon }[] = [
+const steps = [
   {
     title: "Enroll",
     description:
-      "Choose a published course and confirm your place. Course access is set up for you.",
-    icon: ClipboardCheck,
+      "Choose a published course and confirm your place. Course access is provisioned as soon as you enroll.",
+    status: "Live" as const,
   },
   {
     title: "Learn",
     description:
-      "Work through modules and lessons at your own pace, with help available as you go.",
-    icon: BookOpen,
+      "Work through modules and lessons. Completion is recorded per lesson. An in-course assistant is planned.",
+    status: "Live" as const,
   },
   {
     title: "Get certified",
     description:
-      "Finishing every lesson issues a certificate other people can verify.",
-    icon: Award,
+      "When every lesson is done, a certificate is issued with a server-generated reference. Anyone can check it without an account.",
+    status: "Live" as const,
   },
 ];
 
@@ -27,41 +27,36 @@ export function HowItWorksSection() {
       id="how-it-works"
       className="border-t border-line bg-surface py-16 md:py-20"
     >
-      <div className="mx-auto max-w-5xl px-5 sm:px-7">
-        <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
-        <p className="mt-2 max-w-xl text-muted">
-          Three steps, with nothing to chase in between.
+      <div className="mx-auto max-w-6xl px-5 sm:px-7">
+        <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+          How it works
+        </h2>
+        <p className="mt-3 max-w-[40rem] text-muted">
+          The path the evaluator walks is live. Planned V1 is labeled where it
+          appears later on this page.
         </p>
 
-        <ol className="mt-10 flex flex-col gap-8 md:flex-row md:items-start md:gap-0">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-
-            return (
-              <li
-                key={step.title}
-                className="flex md:min-w-0 md:flex-1 md:flex-col"
+        <ol className="mt-10 divide-y divide-line border-y border-line">
+          {steps.map((step, index) => (
+            <li
+              key={step.title}
+              className="grid gap-3 py-6 sm:grid-cols-[2.5rem_1fr_auto] sm:items-start sm:gap-6"
+            >
+              <span
+                aria-hidden="true"
+                className="text-sm font-semibold tabular-nums text-brand"
               >
-                <div className="flex items-center md:w-full">
-                  <span className="grid size-12 shrink-0 place-items-center rounded-full bg-brand text-white">
-                    <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
-                  </span>
-                  {index < steps.length - 1 ? (
-                    <span
-                      aria-hidden="true"
-                      className="mx-3 hidden h-0.5 flex-1 bg-brand md:block"
-                    />
-                  ) : null}
-                </div>
-                <div className="ml-4 min-w-0 md:ml-0 md:mt-4">
-                  <h3 className="font-medium">{step.title}</h3>
-                  <p className="mt-1.5 text-sm leading-6 text-muted">
-                    {step.description}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
+                {index + 1}
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-semibold">{step.title}</h3>
+                <p className="mt-1.5 max-w-[42rem] text-sm leading-6 text-muted">
+                  {step.description}
+                </p>
+              </div>
+              <ScopeBadge status={step.status} />
+            </li>
+          ))}
         </ol>
       </div>
     </section>

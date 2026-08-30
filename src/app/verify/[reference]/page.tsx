@@ -31,8 +31,7 @@ export default async function VerifyCertificatePage({ params }: PageProps) {
       >
         {record ? (
           <>
-            <p className="eyebrow">Public verification</p>
-            <h1 className="page-title mt-3">
+            <h1 className="page-title">
               {record.certificate.verificationStatus === "revoked"
                 ? "This certificate was revoked"
                 : "Certificate verified"}
@@ -53,8 +52,7 @@ export default async function VerifyCertificatePage({ params }: PageProps) {
           </>
         ) : (
           <>
-            <p className="eyebrow">Public verification</p>
-            <h1 className="page-title mt-3">No matching certificate</h1>
+            <h1 className="page-title">No matching certificate</h1>
             <p className="mt-2 text-sm leading-6 text-muted">
               Nothing in the registry matches that reference. Check the
               characters and try again.

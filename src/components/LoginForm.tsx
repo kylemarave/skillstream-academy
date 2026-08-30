@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
@@ -8,12 +9,12 @@ const demoAccounts = [
   { role: "Student", email: "student@skillstream.academy" },
   { role: "Instructor", email: "instructor@skillstream.academy" },
   { role: "Admin", email: "admin@skillstream.academy" },
-];
+] as const;
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [email, setEmail] = useState("instructor@skillstream.academy");
+  const [email, setEmail] = useState("student@skillstream.academy");
   const [password, setPassword] = useState("password123");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,19 +53,30 @@ export function LoginForm() {
   }
 
   return (
-    <main
-      id="main-content"
-      className="flex min-h-screen items-center justify-center bg-canvas px-5 py-12"
-    >
-      <div className="w-full max-w-sm">
-        <BrandMark stacked={false} />
+    <div className="min-h-screen bg-canvas">
+      <header className="border-b border-line bg-canvas">
+        <div className="mx-auto flex max-w-lg items-center justify-between px-5 py-3 sm:px-7">
+          <BrandMark stacked={false} />
+          <Link
+            href="/verify"
+            className="inline-flex min-h-11 items-center text-sm font-medium text-muted hover:text-ink"
+          >
+            Verify
+          </Link>
+        </div>
+      </header>
 
-        <h1 className="page-title mt-8">Sign in</h1>
-        <p className="mt-2 text-sm text-muted">
-          You will land in the workspace for your role.
+      <main
+        id="main-content"
+        className="mx-auto flex w-full max-w-lg flex-col px-5 py-12 sm:px-7 sm:py-16"
+      >
+        <h1 className="page-title">Sign in</h1>
+        <p className="mt-2 text-sm leading-6 text-muted">
+          Demo accounts land in the workspace for that role. The student account
+          is selected so you can walk enroll → learn → certify first.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+        <form onSubmit={handleSubmit} className="card mt-8 space-y-4 px-5 py-6 sm:px-6">
           <div>
             <label className="label" htmlFor="email">
               Email
@@ -110,9 +122,9 @@ export function LoginForm() {
           </button>
         </form>
 
-        <div className="mt-8 border-t border-line pt-5">
-          <p className="text-sm font-medium">Demo accounts</p>
-          <p className="hint mt-0.5">
+        <div className="mt-8">
+          <p className="text-sm font-semibold">Demo accounts</p>
+          <p className="hint mt-1">
             Password for all three:{" "}
             <code className="font-mono text-ink">password123</code>
           </p>
@@ -127,7 +139,7 @@ export function LoginForm() {
                   onClick={() => setEmail(account.email)}
                   className={`min-h-11 flex-1 rounded-lg border px-2 text-sm ${
                     isSelected
-                      ? "border-brand bg-brand-soft font-medium text-brand-strong"
+                      ? "border-brand bg-brand-soft font-semibold text-brand-strong"
                       : "border-line-strong bg-surface text-muted hover:bg-subtle"
                   }`}
                 >
@@ -137,14 +149,7 @@ export function LoginForm() {
             })}
           </div>
         </div>
-
-        <p className="mt-8 text-xs text-muted">
-          Academic project demo — no real student data.{" "}
-          <a href="/verify" className="font-medium text-brand hover:text-brand-strong">
-            Verify a certificate
-          </a>
-        </p>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

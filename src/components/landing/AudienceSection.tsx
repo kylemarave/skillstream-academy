@@ -1,24 +1,31 @@
-import { GraduationCap, PenLine } from "lucide-react";
+import { ScopeBadge } from "@/components/landing/ScopeBadge";
 
 const audiences = [
   {
-    title: "For students",
-    icon: GraduationCap,
+    title: "Students",
     items: [
-      "Browse and enroll in published courses",
-      "Track lesson progress in one place",
-      "Ask for help and reach an instructor when needed",
-      "Download and share verified certificates",
+      { text: "Browse and enroll in published courses", status: "Live" as const },
+      { text: "Track lesson progress in one place", status: "Live" as const },
+      {
+        text: "Share a certificate reference anyone can check",
+        status: "Live" as const,
+      },
+      {
+        text: "Ask an assistant and reach an instructor when needed",
+        status: "Planned" as const,
+      },
     ],
   },
   {
-    title: "For instructors",
-    icon: PenLine,
+    title: "Instructors",
     items: [
-      "Build courses from modules and lessons",
-      "Publish to the catalog when the content is ready",
-      "Follow student progress per course",
-      "Answer escalated questions from one inbox",
+      { text: "Build courses from modules and lessons", status: "Live" as const },
+      { text: "Publish to the catalog when content is ready", status: "Live" as const },
+      { text: "Follow student progress per course", status: "Live" as const },
+      {
+        text: "Answer escalated questions from one inbox",
+        status: "Planned" as const,
+      },
     ],
   },
 ];
@@ -26,38 +33,32 @@ const audiences = [
 export function AudienceSection() {
   return (
     <section id="roles" className="border-t border-line bg-surface py-16 md:py-20">
-      <div className="mx-auto max-w-5xl px-5 sm:px-7">
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Built for both sides of the course
+      <div className="mx-auto max-w-6xl px-5 sm:px-7">
+        <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+          Students and instructors, in the same academy
         </h2>
+        <p className="mt-3 max-w-[40rem] text-muted">
+          Sign in with a demo account for either role. Features that are not
+          built yet are marked Planned.
+        </p>
 
-        <div className="mt-10 grid gap-10 md:grid-cols-2">
-          {audiences.map((audience) => {
-            const Icon = audience.icon;
-
-            return (
-              <div key={audience.title}>
-                <span
-                  aria-hidden="true"
-                  className="grid size-11 place-items-center rounded-lg bg-brand-soft text-brand-strong"
-                >
-                  <Icon size={20} strokeWidth={1.8} />
-                </span>
-                <h3 className="mt-4 font-medium">{audience.title}</h3>
-                <ul className="mt-4 space-y-2.5">
-                  {audience.items.map((item) => (
-                    <li key={item} className="flex gap-3 text-sm text-muted">
-                      <span
-                        aria-hidden="true"
-                        className="mt-2 size-1 shrink-0 rounded-full bg-brand"
-                      />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
+        <div className="mt-10 grid gap-12 md:grid-cols-2 md:gap-16">
+          {audiences.map((audience) => (
+            <div key={audience.title}>
+              <h3 className="text-lg font-semibold">{audience.title}</h3>
+              <ul className="mt-5 space-y-3">
+                {audience.items.map((item) => (
+                  <li
+                    key={item.text}
+                    className="flex items-start justify-between gap-4 text-sm leading-6 text-muted"
+                  >
+                    <span>{item.text}</span>
+                    <ScopeBadge status={item.status} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </section>

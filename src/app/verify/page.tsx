@@ -10,9 +10,8 @@ export default function VerifyIndexPage() {
         id="main-content"
         className="mx-auto w-full max-w-lg px-5 py-12 sm:px-7 lg:py-16"
       >
-        <p className="eyebrow">Public verification</p>
-        <h1 className="page-title mt-3">Verify a certificate</h1>
-        <p className="mt-2 text-sm leading-6 text-muted">
+        <h1 className="page-title">Verify a certificate</h1>
+        <p className="mt-3 text-sm leading-6 text-muted">
           Enter the reference number from a Skillstream Academy certificate.
           Anyone can check it — you do not need an account.
         </p>

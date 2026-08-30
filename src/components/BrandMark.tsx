@@ -24,7 +24,8 @@ export function BrandMark({
         </span>
       ) : (
         <span className="text-[15px] font-semibold tracking-tight">
-          Skillstream {subtitle}
+          Skillstream
+          <span className="hidden sm:inline"> {subtitle}</span>
         </span>
       )}
     </Link>
