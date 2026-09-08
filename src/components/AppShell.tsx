@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import type { SessionUser } from "@/lib/types";
 import { BrandMark } from "./BrandMark";
+import { ConfirmedBanner } from "./feedback/ConfirmedBanner";
 import { LogoutButton } from "./LogoutButton";
 
 const roleLabels: Record<SessionUser["role"], string> = {
@@ -127,6 +129,10 @@ export function AppShell({
           </div>
           {actions ? <div className="flex gap-2">{actions}</div> : null}
         </header>
+
+        <Suspense fallback={null}>
+          <ConfirmedBanner />
+        </Suspense>
 
         {children}
       </main>

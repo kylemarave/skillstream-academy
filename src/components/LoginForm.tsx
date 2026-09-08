@@ -3,6 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { PublicShell } from "@/components/landing/PublicShell";
+import { ConfirmedBanner } from "@/components/feedback/ConfirmedBanner";
+import { ConfirmDialog, useConfirmDialog } from "@/components/feedback/ConfirmDialog";
+import { withConfirmed } from "@/lib/confirmations";
 
 const demoAccounts = [
   { role: "Student", email: "student@skillstream.academy" },
@@ -13,42 +16,47 @@ const demoAccounts = [
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const confirm = useConfirmDialog();
   const [email, setEmail] = useState("student@skillstream.academy");
   const [password, setPassword] = useState("password123");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(event: FormEvent) {
+  const selectedRole =
+    demoAccounts.find((account) => account.email === email)?.role ?? "this account";
+
+  function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    setLoading(true);
+    confirm.request();
+  }
+
+  async function handleSignIn() {
     setError("");
+    await confirm.run(async () => {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      const data = (await response.json()) as { error?: string; role?: string };
+
+      if (!response.ok) {
+        setError(data.error ?? "Login failed.");
+        return;
+      }
+
+      const next = searchParams.get("next");
+      const destination =
+        next ||
+        (data.role === "student"
+          ? "/student/dashboard"
+          : data.role === "instructor"
+            ? "/instructor/dashboard"
+            : "/admin");
+
+      router.push(withConfirmed(destination, "signed-in"));
+      router.refresh();
     });
-
-    const data = (await response.json()) as { error?: string; role?: string };
-
-    if (!response.ok) {
-      setError(data.error ?? "Login failed.");
-      setLoading(false);
-      return;
-    }
-
-    const next = searchParams.get("next");
-    if (next) {
-      router.push(next);
-    } else if (data.role === "student") {
-      router.push("/student/dashboard");
-    } else if (data.role === "instructor") {
-      router.push("/instructor/dashboard");
-    } else {
-      router.push("/admin");
-    }
-
-    router.refresh();
   }
 
   return (
@@ -59,14 +67,14 @@ export function LoginForm() {
       >
         <div className="w-full max-w-[26rem]">
           <h1 className="page-title text-center">Sign in</h1>
-          <p className="mx-auto mt-2 max-w-[24rem] text-center text-sm leading-6 text-muted">
-            Demo accounts land in that role's workspace. Student is selected so
-            you can walk enroll → learn → certify first.
-          </p>
+
+          <div className="mt-8">
+            <ConfirmedBanner />
+          </div>
 
           <form
             onSubmit={handleSubmit}
-            className="card mt-8 space-y-5 px-5 py-6 sm:px-6"
+            className="card space-y-5 px-5 py-6 sm:px-6"
           >
             <fieldset>
               <legend className="label">Demo account</legend>
@@ -134,14 +142,24 @@ export function LoginForm() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={confirm.busy}
               className="btn btn-primary w-full"
             >
-              {loading ? "Signing in…" : "Sign in"}
+              {confirm.busy ? "Signing in…" : "Sign in"}
             </button>
           </form>
         </div>
       </main>
+
+      <ConfirmDialog
+        open={confirm.open}
+        title={`Sign in as ${selectedRole}?`}
+        description={`${email} will open that role's workspace.`}
+        confirmLabel="Sign in"
+        busy={confirm.busy}
+        onConfirm={handleSignIn}
+        onCancel={confirm.cancel}
+      />
     </PublicShell>
   );
 }

@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import type { CourseStatus } from "@/lib/types";
+import { confirmationCopy } from "@/lib/confirmations";
+import { ActionNotice } from "./feedback/ActionNotice";
+import { ConfirmDialog, useConfirmDialog } from "./feedback/ConfirmDialog";
 
 interface CoursePublishControlProps {
   courseId: string;
@@ -17,40 +20,36 @@ export function CoursePublishControl({
   hasContent,
 }: CoursePublishControlProps) {
   const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
+  const confirm = useConfirmDialog();
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState<"published" | "unpublished" | null>(null);
   const isPublished = status === "published";
 
-  async function updateStatus(nextStatus: "draft" | "published") {
-    setSaving(true);
-    setMessage("");
+  async function updateStatus() {
+    const nextStatus = isPublished ? "draft" : "published";
     setError("");
+    setNotice(null);
 
-    try {
-      const response = await fetch(`/api/courses/${courseId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: nextStatus }),
-      });
+    await confirm.run(async () => {
+      try {
+        const response = await fetch(`/api/courses/${courseId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: nextStatus }),
+        });
 
-      if (!response.ok) {
-        const data = (await response.json()) as { error?: string };
-        setError(data.error ?? "The course status could not be updated.");
-        return;
+        if (!response.ok) {
+          const data = (await response.json()) as { error?: string };
+          setError(data.error ?? "The course status could not be updated.");
+          return;
+        }
+
+        setNotice(nextStatus === "published" ? "published" : "unpublished");
+        router.refresh();
+      } catch {
+        setError("The course status could not be updated. Check your connection.");
       }
-
-      setMessage(
-        nextStatus === "published"
-          ? "Published. Students can now see this course."
-          : "Returned to draft. Students can no longer see it.",
-      );
-      router.refresh();
-    } catch {
-      setError("The course status could not be updated. Check your connection.");
-    } finally {
-      setSaving(false);
-    }
+    });
   }
 
   return (
@@ -72,26 +71,50 @@ export function CoursePublishControl({
 
       <button
         type="button"
-        disabled={saving}
-        onClick={() => updateStatus(isPublished ? "draft" : "published")}
+        disabled={confirm.busy}
+        onClick={confirm.request}
         className={`mt-4 ${isPublished ? "btn btn-secondary" : "btn btn-primary"}`}
       >
-        {saving ? (
+        {confirm.busy ? (
           <LoaderCircle aria-hidden="true" size={16} className="animate-spin" />
         ) : null}
-        {saving ? "Saving…" : isPublished ? "Return to draft" : "Publish course"}
+        {confirm.busy
+          ? "Saving…"
+          : isPublished
+            ? "Return to draft"
+            : "Publish course"}
       </button>
 
-      {message ? (
-        <p role="status" className="mt-3 text-sm text-success">
-          {message}
-        </p>
+      {notice ? (
+        <div className="mt-3">
+          <ActionNotice
+            title={confirmationCopy[notice].title}
+            detail={confirmationCopy[notice].detail}
+          />
+        </div>
       ) : null}
       {error ? (
         <p role="alert" className="mt-3 text-sm text-danger">
           {error}
         </p>
       ) : null}
+
+      <ConfirmDialog
+        open={confirm.open}
+        title={isPublished ? "Return this course to draft?" : "Publish this course?"}
+        description={
+          isPublished
+            ? "Students will no longer see it in the catalog. Existing enrollments stay in place."
+            : hasContent
+              ? "Students will see this course in the catalog and can enroll immediately."
+              : "This course has no lessons yet. Students who enroll will find an empty outline."
+        }
+        confirmLabel={isPublished ? "Return to draft" : "Publish"}
+        tone={isPublished ? "danger" : "brand"}
+        busy={confirm.busy}
+        onConfirm={updateStatus}
+        onCancel={confirm.cancel}
+      />
     </section>
   );
 }

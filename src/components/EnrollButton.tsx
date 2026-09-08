@@ -4,16 +4,48 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
+import { withConfirmed } from "@/lib/confirmations";
+import { ConfirmDialog, useConfirmDialog } from "./feedback/ConfirmDialog";
 
 interface EnrollButtonProps {
   courseId: string;
+  courseTitle: string;
   enrolled: boolean;
 }
 
-export function EnrollButton({ courseId, enrolled }: EnrollButtonProps) {
+export function EnrollButton({
+  courseId,
+  courseTitle,
+  enrolled,
+}: EnrollButtonProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const confirm = useConfirmDialog();
   const [error, setError] = useState("");
+
+  async function handleEnroll() {
+    setError("");
+    await confirm.run(async () => {
+      try {
+        const response = await fetch("/api/enrollments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ courseId }),
+        });
+
+        const data = (await response.json()) as { error?: string };
+
+        if (!response.ok) {
+          setError(data.error ?? "Enrollment could not be completed.");
+          return;
+        }
+
+        router.push(withConfirmed(`/student/learning/${courseId}`, "enrolled"));
+        router.refresh();
+      } catch {
+        setError("Enrollment could not be completed. Check your connection.");
+      }
+    });
+  }
 
   if (enrolled) {
     return (
@@ -26,45 +58,18 @@ export function EnrollButton({ courseId, enrolled }: EnrollButtonProps) {
     );
   }
 
-  async function handleEnroll() {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("/api/enrollments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId }),
-      });
-
-      const data = (await response.json()) as { error?: string };
-
-      if (!response.ok) {
-        setError(data.error ?? "Enrollment could not be completed.");
-        return;
-      }
-
-      router.push(`/student/learning/${courseId}`);
-      router.refresh();
-    } catch {
-      setError("Enrollment could not be completed. Check your connection.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <div className="sm:text-right">
       <button
         type="button"
-        onClick={handleEnroll}
-        disabled={loading}
+        onClick={confirm.request}
+        disabled={confirm.busy}
         className="btn btn-primary w-full"
       >
-        {loading ? (
+        {confirm.busy ? (
           <LoaderCircle aria-hidden="true" size={16} className="animate-spin" />
         ) : null}
-        {loading ? "Enrolling…" : "Enroll"}
+        {confirm.busy ? "Enrolling…" : "Enroll"}
       </button>
       <p className="mt-1.5 text-xs text-muted">
         Demo: no payment is collected. Confirming opens access immediately.
@@ -74,6 +79,16 @@ export function EnrollButton({ courseId, enrolled }: EnrollButtonProps) {
           {error}
         </p>
       ) : null}
+
+      <ConfirmDialog
+        open={confirm.open}
+        title="Enroll in this course?"
+        description={`${courseTitle} — access is provisioned as soon as you confirm. No payment is collected in this demo.`}
+        confirmLabel="Confirm enrollment"
+        busy={confirm.busy}
+        onConfirm={handleEnroll}
+        onCancel={confirm.cancel}
+      />
     </div>
   );
 }

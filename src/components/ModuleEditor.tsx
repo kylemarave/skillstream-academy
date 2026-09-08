@@ -2,6 +2,9 @@
 
 import { FormEvent, useState } from "react";
 import { Plus } from "lucide-react";
+import { confirmationCopy } from "@/lib/confirmations";
+import { ActionNotice } from "./feedback/ActionNotice";
+import { ConfirmDialog, useConfirmDialog } from "./feedback/ConfirmDialog";
 
 interface ModuleEditorProps {
   courseId: string;
@@ -19,81 +22,111 @@ interface ModuleEditorProps {
 }
 
 export function ModuleEditor({ courseId, initialModules }: ModuleEditorProps) {
+  const moduleConfirm = useConfirmDialog();
+  const lessonConfirm = useConfirmDialog();
   const [modules, setModules] = useState(initialModules);
   const [moduleTitle, setModuleTitle] = useState("");
   const [lessonDrafts, setLessonDrafts] = useState<Record<string, string>>({});
+  const [pendingLessonModuleId, setPendingLessonModuleId] = useState<
+    string | null
+  >(null);
   const [error, setError] = useState("");
-  const [addingModule, setAddingModule] = useState(false);
-  const [addingLessonTo, setAddingLessonTo] = useState<string | null>(null);
+  const [notice, setNotice] = useState<"module-added" | "lesson-added" | null>(
+    null,
+  );
 
   const lessonCount = modules.reduce(
     (total, courseModule) => total + courseModule.lessons.length,
     0,
   );
+  const pendingLessonTitle = pendingLessonModuleId
+    ? lessonDrafts[pendingLessonModuleId]?.trim() ?? ""
+    : "";
+  const pendingLessonModule = modules.find(
+    (courseModule) => courseModule.id === pendingLessonModuleId,
+  );
 
-  async function addModule(event: FormEvent) {
+  function requestAddModule(event: FormEvent) {
     event.preventDefault();
-    setError("");
-    setAddingModule(true);
-
-    try {
-      const response = await fetch(`/api/courses/${courseId}/modules`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: moduleTitle }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        setError(data.error ?? "The module could not be added.");
-        return;
-      }
-
-      setModules((current) => [...current, { ...data, lessons: [] }]);
-      setModuleTitle("");
-    } finally {
-      setAddingModule(false);
-    }
+    moduleConfirm.request();
   }
 
-  async function addLesson(moduleId: string) {
+  function requestAddLesson(moduleId: string) {
     const title = lessonDrafts[moduleId]?.trim();
     if (!title) return;
+    setPendingLessonModuleId(moduleId);
+    lessonConfirm.request();
+  }
 
+  async function addModule() {
     setError("");
-    setAddingLessonTo(moduleId);
-    try {
-      const response = await fetch(
-        `/api/courses/${courseId}/modules/${moduleId}/lessons`,
-        {
+    setNotice(null);
+    await moduleConfirm.run(async () => {
+      try {
+        const response = await fetch(`/api/courses/${courseId}/modules`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, contentType: "text" }),
-        },
-      );
+          body: JSON.stringify({ title: moduleTitle }),
+        });
 
-      const data = await response.json();
-      if (!response.ok) {
-        setError(data.error ?? "The lesson could not be added.");
-        return;
+        const data = await response.json();
+        if (!response.ok) {
+          setError(data.error ?? "The module could not be added.");
+          return;
+        }
+
+        setModules((current) => [...current, { ...data, lessons: [] }]);
+        setModuleTitle("");
+        setNotice("module-added");
+      } catch {
+        setError("The module could not be added. Check your connection.");
       }
+    });
+  }
 
-      setModules((current) =>
-        current.map((courseModule) =>
-          courseModule.id === moduleId
-            ? { ...courseModule, lessons: [...courseModule.lessons, data] }
-            : courseModule,
-        ),
-      );
-      setLessonDrafts((current) => ({ ...current, [moduleId]: "" }));
-    } finally {
-      setAddingLessonTo(null);
-    }
+  async function addLesson() {
+    const moduleId = pendingLessonModuleId;
+    const title = pendingLessonTitle;
+    if (!moduleId || !title) return;
+
+    setError("");
+    setNotice(null);
+    await lessonConfirm.run(async () => {
+      try {
+        const response = await fetch(
+          `/api/courses/${courseId}/modules/${moduleId}/lessons`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, contentType: "text" }),
+          },
+        );
+
+        const data = await response.json();
+        if (!response.ok) {
+          setError(data.error ?? "The lesson could not be added.");
+          return;
+        }
+
+        setModules((current) =>
+          current.map((courseModule) =>
+            courseModule.id === moduleId
+              ? { ...courseModule, lessons: [...courseModule.lessons, data] }
+              : courseModule,
+          ),
+        );
+        setLessonDrafts((current) => ({ ...current, [moduleId]: "" }));
+        setPendingLessonModuleId(null);
+        setNotice("lesson-added");
+      } catch {
+        setError("The lesson could not be added. Check your connection.");
+      }
+    });
   }
 
   return (
     <div className="max-w-3xl space-y-5">
-      <form onSubmit={addModule} className="card p-5">
+      <form onSubmit={requestAddModule} className="card p-5">
         <label className="label" htmlFor="module-title">
           Add a module
         </label>
@@ -109,14 +142,21 @@ export function ModuleEditor({ courseId, initialModules }: ModuleEditorProps) {
           />
           <button
             type="submit"
-            disabled={addingModule}
+            disabled={moduleConfirm.busy}
             className="btn btn-primary"
           >
             <Plus aria-hidden="true" size={16} />
-            {addingModule ? "Adding…" : "Add module"}
+            {moduleConfirm.busy ? "Adding…" : "Add module"}
           </button>
         </div>
       </form>
+
+      {notice ? (
+        <ActionNotice
+          title={confirmationCopy[notice].title}
+          onDismiss={() => setNotice(null)}
+        />
+      ) : null}
 
       {error ? (
         <p role="alert" className="text-sm text-danger">
@@ -189,21 +229,47 @@ export function ModuleEditor({ courseId, initialModules }: ModuleEditorProps) {
                 />
                 <button
                   type="button"
-                  onClick={() => addLesson(courseModule.id)}
+                  onClick={() => requestAddLesson(courseModule.id)}
                   disabled={
-                    addingLessonTo === courseModule.id ||
+                    lessonConfirm.busy ||
                     !lessonDrafts[courseModule.id]?.trim()
                   }
                   className="btn btn-secondary"
                 >
                   <Plus aria-hidden="true" size={16} />
-                  {addingLessonTo === courseModule.id ? "Adding…" : "Add lesson"}
+                  {lessonConfirm.busy &&
+                  pendingLessonModuleId === courseModule.id
+                    ? "Adding…"
+                    : "Add lesson"}
                 </button>
               </div>
             </section>
           ))}
         </>
       )}
+
+      <ConfirmDialog
+        open={moduleConfirm.open}
+        title="Add this module?"
+        description={`${moduleTitle || "Untitled module"} will be added to the course outline.`}
+        confirmLabel="Add module"
+        busy={moduleConfirm.busy}
+        onConfirm={addModule}
+        onCancel={moduleConfirm.cancel}
+      />
+
+      <ConfirmDialog
+        open={lessonConfirm.open}
+        title="Add this lesson?"
+        description={`${pendingLessonTitle || "Untitled lesson"}${pendingLessonModule ? ` will be added to ${pendingLessonModule.title}.` : "."}`}
+        confirmLabel="Add lesson"
+        busy={lessonConfirm.busy}
+        onConfirm={addLesson}
+        onCancel={() => {
+          lessonConfirm.cancel();
+          if (!lessonConfirm.busy) setPendingLessonModuleId(null);
+        }}
+      />
     </div>
   );
 }

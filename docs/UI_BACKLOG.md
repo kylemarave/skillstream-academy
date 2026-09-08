@@ -106,10 +106,10 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Add complete interaction feedback
 
-- Add toast or inline success confirmation for course, module, and lesson mutations.
+- Confirm-before dialogs now cover sign in, enroll, complete lesson, create course, add module/lesson, publish, unpublish, verify, and log out.
+- Inline or redirect success notices now cover those same mutations.
 - Add skeletons for route-level loading.
 - Add retry actions for network and server failures.
-- Add confirmation for destructive actions.
 
 ## P2 — Professional product hardening
 

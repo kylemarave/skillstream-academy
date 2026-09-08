@@ -62,6 +62,7 @@ export default async function StudentCoursesPage() {
                   <div className="mt-2">
                     <EnrollButton
                       courseId={course.id}
+                      courseTitle={course.title}
                       enrolled={enrolledIds.has(course.id)}
                     />
                   </div>

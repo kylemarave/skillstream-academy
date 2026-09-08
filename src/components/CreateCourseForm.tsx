@@ -3,110 +3,133 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { withConfirmed } from "@/lib/confirmations";
+import { ConfirmDialog, useConfirmDialog } from "./feedback/ConfirmDialog";
 
 export function CreateCourseForm() {
   const router = useRouter();
+  const confirm = useConfirmDialog();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("49.99");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    setLoading(true);
+    confirm.request();
+  }
+
+  async function handleCreate() {
     setError("");
+    await confirm.run(async () => {
+      const response = await fetch("/api/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          description,
+          price: Number(price),
+          status: "draft",
+        }),
+      });
 
-    const response = await fetch("/api/courses", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title,
-        description,
-        price: Number(price),
-        status: "draft",
-      }),
+      const data = (await response.json()) as { error?: string; id?: string };
+
+      if (!response.ok) {
+        setError(data.error ?? "The course could not be created.");
+        return;
+      }
+
+      router.push(
+        withConfirmed(`/instructor/courses/${data.id}/modules`, "course-created"),
+      );
+      router.refresh();
     });
-
-    const data = (await response.json()) as { error?: string; id?: string };
-
-    if (!response.ok) {
-      setError(data.error ?? "The course could not be created.");
-      setLoading(false);
-      return;
-    }
-
-    router.push(`/instructor/courses/${data.id}/modules`);
-    router.refresh();
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card max-w-2xl">
-      <div className="space-y-5 px-5 py-5">
-        <div>
-          <label className="label" htmlFor="course-title">
-            Course title
-          </label>
-          <input
-            id="course-title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            className="field mt-1.5"
-            placeholder="Web Development Foundations"
-            autoComplete="off"
-            required
-          />
+    <>
+      <form onSubmit={handleSubmit} className="card max-w-2xl">
+        <div className="space-y-5 px-5 py-5">
+          <div>
+            <label className="label" htmlFor="course-title">
+              Course title
+            </label>
+            <input
+              id="course-title"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              className="field mt-1.5"
+              placeholder="Web Development Foundations"
+              autoComplete="off"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="label" htmlFor="course-description">
+              Description
+            </label>
+            <textarea
+              id="course-description"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              rows={5}
+              className="field mt-1.5 resize-y"
+              placeholder="What students will learn and what they can do afterwards."
+            />
+            <p className="hint mt-1.5">Shown in the student catalog.</p>
+          </div>
+
+          <div className="max-w-40">
+            <label className="label" htmlFor="course-price">
+              Price (USD)
+            </label>
+            <input
+              id="course-price"
+              type="number"
+              min="0"
+              step="0.01"
+              value={price}
+              onChange={(event) => setPrice(event.target.value)}
+              className="field mt-1.5 tabular-nums"
+              required
+            />
+          </div>
+
+          {error ? (
+            <p role="alert" className="text-sm text-danger">
+              {error}
+            </p>
+          ) : null}
         </div>
 
-        <div>
-          <label className="label" htmlFor="course-description">
-            Description
-          </label>
-          <textarea
-            id="course-description"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            rows={5}
-            className="field mt-1.5 resize-y"
-            placeholder="What students will learn and what they can do afterwards."
-          />
-          <p className="hint mt-1.5">Shown in the student catalog.</p>
+        <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-4">
+          <p className="hint">Saved as a draft until you publish it.</p>
+          <div className="flex gap-2">
+            <Link href="/instructor/courses" className="btn btn-quiet">
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              disabled={confirm.busy}
+              className="btn btn-primary"
+            >
+              {confirm.busy ? "Creating…" : "Create and add content"}
+            </button>
+          </div>
         </div>
+      </form>
 
-        <div className="max-w-40">
-          <label className="label" htmlFor="course-price">
-            Price (USD)
-          </label>
-          <input
-            id="course-price"
-            type="number"
-            min="0"
-            step="0.01"
-            value={price}
-            onChange={(event) => setPrice(event.target.value)}
-            className="field mt-1.5 tabular-nums"
-            required
-          />
-        </div>
-
-        {error ? (
-          <p role="alert" className="text-sm text-danger">
-            {error}
-          </p>
-        ) : null}
-      </div>
-
-      <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-4">
-        <p className="hint">Saved as a draft until you publish it.</p>
-        <div className="flex gap-2">
-          <Link href="/instructor/courses" className="btn btn-quiet">
-            Cancel
-          </Link>
-          <button type="submit" disabled={loading} className="btn btn-primary">
-            {loading ? "Creating…" : "Create and add content"}
-          </button>
-        </div>
-      </div>
-    </form>
+      <ConfirmDialog
+        open={confirm.open}
+        title="Create this course?"
+        description={`${title || "Untitled course"} will be saved as a draft. Students will not see it until you publish.`}
+        confirmLabel="Create draft"
+        busy={confirm.busy}
+        onConfirm={handleCreate}
+        onCancel={confirm.cancel}
+      />
+    </>
   );
 }

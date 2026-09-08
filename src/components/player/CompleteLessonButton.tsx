@@ -5,13 +5,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import type { Lesson } from "@/lib/types";
+import { withConfirmed } from "@/lib/confirmations";
 import { completeActionLabel } from "@/lib/player";
+import { ConfirmDialog, useConfirmDialog } from "../feedback/ConfirmDialog";
 
 interface CompleteLessonButtonProps {
   courseId: string;
   lesson: Lesson;
   completed: boolean;
   nextLessonId: string | null;
+  finishesCourse: boolean;
 }
 
 export function CompleteLessonButton({
@@ -19,56 +22,60 @@ export function CompleteLessonButton({
   lesson,
   completed,
   nextLessonId,
+  finishesCourse,
 }: CompleteLessonButtonProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const confirm = useConfirmDialog();
   const [error, setError] = useState("");
 
   const courseHref = `/student/learning/${courseId}`;
   const nextHref = nextLessonId
     ? `/student/learning/${courseId}/lessons/${nextLessonId}`
     : courseHref;
+  const actionLabel = completeActionLabel(lesson.contentType);
 
   async function handleComplete() {
-    setLoading(true);
     setError("");
+    await confirm.run(async () => {
+      try {
+        const response = await fetch(
+          `/api/learning/${courseId}/lessons/${lesson.id}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "completed" }),
+          },
+        );
+        const data = (await response.json()) as {
+          error?: string;
+          nextLesson?: { id: string } | null;
+          certificate?: { id: string } | null;
+          justCertified?: boolean;
+        };
 
-    try {
-      const response = await fetch(
-        `/api/learning/${courseId}/lessons/${lesson.id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "completed" }),
-        },
-      );
-      const data = (await response.json()) as {
-        error?: string;
-        enrollment?: { status: string };
-        nextLesson?: { id: string } | null;
-        certificate?: { id: string } | null;
-        justCertified?: boolean;
-      };
+        if (!response.ok) {
+          setError(data.error ?? "This lesson could not be completed.");
+          return;
+        }
 
-      if (!response.ok) {
-        setError(data.error ?? "This lesson could not be completed.");
-        return;
-      }
-
-      const destination =
-        data.justCertified && data.certificate?.id
-          ? `/student/certificates/${data.certificate.id}`
-          : data.nextLesson
+        if (data.justCertified && data.certificate?.id) {
+          router.push(
+            withConfirmed(
+              `/student/certificates/${data.certificate.id}`,
+              "certified",
+            ),
+          );
+        } else {
+          const destination = data.nextLesson
             ? `/student/learning/${courseId}/lessons/${data.nextLesson.id}`
             : courseHref;
-
-      router.push(destination);
-      router.refresh();
-    } catch {
-      setError("This lesson could not be completed. Check your connection.");
-    } finally {
-      setLoading(false);
-    }
+          router.push(withConfirmed(destination, "lesson-complete"));
+        }
+        router.refresh();
+      } catch {
+        setError("This lesson could not be completed. Check your connection.");
+      }
+    });
   }
 
   if (completed) {
@@ -86,20 +93,34 @@ export function CompleteLessonButton({
     <div>
       <button
         type="button"
-        onClick={handleComplete}
-        disabled={loading}
+        onClick={confirm.request}
+        disabled={confirm.busy}
         className="btn btn-primary"
       >
-        {loading ? (
+        {confirm.busy ? (
           <LoaderCircle aria-hidden="true" size={16} className="animate-spin" />
         ) : null}
-        {loading ? "Saving…" : completeActionLabel(lesson.contentType)}
+        {confirm.busy ? "Saving…" : actionLabel}
       </button>
       {error ? (
         <p role="alert" className="mt-2 text-sm text-danger">
           {error}
         </p>
       ) : null}
+
+      <ConfirmDialog
+        open={confirm.open}
+        title={finishesCourse ? "Finish the course?" : "Mark this lesson complete?"}
+        description={
+          finishesCourse
+            ? `${lesson.title} is the last lesson. Confirming issues your certificate.`
+            : `${lesson.title} will be saved as complete. You can still reopen it afterwards.`
+        }
+        confirmLabel={finishesCourse ? "Complete and certify" : actionLabel}
+        busy={confirm.busy}
+        onConfirm={handleComplete}
+        onCancel={confirm.cancel}
+      />
     </div>
   );
 }

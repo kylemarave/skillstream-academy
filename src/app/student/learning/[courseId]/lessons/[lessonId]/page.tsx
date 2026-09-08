@@ -40,6 +40,10 @@ export default async function LessonPlayerPage({ params }: PageProps) {
   const nextLessonId = completed
     ? (state.summary.nextLesson?.id ?? null)
     : (state.lessons[lessonIndex + 1]?.id ?? null);
+  const finishesCourse =
+    !completed &&
+    state.summary.total > 0 &&
+    state.summary.completed === state.summary.total - 1;
 
   return (
     <AppShell
@@ -92,6 +96,7 @@ export default async function LessonPlayerPage({ params }: PageProps) {
               lesson={lesson}
               completed={completed}
               nextLessonId={nextLessonId}
+              finishesCourse={finishesCourse}
             />
           </div>
         </section>
