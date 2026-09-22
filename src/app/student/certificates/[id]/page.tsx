@@ -28,7 +28,11 @@ export default async function StudentCertificateDetailPage({
     <AppShell
       user={session}
       title="Certificate"
-      subtitle="Share the reference number. Anyone can confirm this credential without signing in."
+      subtitle={
+        certificate.verificationStatus === "revoked"
+          ? "This credential was revoked. Public lookup still finds the reference."
+          : "Share the reference number. Anyone can confirm this credential without signing in."
+      }
       nav={studentNav}
       actions={
         <Link href="/student/certificates" className="btn btn-secondary">
@@ -38,6 +42,16 @@ export default async function StudentCertificateDetailPage({
       }
     >
       <div className="mx-auto max-w-3xl">
+        {certificate.verificationStatus === "revoked" ? (
+          <p
+            role="alert"
+            className="mb-6 rounded-lg bg-danger-soft px-3 py-2 text-center text-sm text-danger"
+          >
+            This certificate was revoked. The public page still finds the
+            reference and shows it as revoked.
+          </p>
+        ) : null}
+
         <CertificateRecord
           studentName={studentName}
           courseTitle={course.title}

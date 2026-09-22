@@ -41,13 +41,13 @@ export const integrations = [
   {
     id: "registration-lms",
     label: "Enrollment → LMS access",
-    detail: "Confirming enrollment provisions the course account.",
+    detail: "Confirming enrollment sets up LMS access and writes enrollment.confirmed. The course becomes active only after access is provisioned.",
     status: "Live",
   },
   {
     id: "lms-cert",
     label: "Completion → Certificate",
-    detail: "Finishing every lesson issues a verifiable credential.",
+    detail: "Finishing every lesson issues a verifiable credential and writes enrollment.completed.",
     status: "Live",
   },
   {

@@ -24,7 +24,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 ## Data model
 - Identity — users, user_sessions
 - Learning — courses, course_modules, lessons, enrollments, lms_accounts, lesson_progress
-- Credential / money — certificates, payments
+- Credential — certificates
 - AI / comms — ai_conversations, ai_messages, escalations, notifications
 - Ops — integration_events, audit_logs
 
@@ -32,7 +32,8 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Role login (student, instructor, admin)
 - Instructor create course, modules, lessons, publish
 - Student catalog and enrollment
-- LMS account created on enroll
+- LMS account created on enroll; course is active only after access is provisioned
+- Student provisioning states: in progress, failed, and player blocked until access is ready
 - Lesson player with progress
 - Completing all lessons marks enrollment completed
 - Certificate issued on completion
@@ -40,16 +41,22 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Basic instructor roster
 - Landing page
 - Confirm-before dialog + after-success notice on every live mutating action
+- Instructor edit, delete, and reorder for courses, modules, and lessons
+- Instructor lesson type, reading/video URL, duration, and quiz prompt
+- Completeness checklist before publish (API rejects incomplete)
+- Archive course without deleting enrollments
+- Integration events for LMS provision and certificate issue (retries Planned)
+- Instructor roster last activity, needs-attention, and student detail
+- Courses are free — no price, checkout, or payment copy
+- Instructor can revoke a certificate; public verify still finds the reference and shows it as revoked
 
 ## Not built — keep labeled Planned
 - Hashed production auth
 - Relational database
-- Real payments
 - PDF certificate files
 - AI chat
 - Escalation inbox
 - Admin operations
-- Edit / delete authoring
 - Notifications
 - Integration-event retries
 - Audit logs
@@ -61,6 +68,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Native mobile app
 - Advanced analytics / personalized recommendations
 - Blockchain certificate anchoring
+- Payments, checkout, refunds, and course prices
 
 ---
 
@@ -69,14 +77,10 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - [x] Product purpose: enroll → learn → certify, public verification
 - [x] ERD + entity spec for V1 (single academy, one instructor per course)
 - [ ] Sign-off on ERD
-- [ ] Choose payment provider
-- [ ] Confirm one payment per enrollment (no subscriptions)
 - [ ] Confirm one active enrollment per student per course
-- [ ] Define refund policy
 - [ ] Define PII / data-retention period
 - [ ] Define escalation SLA
 - [ ] Define max integration-event retries
-- [ ] Confirm currency (default USD)
 - [ ] Decide certificate tamper-evidence (signed record + public lookup)
 - [ ] Decide if external_lms_id is used in V1 or reserved
 
@@ -92,11 +96,10 @@ Keep this path real. A student must be able to enroll, finish lessons, and verif
 - [x] Block duplicate open enrollments
 - [x] Student sees the course as active after enroll
 - [x] Confirm enrollment before it runs; success banner after
-- [ ] Honor full status path: pending → confirmed → active → completed (today enroll jumps to active)
-- [ ] Payment-failed UI state
-- [ ] Provisioning-in-progress UI state
-- [ ] Provisioning-failed UI state
-- [ ] Emit enrollment.confirmed into integration_events
+- [x] Enroll starts at confirmed and becomes active only after LMS provision
+- [x] Provisioning-in-progress UI state
+- [x] Provisioning-failed UI state
+- [x] Emit enrollment.confirmed into integration_events
 
 ## 1.2 Student course player
 - [x] Module navigation + lesson body
@@ -104,8 +107,8 @@ Keep this path real. A student must be able to enroll, finish lessons, and verif
 - [x] Completing the last lesson sets enrollment to completed
 - [x] Confirm before marking a lesson complete; success banner after
 - [ ] Real quiz / assignment scoring (quiz/assignment currently auto-score 100)
-- [ ] Video, quiz, and assignment lesson types (create is text-only today)
-- [ ] Lesson duration and content URL/body in authoring
+- [x] Video, quiz, and assignment types in authoring (scoring still Planned)
+- [x] Lesson duration and content URL/body in authoring
 
 ## 1.3 Certificates
 - [x] Issue certificate only when enrollment is completed
@@ -115,8 +118,8 @@ Keep this path real. A student must be able to enroll, finish lessons, and verif
 - [x] Confirm before looking up a reference; result page is the after-confirm
 - [x] Copy reference confirms with “Copied”
 - [ ] PDF file + real file_url (today file_url points at /verify/...)
-- [ ] Revoke / verification_status = revoked
-- [ ] Emit enrollment.completed into integration_events
+- [x] Revoke / verification_status = revoked
+- [x] Emit enrollment.completed into integration_events
 
 ## 1.4 Authentication
 - [x] Role login + role-based route protection
@@ -151,13 +154,14 @@ Done when: two simultaneous edits cannot clobber each other.
 - [x] Warn before publishing a course with no lessons
 - [x] Confirm before create / add module / add lesson / publish / unpublish
 - [x] Success notice after those mutations
-- [ ] Edit course title, description, price
-- [ ] Edit / delete modules and lessons
-- [ ] Lesson type, content URL/body, duration, quiz config
-- [ ] Reorder modules/lessons (sequence_order)
-- [ ] Autosave or explicit save confirmation
-- [ ] Completeness checklist before publish
-- [ ] Archive course without deleting enrollments
+- [x] Edit course title and description
+- [x] Edit / delete modules and lessons
+- [x] Delete course (blocked when enrollments exist)
+- [x] Lesson type, content URL/body, duration, quiz prompt/choices
+- [x] Reorder modules/lessons (up/down, sequence_order)
+- [x] Explicit save confirmation (“Saved”)
+- [x] Completeness checklist before publish
+- [x] Archive course without deleting enrollments
 
 ## 2.2 Admin course review
 - [ ] Submit for review
@@ -169,9 +173,9 @@ Done when: two simultaneous edits cannot clobber each other.
 ## 2.3 Roster and progress
 - [x] List enrolled students per course
 - [x] Progress % and certificate reference
-- [ ] Last activity timestamp
-- [ ] Needs-attention filter
-- [ ] Student detail view
+- [x] Last activity timestamp
+- [x] Needs-attention filter
+- [x] Student detail view
 
 ## 2.4 AI assistant + escalation
 - [ ] Student chat (ai_conversations + ai_messages)
@@ -193,34 +197,28 @@ Done when: two simultaneous edits cannot clobber each other.
 
 ---
 
-# Phase 3 — Payments, events, notifications
+# Phase 3 — Events and notifications
 
 ## 3.1 Payments
-- [ ] payments record per enrollment
-- [ ] Amount matches course price at purchase time
-- [ ] Provider + provider_ref
-- [ ] Status: pending | succeeded | failed | refunded
-- [ ] Enrollment → confirmed only after succeeded
-- [ ] Demo copy stays honest until this is live (no fake paid receipts)
+Out of V1. Courses are free. No checkout, receipts, refunds, or course prices.
 
 ## 3.2 Integration events
-- [ ] Write enrollment.confirmed and enrollment.completed
-- [ ] Status: pending | processing | succeeded | failed
+- [x] Write enrollment.confirmed and enrollment.completed
+- [x] Status: pending | processing | succeeded | failed
 - [ ] Retry with backoff + retry_count / last_error
-- [ ] Enrollment becomes active only when LMS sync_status = provisioned
-- [ ] Reconciliation so a paid student cannot sit in confirmed + failed forever
+- [x] Enrollment becomes active only when LMS sync_status = provisioned
+- [ ] Reconciliation so an enrolled student cannot sit in confirmed + failed forever
 
 ## 3.3 Notifications
 - [ ] lms_account_ready
 - [ ] certificate_issued
 - [ ] escalation_update
 - [ ] enrollment_confirmed
-- [ ] payment_failed
 - [ ] In-app unread / read (read_at)
 - [ ] Notification preferences
 
 ## 3.4 Audit logs
-- [ ] Append-only log for enrollments, certificate issue/revoke, payments, admin actions
+- [ ] Append-only log for enrollments, certificate issue/revoke, admin actions
 - [ ] Actor, action, target, metadata
 - [ ] No updates or deletes
 
@@ -240,7 +238,7 @@ Done when: two simultaneous edits cannot clobber each other.
 ## 4.2 Catalog discovery
 - [x] Published course list
 - [ ] Search
-- [ ] Topic / price filters
+- [ ] Topic filters
 - [ ] Sort + pagination
 - [ ] Outcomes, duration, level, prerequisites
 - [ ] Instructor profile (users.bio)
@@ -268,8 +266,8 @@ Check these before calling a phase done.
 - [ ] Student can finish enroll → learn → certify without editing seed data
 - [ ] Instructor can publish a course and see roster progress
 - [ ] Public verify works with no account
-- [ ] Planned features (AI, payments, PDF, admin) are labeled Planned
-- [ ] No invented testimonials, payments, or AI answers
+- [ ] Planned features (AI, PDF, admin) are labeled Planned
+- [ ] No invented testimonials or AI answers
 - [ ] Certificate reference is never client-supplied
 - [ ] Role changes only via admin
 - [ ] Tests for enrollment, progress → completion, certificate uniqueness, verify lookup
@@ -306,9 +304,9 @@ Check these before calling a phase done.
 
 - [x] Enroll in a course
   Before: Done — “Enroll in this course?”
-  After: Done — “Enrollment confirmed” banner on the course
+  After: Done — “Enrollment confirmed” on ready access; failed access uses a danger banner
   Loading: Done — “Enrolling…”
-  Fail: Done — inline error
+  Fail: Done — inline error; LMS fail shows “Course access did not provision. Retry is Planned.”
 
 - [x] Complete a lesson
   Before: Done — “Mark this lesson complete?”
@@ -358,17 +356,33 @@ Check these before calling a phase done.
   Loading: Done
   Fail: Done — inline error
 
+- [x] Edit course / module / lesson
+  Before: N/A
+  After: Done — “Saved”
+  Fail: Done — inline error
+
+- [x] Delete course / module / lesson
+  Before: Done — confirm dialog
+  After: Done — “Deleted”
+  Fail: Done — inline error; course delete blocked if students are enrolled
+
+- [x] Reorder modules / lessons
+  Before: N/A
+  After: Done — “Order saved”
+  Fail: Done — inline error
+
+- [x] Revoke a certificate
+  Before: Done — “Revoke this certificate?”
+  After: Done — “Certificate revoked”
+  Loading: Done — “Revoking…”
+  Fail: Done — inline error
+
 ## Not built yet — add Before + After when you ship them
 
-- [ ] Edit course / module / lesson — After = “Saved”
-- [ ] Delete course / module / lesson — Before required, After = “Deleted”
-- [ ] Reorder modules / lessons — After = “Order saved”
 - [ ] Approve / return / archive / reassign a course
 - [ ] Retry a failed LMS or certificate sync
 - [ ] Suspend / deactivate a user
 - [ ] Change a user role
-- [ ] Revoke a certificate
-- [ ] Refund / mark payment failed
 - [ ] Resolve an escalation
 - [ ] Retry a failed integration event
 
@@ -386,8 +400,6 @@ Check these before calling a phase done.
 # Suggested build order
 
 1. Auth + database
-2. Authoring edit / delete (include confirm + success on those new actions)
-3. Payments + enrollment lifecycle (pending → confirmed → active)
-4. Integration events + retries
-5. AI + escalations
-6. Admin ops + notifications
+2. Integration-event retries (write of confirmed/completed is live)
+3. AI + escalations
+4. Admin ops + notifications

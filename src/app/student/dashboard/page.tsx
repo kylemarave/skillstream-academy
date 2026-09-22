@@ -9,6 +9,12 @@ import { QuickActionCard } from "@/components/dashboard/QuickActionCard";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { studentJourneySteps } from "@/components/dashboard/constants";
 import { requireRole } from "@/lib/auth";
+import {
+  canAccessLessons,
+  courseAccessState,
+  studentCourseActionLabel,
+  studentCourseHref,
+} from "@/lib/access";
 import { listLearningForStudent, listCourses } from "@/lib/db";
 import { studentNav } from "@/lib/nav";
 
@@ -21,26 +27,42 @@ export default async function StudentDashboardPage() {
 
   const enrolledCount = enrolled.length;
   const inProgressCount = enrolled.filter(
-    (item) => item.enrollment.status === "active",
+    (item) =>
+      item.enrollment.status === "active" &&
+      canAccessLessons(item.enrollment, item.lmsAccount),
   ).length;
   const certifiedCount = enrolled.filter((item) => item.certificate).length;
   const openCourses = catalog.filter(
     (course) => !enrolled.some((item) => item.course.id === course.id),
   );
-  const activeLearning = enrolled.find(
-    (item) => item.enrollment.status === "active",
+  const hasUnfinished = enrolled.some(
+    (item) =>
+      item.enrollment.status !== "completed" &&
+      item.enrollment.status !== "cancelled",
   );
-  const continueHref = activeLearning?.summary.nextLesson
-    ? `/student/learning/${activeLearning.course.id}/lessons/${activeLearning.summary.nextLesson.id}`
-    : activeLearning
-      ? `/student/learning/${activeLearning.course.id}`
-      : "/student/learning";
+  const continueItem =
+    enrolled.find(
+      (item) =>
+        item.enrollment.status === "active" &&
+        canAccessLessons(item.enrollment, item.lmsAccount),
+    ) ??
+    enrolled.find(
+      (item) =>
+        item.enrollment.status !== "completed" &&
+        item.enrollment.status !== "cancelled",
+    );
+  const continueHref = continueItem
+    ? studentCourseHref(continueItem.course.id, {
+        accessReady: canAccessLessons(
+          continueItem.enrollment,
+          continueItem.lmsAccount,
+        ),
+        certificateId: continueItem.certificate?.id,
+        nextLessonId: continueItem.summary.nextLesson?.id,
+      })
+    : "/student/learning";
   const journeyStep =
-    enrolledCount === 0
-      ? "enroll"
-      : inProgressCount === 0
-        ? "certify"
-        : "learn";
+    enrolledCount === 0 ? "enroll" : hasUnfinished ? "learn" : "certify";
 
   return (
     <AppShell
@@ -134,12 +156,19 @@ export default async function StudentDashboardPage() {
             </div>
             <ul className="divide-y divide-line">
               {enrolled.slice(0, 3).map(
-                ({ enrollment, course, summary, certificate }) => {
-                const href = certificate
-                  ? `/student/certificates/${certificate.id}`
-                  : summary.nextLesson
-                    ? `/student/learning/${course.id}/lessons/${summary.nextLesson.id}`
-                    : `/student/learning/${course.id}`;
+                ({ enrollment, course, summary, certificate, lmsAccount }) => {
+                const accessReady = canAccessLessons(enrollment, lmsAccount);
+                const href = studentCourseHref(course.id, {
+                  accessReady,
+                  certificateId: certificate?.id,
+                  nextLessonId: summary.nextLesson?.id,
+                });
+                const action = studentCourseActionLabel({
+                  accessReady,
+                  completed: enrollment.status === "completed",
+                  started: summary.completed > 0,
+                  hasCertificate: Boolean(certificate),
+                });
 
                 return (
                   <li
@@ -152,11 +181,15 @@ export default async function StudentDashboardPage() {
                         {course.title}
                       </p>
                       <p className="mt-0.5 text-sm text-muted">
-                        {certificate
-                          ? certificate.referenceNumber
-                          : enrollment.status === "completed"
-                            ? "Course complete"
-                            : `${summary.percent}% complete`}
+                        {!accessReady
+                          ? courseAccessState(lmsAccount) === "failed"
+                            ? "Course access did not provision"
+                            : "Setting up course access"
+                          : certificate
+                            ? certificate.referenceNumber
+                            : enrollment.status === "completed"
+                              ? "Course complete"
+                              : `${summary.percent}% complete`}
                       </p>
                     </div>
                     <EnrollmentBadge status={enrollment.status} />
@@ -164,11 +197,7 @@ export default async function StudentDashboardPage() {
                       href={href}
                       className="shrink-0 text-sm font-medium text-brand hover:text-brand-strong"
                     >
-                      {certificate
-                        ? "Certificate"
-                        : enrollment.status === "completed"
-                          ? "Review"
-                          : "Continue"}
+                      {action}
                     </Link>
                   </li>
                 );
@@ -215,8 +244,8 @@ export default async function StudentDashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <p className="shrink-0 text-sm font-medium tabular-nums">
-                    ${course.price.toFixed(2)}
+                  <p className="shrink-0 text-sm font-medium text-muted">
+                    Free
                   </p>
                 </li>
               ))}

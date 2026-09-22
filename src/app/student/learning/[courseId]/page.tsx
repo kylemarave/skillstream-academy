@@ -2,10 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { AccessNotice } from "@/components/AccessNotice";
 import { CourseOutline } from "@/components/player/CourseOutline";
 import { ProgressMeter } from "@/components/player/ProgressMeter";
 import { EnrollmentBadge } from "@/components/EnrollmentBadge";
 import { requireRole } from "@/lib/auth";
+import { accessCopy, canAccessLessons, courseAccessState } from "@/lib/access";
 import { getPlayerState } from "@/lib/db";
 import { studentNav } from "@/lib/nav";
 import { contentTypeLabels } from "@/lib/player";
@@ -21,10 +23,13 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
     notFound();
   }
 
-  const { enrollment, course, progress, summary } = state;
-  const continueHref = summary.nextLesson
-    ? `/student/learning/${course.id}/lessons/${summary.nextLesson.id}`
-    : null;
+  const { enrollment, course, progress, summary, lmsAccount } = state;
+  const accessReady = canAccessLessons(enrollment, lmsAccount);
+  const accessState = courseAccessState(lmsAccount);
+  const continueHref =
+    accessReady && summary.nextLesson
+      ? `/student/learning/${course.id}/lessons/${summary.nextLesson.id}`
+      : null;
   const courseComplete = enrollment.status === "completed";
 
   return (
@@ -45,6 +50,7 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
           courseId={course.id}
           modules={course.modules}
           progress={progress}
+          locked={!accessReady}
         />
 
         <div className="space-y-6">
@@ -53,11 +59,20 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
               <div>
                 <p className="eyebrow">Your progress</p>
                 <p className="mt-1 text-sm text-muted">
-                  Access is ready. Finish every lesson to complete the course.
+                  {accessReady
+                    ? accessCopy.ready.detail
+                    : "Lessons stay closed until course access is ready."}
                 </p>
               </div>
               <EnrollmentBadge status={enrollment.status} />
             </div>
+            <AccessNotice state={accessState} />
+            {course.status === "archived" ? (
+              <p className="mt-3 rounded-lg bg-subtle px-3 py-2 text-sm text-muted">
+                This course is archived and is no longer in the catalog. You
+                keep access because you enrolled.
+              </p>
+            ) : null}
             <div className="mt-4">
               <ProgressMeter
                 completed={summary.completed}
@@ -90,7 +105,7 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
             ) : null}
 
             <div className="mt-5">
-              {summary.total === 0 ? (
+              {!accessReady ? null : summary.total === 0 ? (
                 <p className="text-sm text-muted">
                   This course has no lessons yet. Check back after the instructor
                   adds content.
@@ -135,15 +150,24 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
                       <ul className="mt-2 space-y-1">
                         {courseModule.lessons.map((lesson) => (
                           <li key={lesson.id}>
-                            <Link
-                              href={`/student/learning/${course.id}/lessons/${lesson.id}`}
-                              className="text-sm text-brand hover:text-brand-strong"
-                            >
-                              {lesson.title}
-                              <span className="ml-2 text-muted">
-                                {contentTypeLabels[lesson.contentType]}
+                            {accessReady ? (
+                              <Link
+                                href={`/student/learning/${course.id}/lessons/${lesson.id}`}
+                                className="text-sm text-brand hover:text-brand-strong"
+                              >
+                                {lesson.title}
+                                <span className="ml-2 text-muted">
+                                  {contentTypeLabels[lesson.contentType]}
+                                </span>
+                              </Link>
+                            ) : (
+                              <span className="text-sm text-muted">
+                                {lesson.title}
+                                <span className="ml-2">
+                                  {contentTypeLabels[lesson.contentType]}
+                                </span>
                               </span>
-                            </Link>
+                            )}
                           </li>
                         ))}
                       </ul>

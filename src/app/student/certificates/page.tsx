@@ -14,7 +14,7 @@ export default async function StudentCertificatesPage() {
     <AppShell
       user={session}
       title="Certificates"
-      subtitle="Credentials issued when you finish a course. Share the reference so others can verify it."
+      subtitle="Credentials issued when you finish a course. Share a valid reference so others can verify it."
       nav={studentNav}
     >
       {records.length === 0 ? (

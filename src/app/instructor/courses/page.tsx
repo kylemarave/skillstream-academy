@@ -14,7 +14,7 @@ export default async function InstructorCoursesPage() {
     <AppShell
       user={session}
       title="My courses"
-      subtitle="Drafts are private to you. Published courses appear in the student catalog."
+      subtitle="Drafts are private. Published courses appear in the catalog. Archived courses stay in your library, and enrollments stay intact."
       nav={instructorNav}
       actions={
         <Link href="/instructor/courses/new" className="btn btn-primary">
@@ -27,7 +27,7 @@ export default async function InstructorCoursesPage() {
         <div className="card px-5 py-10">
           <p className="text-sm font-medium">No courses yet</p>
           <p className="mt-1 max-w-md text-sm text-muted">
-            Start with a title, description, and price. You can add modules and
+            Start with a title and description. You can add modules and
             lessons before publishing.
           </p>
           <Link href="/instructor/courses/new" className="btn btn-primary mt-4">
@@ -61,8 +61,8 @@ export default async function InstructorCoursesPage() {
                       {course.description || "No description yet."}
                     </p>
                   </div>
-                  <p className="text-sm text-muted tabular-nums sm:text-right">
-                    ${course.price.toFixed(2)} · updated{" "}
+                  <p className="text-sm text-muted sm:text-right">
+                    Updated{" "}
                     {new Date(course.updatedAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",

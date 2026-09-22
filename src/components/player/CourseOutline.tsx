@@ -8,11 +8,13 @@ export function CourseOutline({
   modules,
   progress,
   currentLessonId,
+  locked = false,
 }: {
   courseId: string;
   modules: Array<CourseModule & { lessons: Lesson[] }>;
   progress: LessonProgress[];
   currentLessonId?: string;
+  locked?: boolean;
 }) {
   return (
     <nav aria-label="Course outline" className="card overflow-hidden">
@@ -35,49 +37,63 @@ export function CourseOutline({
                   {courseModule.lessons.map((lesson) => {
                     const status = getLessonProgressStatus(progress, lesson.id);
                     const current = lesson.id === currentLessonId;
-
-                    return (
-                      <li key={lesson.id}>
-                        <Link
-                          href={`/student/learning/${courseId}/lessons/${lesson.id}`}
-                          aria-current={current ? "page" : undefined}
-                          className={`flex items-start gap-2 rounded-md px-2 py-1.5 text-sm ${
-                            current
-                              ? "bg-brand-soft font-medium text-brand-strong"
-                              : "text-ink hover:bg-subtle"
+                    const itemClass = `flex items-start gap-2 rounded-md px-2 py-1.5 text-sm ${
+                      current
+                        ? "bg-brand-soft font-medium text-brand-strong"
+                        : locked
+                          ? "text-muted"
+                          : "text-ink hover:bg-subtle"
+                    }`;
+                    const itemBody = (
+                      <>
+                        <span
+                          className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full ${
+                            status === "completed"
+                              ? "bg-success text-white"
+                              : status === "in_progress"
+                                ? "border border-brand bg-brand-soft"
+                                : "border border-line-strong"
                           }`}
+                          aria-hidden="true"
                         >
-                          <span
-                            className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full ${
-                              status === "completed"
-                                ? "bg-success text-white"
-                                : status === "in_progress"
-                                  ? "border border-brand bg-brand-soft"
-                                  : "border border-line-strong"
-                            }`}
-                            aria-hidden="true"
-                          >
-                            {status === "completed" ? (
-                              <Check size={10} strokeWidth={3} />
-                            ) : null}
-                          </span>
-                          <span className="min-w-0">
-                            <span className="sr-only">
-                              {status === "completed"
+                          {status === "completed" ? (
+                            <Check size={10} strokeWidth={3} />
+                          ) : null}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="sr-only">
+                            {locked
+                              ? "Locked. "
+                              : status === "completed"
                                 ? "Completed. "
                                 : status === "in_progress"
                                   ? "In progress. "
                                   : "Not started. "}
-                            </span>
-                            <span className="block leading-5">{lesson.title}</span>
-                            <span className="mt-0.5 block text-xs font-normal text-muted">
-                              {contentTypeLabels[lesson.contentType]}
-                              {lesson.durationMinutes
-                                ? ` · ${lesson.durationMinutes} min`
-                                : ""}
-                            </span>
                           </span>
-                        </Link>
+                          <span className="block leading-5">{lesson.title}</span>
+                          <span className="mt-0.5 block text-xs font-normal text-muted">
+                            {contentTypeLabels[lesson.contentType]}
+                            {lesson.durationMinutes
+                              ? ` · ${lesson.durationMinutes} min`
+                              : ""}
+                          </span>
+                        </span>
+                      </>
+                    );
+
+                    return (
+                      <li key={lesson.id}>
+                        {locked ? (
+                          <span className={itemClass}>{itemBody}</span>
+                        ) : (
+                          <Link
+                            href={`/student/learning/${courseId}/lessons/${lesson.id}`}
+                            aria-current={current ? "page" : undefined}
+                            className={itemClass}
+                          >
+                            {itemBody}
+                          </Link>
+                        )}
                       </li>
                     );
                   })}

@@ -13,6 +13,9 @@ import type {
   User,
 } from "./types";
 import { normalizeReference } from "./certificates";
+import { recordIntegrationEvent } from "./integrationEvents";
+import { canAccessLessons } from "./access";
+import { attentionReason, lastActivityAt, needsAttention } from "./roster";
 
 const DATA_PATH = path.join(process.cwd(), "data", "store.json");
 
@@ -28,6 +31,7 @@ async function readStore(): Promise<DataStore> {
     lmsAccounts: parsed.lmsAccounts ?? [],
     lessonProgress: parsed.lessonProgress ?? [],
     certificates: parsed.certificates ?? [],
+    integrationEvents: parsed.integrationEvents ?? [],
   };
 }
 
@@ -86,7 +90,7 @@ export async function createCourse(
 
 export async function updateCourse(
   id: string,
-  input: Partial<Pick<Course, "title" | "description" | "price" | "status">>,
+  input: Partial<Pick<Course, "title" | "description" | "status">>,
 ): Promise<Course | undefined> {
   const store = await readStore();
   const index = store.courses.findIndex((course) => course.id === id);
@@ -143,6 +147,199 @@ export async function createLesson(
   store.lessons.push(lesson);
   await writeStore(store);
   return lesson;
+}
+
+function resequence<T extends { sequenceOrder: number }>(items: T[]) {
+  return items
+    .sort((a, b) => a.sequenceOrder - b.sequenceOrder)
+    .map((item, index) => ({ ...item, sequenceOrder: index + 1 }));
+}
+
+function swapSequence<T extends { id: string; sequenceOrder: number }>(
+  items: T[],
+  id: string,
+  direction: "up" | "down",
+) {
+  const ordered = [...items].sort((a, b) => a.sequenceOrder - b.sequenceOrder);
+  const index = ordered.findIndex((item) => item.id === id);
+  if (index === -1) return null;
+
+  const target = direction === "up" ? index - 1 : index + 1;
+  if (target < 0 || target >= ordered.length) return ordered;
+
+  const current = ordered[index];
+  ordered[index] = ordered[target];
+  ordered[target] = current;
+  return ordered.map((item, nextIndex) => ({
+    ...item,
+    sequenceOrder: nextIndex + 1,
+  }));
+}
+
+export async function updateModule(
+  id: string,
+  input: Partial<Pick<CourseModule, "title">>,
+): Promise<CourseModule | undefined> {
+  const store = await readStore();
+  const index = store.modules.findIndex((courseModule) => courseModule.id === id);
+  if (index === -1) return undefined;
+
+  store.modules[index] = {
+    ...store.modules[index],
+    ...input,
+  };
+  await writeStore(store);
+  return store.modules[index];
+}
+
+export async function deleteModule(courseId: string, moduleId: string) {
+  const store = await readStore();
+  const courseModule = store.modules.find(
+    (item) => item.id === moduleId && item.courseId === courseId,
+  );
+  if (!courseModule) return { ok: false as const };
+
+  const lessonIds = new Set(
+    store.lessons
+      .filter((lesson) => lesson.moduleId === moduleId)
+      .map((lesson) => lesson.id),
+  );
+
+  store.lessons = store.lessons.filter((lesson) => lesson.moduleId !== moduleId);
+  store.lessonProgress = store.lessonProgress.filter(
+    (progress) => !lessonIds.has(progress.lessonId),
+  );
+  const remaining = store.modules.filter((item) => item.id !== moduleId);
+  store.modules = [
+    ...remaining.filter((item) => item.courseId !== courseId),
+    ...resequence(remaining.filter((item) => item.courseId === courseId)),
+  ];
+  await writeStore(store);
+  return { ok: true as const };
+}
+
+export async function moveModule(
+  courseId: string,
+  moduleId: string,
+  direction: "up" | "down",
+) {
+  const store = await readStore();
+  const courseModules = store.modules.filter(
+    (item) => item.courseId === courseId,
+  );
+  const next = swapSequence(courseModules, moduleId, direction);
+  if (!next) return undefined;
+
+  const byId = new Map(next.map((item) => [item.id, item.sequenceOrder]));
+  store.modules = store.modules.map((item) =>
+    item.courseId === courseId && byId.has(item.id)
+      ? { ...item, sequenceOrder: byId.get(item.id)! }
+      : item,
+  );
+  await writeStore(store);
+  return store.modules
+    .filter((item) => item.courseId === courseId)
+    .sort((a, b) => a.sequenceOrder - b.sequenceOrder);
+}
+
+export async function updateLesson(
+  id: string,
+  input: Partial<Pick<Lesson, "title" | "contentType" | "contentRef" | "durationMinutes">>,
+): Promise<Lesson | undefined> {
+  const store = await readStore();
+  const index = store.lessons.findIndex((lesson) => lesson.id === id);
+  if (index === -1) return undefined;
+
+  store.lessons[index] = {
+    ...store.lessons[index],
+    ...input,
+  };
+  await writeStore(store);
+  return store.lessons[index];
+}
+
+export async function deleteLesson(moduleId: string, lessonId: string) {
+  const store = await readStore();
+  const lesson = store.lessons.find(
+    (item) => item.id === lessonId && item.moduleId === moduleId,
+  );
+  if (!lesson) return { ok: false as const };
+
+  store.lessonProgress = store.lessonProgress.filter(
+    (progress) => progress.lessonId !== lessonId,
+  );
+  store.lessons = [
+    ...store.lessons.filter((item) => item.moduleId !== moduleId),
+    ...resequence(
+      store.lessons.filter(
+        (item) => item.moduleId === moduleId && item.id !== lessonId,
+      ),
+    ),
+  ];
+  await writeStore(store);
+  return { ok: true as const };
+}
+
+export async function moveLesson(
+  moduleId: string,
+  lessonId: string,
+  direction: "up" | "down",
+) {
+  const store = await readStore();
+  const lessons = store.lessons.filter((item) => item.moduleId === moduleId);
+  const next = swapSequence(lessons, lessonId, direction);
+  if (!next) return undefined;
+
+  const byId = new Map(next.map((item) => [item.id, item.sequenceOrder]));
+  store.lessons = store.lessons.map((item) =>
+    item.moduleId === moduleId && byId.has(item.id)
+      ? { ...item, sequenceOrder: byId.get(item.id)! }
+      : item,
+  );
+  await writeStore(store);
+  return store.lessons
+    .filter((item) => item.moduleId === moduleId)
+    .sort((a, b) => a.sequenceOrder - b.sequenceOrder);
+}
+
+export async function deleteCourse(courseId: string) {
+  const store = await readStore();
+  const course = store.courses.find((item) => item.id === courseId);
+  if (!course) return { ok: false as const, error: "Course not found.", status: 404 };
+
+  const hasEnrollment = store.enrollments.some(
+    (enrollment) =>
+      enrollment.courseId === courseId && enrollment.status !== "cancelled",
+  );
+  if (hasEnrollment) {
+    return {
+      ok: false as const,
+      error: "This course has enrollments. Archive it instead of deleting.",
+      status: 409,
+    };
+  }
+
+  const moduleIds = new Set(
+    store.modules
+      .filter((item) => item.courseId === courseId)
+      .map((item) => item.id),
+  );
+  const lessonIds = new Set(
+    store.lessons
+      .filter((lesson) => moduleIds.has(lesson.moduleId))
+      .map((lesson) => lesson.id),
+  );
+
+  store.lessonProgress = store.lessonProgress.filter(
+    (progress) => !lessonIds.has(progress.lessonId),
+  );
+  store.lessons = store.lessons.filter(
+    (lesson) => !moduleIds.has(lesson.moduleId),
+  );
+  store.modules = store.modules.filter((item) => item.courseId !== courseId);
+  store.courses = store.courses.filter((item) => item.id !== courseId);
+  await writeStore(store);
+  return { ok: true as const };
 }
 
 export async function getCourseWithContent(courseId: string) {
@@ -228,6 +425,11 @@ export async function listRosterByCourse(courseId: string) {
   return enrollments.flatMap((enrollment, index) => {
     const student = students[index];
     if (!student) return [];
+    const progress = progressForEnrollment(store, enrollment.id);
+    const activityAt = lastActivityAt(progress);
+    const lmsAccount =
+      store.lmsAccounts.find((item) => item.enrollmentId === enrollment.id) ??
+      null;
     return [
       {
         enrollment,
@@ -237,10 +439,20 @@ export async function listRosterByCourse(courseId: string) {
           lastName: student.lastName,
           email: student.email,
         },
-        summary: summarizeProgress(
-          lessons,
-          progressForEnrollment(store, enrollment.id),
+        summary: summarizeProgress(lessons, progress),
+        progress,
+        lastActivityAt: activityAt,
+        needsAttention: needsAttention(
+          enrollment,
+          activityAt,
+          lmsAccount?.syncStatus,
         ),
+        attentionReason: attentionReason(
+          enrollment,
+          activityAt,
+          lmsAccount?.syncStatus,
+        ),
+        lmsAccount,
         certificate:
           store.certificates.find(
             (item) => item.enrollmentId === enrollment.id,
@@ -250,9 +462,67 @@ export async function listRosterByCourse(courseId: string) {
   });
 }
 
+export async function getRosterDetail(courseId: string, enrollmentId: string) {
+  const course = await getCourseWithContent(courseId);
+  if (!course) return null;
+
+  const roster = await listRosterByCourse(courseId);
+  const row = roster.find((item) => item.enrollment.id === enrollmentId);
+  if (!row) return null;
+
+  return { ...row, course };
+}
+
 export type EnrollResult =
   | { ok: true; enrollment: Enrollment; lmsAccount: LmsAccount }
   | { ok: false; error: string; status: number; enrollment?: Enrollment };
+
+function lmsAccountForEnrollment(store: DataStore, enrollmentId: string) {
+  return (
+    store.lmsAccounts.find((item) => item.enrollmentId === enrollmentId) ?? null
+  );
+}
+
+function provisionLmsAccount(
+  store: DataStore,
+  enrollment: Enrollment,
+  lmsAccount: LmsAccount,
+  now: string,
+  ok = true,
+) {
+  if (ok) {
+    lmsAccount.syncStatus = "provisioned";
+    lmsAccount.provisionedAt = now;
+    lmsAccount.externalLmsId = `lms-${enrollment.id.slice(0, 8)}`;
+    lmsAccount.updatedAt = now;
+    if (enrollment.status === "pending" || enrollment.status === "confirmed") {
+      enrollment.status = "active";
+      enrollment.enrolledAt = enrollment.enrolledAt ?? now;
+      enrollment.updatedAt = now;
+    }
+  } else {
+    lmsAccount.syncStatus = "failed";
+    lmsAccount.provisionedAt = null;
+    lmsAccount.externalLmsId = null;
+    lmsAccount.updatedAt = now;
+  }
+
+  recordIntegrationEvent(store, {
+    enrollmentId: enrollment.id,
+    eventType: "enrollment.confirmed",
+    payload: {
+      courseId: enrollment.courseId,
+      studentId: enrollment.studentId,
+      lmsAccountId: lmsAccount.id,
+      syncStatus: lmsAccount.syncStatus,
+    },
+    ok,
+    error: ok ? undefined : "LMS provisioning failed.",
+    at: now,
+  });
+
+  return lmsAccount;
+}
 
 export async function enrollStudent(
   studentId: string,
@@ -294,7 +564,7 @@ export async function enrollStudent(
     id: randomUUID(),
     studentId,
     courseId,
-    status: "active",
+    status: "confirmed",
     enrolledAt: now,
     completedAt: null,
     createdAt: now,
@@ -304,15 +574,16 @@ export async function enrollStudent(
   const lmsAccount: LmsAccount = {
     id: randomUUID(),
     enrollmentId: enrollment.id,
-    provisionedAt: now,
-    syncStatus: "provisioned",
-    externalLmsId: `lms-${enrollment.id.slice(0, 8)}`,
+    provisionedAt: null,
+    syncStatus: "pending",
+    externalLmsId: null,
     createdAt: now,
     updatedAt: now,
   };
 
   store.enrollments.push(enrollment);
   store.lmsAccounts.push(lmsAccount);
+  provisionLmsAccount(store, enrollment, lmsAccount, now, true);
   await writeStore(store);
 
   return { ok: true, enrollment, lmsAccount };
@@ -379,7 +650,8 @@ export async function listLearningForStudent(studentId: string) {
         store.certificates.find(
           (item) => item.enrollmentId === enrollment.id,
         ) ?? null;
-      return { enrollment, course, summary, certificate };
+      const lmsAccount = lmsAccountForEnrollment(store, enrollment.id);
+      return { enrollment, course, summary, certificate, lmsAccount };
     }),
   );
 }
@@ -395,12 +667,21 @@ export async function getPlayerState(studentId: string, courseId: string) {
   const progress = progressForEnrollment(store, enrollment.id);
   const lessons = flattenCourseLessons(course.modules);
   const summary = summarizeProgress(lessons, progress);
+  const lmsAccount = lmsAccountForEnrollment(store, enrollment.id);
   const certificate =
     enrollment.status === "completed"
       ? await getCertificateForEnrollment(enrollment.id)
       : null;
 
-  return { enrollment, course, progress, lessons, summary, certificate };
+  return {
+    enrollment,
+    course,
+    progress,
+    lessons,
+    summary,
+    certificate,
+    lmsAccount,
+  };
 }
 
 export async function startLesson(
@@ -417,6 +698,15 @@ export async function startLesson(
   );
   if (!enrollment) {
     return { ok: false as const, error: "Not enrolled.", status: 404 };
+  }
+
+  const lmsAccount = lmsAccountForEnrollment(store, enrollment.id);
+  if (!canAccessLessons(enrollment, lmsAccount)) {
+    return {
+      ok: false as const,
+      error: "Course access is not ready.",
+      status: 403,
+    };
   }
 
   const lesson = store.lessons.find((item) => item.id === lessonId);
@@ -594,6 +884,18 @@ function issueCertificateIfEligible(
     createdAt: now,
   };
   store.certificates.push(certificate);
+  recordIntegrationEvent(store, {
+    enrollmentId: enrollment.id,
+    eventType: "enrollment.completed",
+    payload: {
+      courseId: enrollment.courseId,
+      studentId: enrollment.studentId,
+      certificateId: certificate.id,
+      referenceNumber: certificate.referenceNumber,
+    },
+    ok: true,
+    at: now,
+  });
   return certificate;
 }
 
@@ -616,6 +918,43 @@ export async function getCertificateForEnrollment(enrollmentId: string) {
     await writeStore(store);
   }
   return certificate;
+}
+
+export async function revokeCertificate(
+  instructorId: string,
+  courseId: string,
+  enrollmentId: string,
+) {
+  const store = await readStore();
+  const course = store.courses.find((item) => item.id === courseId);
+  if (!course) {
+    return { ok: false as const, error: "Course not found.", status: 404 };
+  }
+  if (course.instructorId !== instructorId) {
+    return { ok: false as const, error: "Forbidden.", status: 403 };
+  }
+
+  const enrollment = store.enrollments.find(
+    (item) => item.id === enrollmentId && item.courseId === courseId,
+  );
+  if (!enrollment) {
+    return { ok: false as const, error: "Enrollment not found.", status: 404 };
+  }
+
+  const index = store.certificates.findIndex(
+    (item) => item.enrollmentId === enrollmentId,
+  );
+  if (index === -1) {
+    return { ok: false as const, error: "No certificate to revoke.", status: 404 };
+  }
+
+  store.certificates[index] = {
+    ...store.certificates[index],
+    verificationStatus: "revoked",
+  };
+  await writeStore(store);
+
+  return { ok: true as const, certificate: store.certificates[index] };
 }
 
 export async function listCertificatesForStudent(studentId: string) {

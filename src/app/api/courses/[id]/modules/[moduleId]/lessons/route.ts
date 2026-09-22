@@ -6,6 +6,11 @@ import {
   listLessonsByModule,
   listModulesByCourse,
 } from "@/lib/db";
+import {
+  isLessonContentType,
+  parseDurationMinutes,
+  validateContentRef,
+} from "@/lib/lessonContent";
 
 type RouteContext = { params: Promise<{ id: string; moduleId: string }> };
 
@@ -54,13 +59,30 @@ export async function POST(request: Request, context: RouteContext) {
 
   const body = (await request.json()) as {
     title?: string;
-    contentType?: "video" | "text" | "quiz" | "assignment";
-    contentRef?: string;
-    durationMinutes?: number | null;
+    contentType?: unknown;
+    contentRef?: unknown;
+    durationMinutes?: unknown;
   };
 
   if (!body.title?.trim()) {
     return NextResponse.json({ error: "Title is required." }, { status: 400 });
+  }
+
+  const contentType = body.contentType ?? "text";
+  if (!isLessonContentType(contentType)) {
+    return NextResponse.json({ error: "Unknown lesson type." }, { status: 400 });
+  }
+
+  const duration = parseDurationMinutes(body.durationMinutes);
+  if (!duration.ok) {
+    return NextResponse.json({ error: duration.error }, { status: 400 });
+  }
+
+  const contentRef =
+    typeof body.contentRef === "string" ? body.contentRef.trim() : "";
+  const contentError = validateContentRef(contentType, contentRef);
+  if (contentError) {
+    return NextResponse.json({ error: contentError }, { status: 400 });
   }
 
   const existing = await listLessonsByModule(moduleId);
@@ -68,9 +90,9 @@ export async function POST(request: Request, context: RouteContext) {
     moduleId,
     title: body.title.trim(),
     sequenceOrder: existing.length + 1,
-    contentType: body.contentType ?? "text",
-    contentRef: body.contentRef?.trim() ?? "",
-    durationMinutes: body.durationMinutes ?? null,
+    contentType,
+    contentRef,
+    durationMinutes: duration.value,
   });
 
   return NextResponse.json(lesson, { status: 201 });

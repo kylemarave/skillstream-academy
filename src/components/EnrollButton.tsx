@@ -4,19 +4,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
-import { withConfirmed } from "@/lib/confirmations";
+import { withConfirmed, type ConfirmationKey } from "@/lib/confirmations";
 import { ConfirmDialog, useConfirmDialog } from "./feedback/ConfirmDialog";
+import type { CourseAccessState } from "@/lib/access";
 
 interface EnrollButtonProps {
   courseId: string;
   courseTitle: string;
   enrolled: boolean;
+  accessState?: CourseAccessState;
 }
 
 export function EnrollButton({
   courseId,
   courseTitle,
   enrolled,
+  accessState = "ready",
 }: EnrollButtonProps) {
   const router = useRouter();
   const confirm = useConfirmDialog();
@@ -32,14 +35,24 @@ export function EnrollButton({
           body: JSON.stringify({ courseId }),
         });
 
-        const data = (await response.json()) as { error?: string };
+        const data = (await response.json()) as {
+          error?: string;
+          lmsAccount?: { syncStatus?: string };
+        };
 
         if (!response.ok) {
           setError(data.error ?? "Enrollment could not be completed.");
           return;
         }
 
-        router.push(withConfirmed(`/student/learning/${courseId}`, "enrolled"));
+        const confirmation: ConfirmationKey =
+          data.lmsAccount?.syncStatus === "failed"
+            ? "access-failed"
+            : data.lmsAccount?.syncStatus === "pending"
+              ? "access-pending"
+              : "enrolled";
+
+        router.push(withConfirmed(`/student/learning/${courseId}`, confirmation));
         router.refresh();
       } catch {
         setError("Enrollment could not be completed. Check your connection.");
@@ -48,12 +61,19 @@ export function EnrollButton({
   }
 
   if (enrolled) {
+    const accessHint =
+      accessState === "failed"
+        ? "Course access did not provision."
+        : accessState === "pending"
+          ? "Setting up course access."
+          : "Access is ready.";
+
     return (
       <div className="sm:text-right">
         <Link href={`/student/learning/${courseId}`} className="btn btn-secondary w-full">
           Open course
         </Link>
-        <p className="mt-1.5 text-xs text-muted">Access is ready.</p>
+        <p className="mt-1.5 text-xs text-muted">{accessHint}</p>
       </div>
     );
   }
@@ -72,7 +92,7 @@ export function EnrollButton({
         {confirm.busy ? "Enrolling…" : "Enroll"}
       </button>
       <p className="mt-1.5 text-xs text-muted">
-        Demo: no payment is collected. Confirming opens access immediately.
+        Free. Confirming sets up course access.
       </p>
       {error ? (
         <p role="alert" className="mt-2 text-sm text-danger">
@@ -83,7 +103,7 @@ export function EnrollButton({
       <ConfirmDialog
         open={confirm.open}
         title="Enroll in this course?"
-        description={`${courseTitle} — access is provisioned as soon as you confirm. No payment is collected in this demo.`}
+        description={`${courseTitle} is free. Confirming sets up course access.`}
         confirmLabel="Confirm enrollment"
         busy={confirm.busy}
         onConfirm={handleEnroll}

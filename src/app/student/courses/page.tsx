@@ -2,22 +2,25 @@ import { AppShell } from "@/components/AppShell";
 import { CourseCover } from "@/components/dashboard/CourseCover";
 import { EnrollButton } from "@/components/EnrollButton";
 import { requireRole } from "@/lib/auth";
-import { listCourses, listEnrollments } from "@/lib/db";
+import { courseAccessState } from "@/lib/access";
+import { listCourses, listLearningForStudent } from "@/lib/db";
 import { studentNav } from "@/lib/nav";
 
 export default async function StudentCoursesPage() {
   const session = await requireRole(["student"]);
-  const [courses, enrollments] = await Promise.all([
+  const [courses, enrolled] = await Promise.all([
     listCourses({ status: "published" }),
-    listEnrollments({ studentId: session.id }),
+    listLearningForStudent(session.id),
   ]);
-  const enrolledIds = new Set(enrollments.map((item) => item.courseId));
+  const enrolledByCourse = new Map(
+    enrolled.map((item) => [item.course.id, item]),
+  );
 
   return (
     <AppShell
       user={session}
       title="Course catalog"
-      subtitle="Confirm a place on a published course. Access is provisioned as soon as you enroll."
+      subtitle="All courses are free. Confirm a place; access is set up after you enroll."
       nav={studentNav}
     >
       {courses.length === 0 ? (
@@ -50,20 +53,21 @@ export default async function StudentCoursesPage() {
                       {course.description || "No description yet."}
                     </p>
                     <p className="mt-2 text-xs text-muted">
-                      Self-paced · access granted on enrollment
+                      Self-paced · access after enrollment
                     </p>
                   </div>
                 </div>
 
                 <div className="sm:w-48">
-                  <p className="text-lg font-semibold tabular-nums sm:text-right">
-                    ${course.price.toFixed(2)}
-                  </p>
+                  <p className="text-sm font-medium sm:text-right">Free</p>
                   <div className="mt-2">
                     <EnrollButton
                       courseId={course.id}
                       courseTitle={course.title}
-                      enrolled={enrolledIds.has(course.id)}
+                      enrolled={enrolledByCourse.has(course.id)}
+                      accessState={courseAccessState(
+                        enrolledByCourse.get(course.id)?.lmsAccount,
+                      )}
                     />
                   </div>
                 </div>

@@ -27,6 +27,7 @@ export function ConfirmedBanner() {
   return (
     <div className="mb-6">
       <ActionNotice
+        tone={copy.tone ?? "success"}
         title={copy.title}
         detail={copy.detail}
         onDismiss={dismiss}

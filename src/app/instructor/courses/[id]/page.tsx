@@ -2,11 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { CourseDetailsForm } from "@/components/CourseDetailsForm";
 import { CoursePublishControl } from "@/components/CoursePublishControl";
 import { StatusBadge } from "@/components/StatusBadge";
 import { requireRole } from "@/lib/auth";
 import { instructorNav } from "@/lib/nav";
 import { getCourseWithContent, listEnrollments } from "@/lib/db";
+import { coursePublishChecklist } from "@/lib/publishChecklist";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -36,14 +38,8 @@ export default async function InstructorCourseDetailPage({ params }: PageProps) 
       <div className="space-y-6">
         <section
           aria-label="Course summary"
-          className="card grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4"
+          className="card grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0"
         >
-          <div className="px-5 py-4">
-            <p className="text-sm text-muted">Price</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums">
-              ${course.price.toFixed(2)}
-            </p>
-          </div>
           <div className="px-5 py-4">
             <p className="text-sm text-muted">Modules</p>
             <p className="mt-1 text-xl font-semibold tabular-nums">
@@ -111,10 +107,19 @@ export default async function InstructorCourseDetailPage({ params }: PageProps) 
           </div>
         </section>
 
+        <CourseDetailsForm
+          courseId={course.id}
+          title={course.title}
+          description={course.description}
+          enrolledCount={enrollments.length}
+        />
+
         <CoursePublishControl
           courseId={course.id}
           status={course.status}
-          hasContent={lessonCount > 0}
+          checklist={coursePublishChecklist(course)}
+          modulesHref={`/instructor/courses/${course.id}/modules`}
+          enrolledCount={enrollments.length}
         />
       </div>
     </AppShell>

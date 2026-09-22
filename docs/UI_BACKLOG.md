@@ -49,7 +49,8 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 - Replace the disabled enrollment control with a working enrollment flow.
 - Capture enrollment confirmation and create the linked LMS account.
-- Show success, payment failure, provisioning-in-progress, and provisioning-failed states.
+- Show success, provisioning-in-progress, and provisioning-failed states. Courses are free; there is no payment-failed state.
+- Enrollment becomes active only after LMS access is provisioned; the player stays blocked until then.
 - Acceptance: a student can enroll and see the course become active without editing seed data.
 
 ### Build the student course player
@@ -62,7 +63,13 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 - Generate a certificate record when course completion occurs.
 - Add student certificate history and a public reference-number verification page.
-- Acceptance: a completed enrollment produces a certificate that can be verified without signing in.
+- Instructor revoke is live: confirm, keep the reference, public verify shows revoked. Cannot undo in the product UI. Enrollment stays completed. PDF files stay Planned.
+- Acceptance: a completed enrollment produces a certificate that can be verified without signing in. Revoking it does not delete the public record.
+
+### Record live integration events
+
+- `enrollment.confirmed` is written when LMS access is provisioned. `enrollment.completed` is written when a certificate is issued. Duplicate succeeded events are not stored. Retry with backoff stays Planned.
+- Acceptance: those two handoffs leave a succeeded (or failed) event on the enrollment.
 
 ### Replace demo authentication
 
@@ -81,10 +88,10 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Finish course authoring
 
-- Edit and delete course details, modules, and lessons.
-- Support lesson type, content URL/body, duration, quiz configuration, and ordering.
-- Add autosave or explicit save confirmation.
-- Add a course completeness checklist before publishing.
+- Edit, delete, and up/down reorder for course details, modules, and lessons are live, with confirm-before delete and Saved / Deleted / Order saved notices. Course delete is blocked when enrollments exist.
+- Lesson type, reading/video URL, duration, and quiz prompt/choices are live. Scoring still auto-records 100 and stays Planned.
+- Completeness checklist is live on the course page. Publish stays disabled until required items pass (title, ≥1 module, every module has a lesson, every lesson has a title and type-appropriate content). Duration is optional. The API rejects incomplete publish. A published course that later fails the checklist stays listed with a warning until the instructor returns it to draft or archives it.
+- Archive is live: confirm, leave the catalog, keep enrollments/progress/certificates. Restore returns the course to draft. Delete stays blocked when enrollments exist.
 
 ### Add admin course review
 
@@ -95,8 +102,7 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 ### Build roster and progress monitoring
 
 - List enrolled students by course.
-- Show progress percentage, last activity, completion date, and students needing attention.
-- Add an accessible student detail view.
+- Last activity, completion date, needs-attention (no lesson started, idle 7 days, or LMS provision failed), and student detail with lesson status are live.
 
 ### Build the AI escalation inbox
 
@@ -106,7 +112,7 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Add complete interaction feedback
 
-- Confirm-before dialogs now cover sign in, enroll, complete lesson, create course, add module/lesson, publish, unpublish, verify, and log out.
+- Confirm-before dialogs now cover sign in, enroll, complete lesson, create course, add module/lesson, publish, unpublish, archive, restore, verify, revoke certificate, and log out.
 - Inline or redirect success notices now cover those same mutations.
 - Add skeletons for route-level loading.
 - Add retry actions for network and server failures.
@@ -122,7 +128,7 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Catalog discovery
 
-- Implement search, topic filters, price filters, sorting, and pagination.
+- Implement search, topic filters, sorting, and pagination.
 - Add course outcomes, duration, level, prerequisites, and instructor profile.
 
 ### Notifications

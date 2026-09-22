@@ -11,7 +11,6 @@ export function CreateCourseForm() {
   const confirm = useConfirmDialog();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("49.99");
   const [error, setError] = useState("");
 
   function handleSubmit(event: FormEvent) {
@@ -28,7 +27,6 @@ export function CreateCourseForm() {
         body: JSON.stringify({
           title,
           description,
-          price: Number(price),
           status: "draft",
         }),
       });
@@ -79,22 +77,6 @@ export function CreateCourseForm() {
               placeholder="What students will learn and what they can do afterwards."
             />
             <p className="hint mt-1.5">Shown in the student catalog.</p>
-          </div>
-
-          <div className="max-w-40">
-            <label className="label" htmlFor="course-price">
-              Price (USD)
-            </label>
-            <input
-              id="course-price"
-              type="number"
-              min="0"
-              step="0.01"
-              value={price}
-              onChange={(event) => setPrice(event.target.value)}
-              className="field mt-1.5 tabular-nums"
-              required
-            />
           </div>
 
           {error ? (

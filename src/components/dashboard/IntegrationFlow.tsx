@@ -14,7 +14,8 @@ export function IntegrationFlow() {
         Automated handoffs
       </h2>
       <p className="mt-1 text-sm text-muted">
-        What the platform is designed to do without manual work.
+        Live handoffs are recorded as integration events. Retry of failed
+        events is Planned.
       </p>
 
       <ul className="mt-4 divide-y divide-line border-t border-line">

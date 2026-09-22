@@ -41,7 +41,6 @@ export async function POST(request: Request) {
   const body = (await request.json()) as {
     title?: string;
     description?: string;
-    price?: number;
     status?: "draft" | "published";
   };
 
@@ -49,12 +48,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Title is required." }, { status: 400 });
   }
 
+  if (body.status === "published") {
+    return NextResponse.json(
+      { error: "Cannot publish yet. Add modules and lessons first." },
+      { status: 400 },
+    );
+  }
+
   const course = await createCourse({
     instructorId: session.id,
     title: body.title.trim(),
     description: body.description?.trim() ?? "",
-    price: Number(body.price ?? 0),
-    status: body.status === "published" ? "published" : "draft",
+    status: "draft",
   });
 
   return NextResponse.json(course, { status: 201 });

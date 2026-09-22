@@ -88,8 +88,8 @@ export default async function InstructorDashboardPage() {
             <div className="px-5 py-8">
               <p className="text-sm font-medium">No courses yet</p>
               <p className="mt-1 max-w-md text-sm text-muted">
-                Create one with a title and price, then add modules and lessons
-                before publishing it.
+                Create one with a title and description, then add modules and
+                lessons before publishing it.
               </p>
               <Link
                 href="/instructor/courses/new"
@@ -112,8 +112,8 @@ export default async function InstructorDashboardPage() {
                       <p className="truncate text-sm font-medium">
                         {course.title}
                       </p>
-                      <p className="mt-0.5 text-sm text-muted tabular-nums">
-                        ${course.price.toFixed(2)} · updated{" "}
+                      <p className="mt-0.5 text-sm text-muted">
+                        Updated{" "}
                         {new Date(course.updatedAt).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
@@ -137,7 +137,7 @@ export default async function InstructorDashboardPage() {
           <div className="divide-y divide-line">
             <QuickActionCard
               title="Create a course"
-              description="Set the title, description, and price."
+              description="Set the title and description."
               href="/instructor/courses/new"
               icon={PenLine}
             />

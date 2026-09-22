@@ -16,7 +16,7 @@ Also real: students (browse, enroll, complete lessons, share a certificate refer
 
 Skillstream Academy is a single-academy learning platform whose job is to connect enrollment, course access, completion, and a publicly verifiable credential so nobody has to chase those handoffs by hand.
 
-Success for the primary user: they can sign in as student and instructor, complete the published path, and verify a certificate without logging in — and they can still see the rest of the intended V1 (AI assistant, escalations, payments, PDF certificates) labeled as planned rather than missing.
+Success for the primary user: they can sign in as student and instructor, complete the published path, and verify a certificate without logging in — and they can still see the rest of the intended V1 (AI assistant, escalations, PDF certificates) labeled as planned rather than missing.
 
 ## Positioning
 
@@ -27,7 +27,7 @@ Two claims a generic LMS install would not automatically make true:
 
 ## Operating Context
 
-Evaluators use seeded demo accounts (student, instructor, admin) on a local Next.js app. Data lives in a JSON file store until a real database exists. Payment is not collected; enrollment still opens access immediately and that is stated as a demo.
+Evaluators use seeded demo accounts (student, instructor, admin) on a local Next.js app. Data lives in a JSON file store until a real database exists. Courses are free; confirming enrollment sets up course access.
 
 V1 scope from the approved ERD: one academy, one instructor per course. The human journey is enroll → learn → get certified. Supporting integrations in the model: registration ↔ LMS, LMS ↔ certificates, portal ↔ AI assistant with instructor escalation.
 
@@ -35,9 +35,9 @@ V1 scope from the approved ERD: one academy, one instructor per course. The huma
 
 Working in this prototype: role login, instructor course/module/lesson create and publish, student catalog and enrollment, LMS account provisioned on enroll, lesson player with progress, enrollment completed when all lessons are done, certificate issued on completion, public `/verify` by reference.
 
-Not implemented and must not be presented as live: real payments, hashed production auth, relational database, PDF certificate files, AI chat, escalation inbox, admin operations, edit/delete authoring.
+Not implemented and must not be presented as live: hashed production auth, relational database, PDF certificate files, AI chat, escalation inbox, admin operations.
 
-Open tension (confirmed both): the judged path must not fake completion; the full V1 story (including AI, escalations, payments) stays visible where it is not built. Record planned work as planned. Do not ship UI that looks like those systems already ran.
+Open tension (confirmed both): the judged path must not fake completion; the full V1 story (including AI and escalations) stays visible where it is not built. Record planned work as planned. Do not ship UI that looks like those systems already ran.
 
 Terminology: enrollment, LMS access/provisioning, lesson progress, certificate reference, public verification, escalation.
 
@@ -57,4 +57,4 @@ Demo logins and seed course content in `data/store.json`. Public verification of
 2. Planned V1 stays in the story, labeled planned — never dressed as live.
 3. A certificate is a public reference, not a login-walled badge.
 4. Students and instructors are both in the product; the first-run is for the person judging that both sides exist.
-5. Do not invent proof, payments, or AI answers to look more complete.
+5. Do not invent proof or AI answers to look more complete.

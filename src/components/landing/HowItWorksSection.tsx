@@ -4,7 +4,7 @@ const steps = [
   {
     title: "Enroll",
     description:
-      "Choose a published course and confirm your place. Course access is provisioned as soon as you enroll.",
+      "Choose a published course and confirm your place. Course access is set up after you enroll.",
     status: "Live" as const,
   },
   {

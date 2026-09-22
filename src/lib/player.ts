@@ -1,15 +1,7 @@
-import type {
-  LessonContentType,
-  LessonProgress,
-  LessonProgressStatus,
-} from "./types";
+import type { LessonContentType, LessonProgress, LessonProgressStatus } from "./types";
+import { contentTypeLabels } from "./lessonContent";
 
-export const contentTypeLabels: Record<LessonContentType, string> = {
-  video: "Video",
-  text: "Reading",
-  quiz: "Quiz",
-  assignment: "Assignment",
-};
+export { contentTypeLabels };
 
 export function getLessonProgressStatus(
   progress: LessonProgress[],

@@ -31,30 +31,27 @@
       "instructorId": "user-instructor-1",
       "title": "Intro to Web Development",
       "description": "Learn HTML, CSS, and JavaScript fundamentals through hands-on projects.",
-      "price": 49.99,
       "status": "published",
       "createdAt": "2026-01-15T08:00:00.000Z",
-      "updatedAt": "2026-01-20T10:00:00.000Z"
+      "updatedAt": "2026-09-22T07:17:52.354Z"
     },
     {
       "id": "course-2",
       "instructorId": "user-instructor-1",
       "title": "Database Design Basics",
       "description": "ERDs, normalization, and SQL for application developers.",
-      "price": 59.99,
-      "status": "draft",
+      "status": "published",
       "createdAt": "2026-02-01T08:00:00.000Z",
-      "updatedAt": "2026-02-01T08:00:00.000Z"
+      "updatedAt": "2026-09-22T08:20:00.000Z"
     },
     {
       "instructorId": "user-instructor-1",
-      "title": "asdd",
-      "description": "addsd",
-      "price": 49.99,
+      "title": "Intro to Nigga",
+      "description": "asdasd",
       "status": "draft",
-      "id": "f2114a62-517c-496e-a85a-a27390dd5843",
-      "createdAt": "2026-08-27T06:00:24.415Z",
-      "updatedAt": "2026-08-27T06:00:24.415Z"
+      "id": "2a227af0-8241-4bcb-be90-93367d9869e7",
+      "createdAt": "2026-09-22T09:45:22.639Z",
+      "updatedAt": "2026-09-22T09:45:22.639Z"
     }
   ],
   "modules": [
@@ -66,25 +63,32 @@
       "createdAt": "2026-01-15T09:00:00.000Z"
     },
     {
-      "id": "module-2",
       "courseId": "course-1",
-      "title": "Building Layouts",
+      "title": "asdasd",
       "sequenceOrder": 2,
-      "createdAt": "2026-01-16T09:00:00.000Z"
+      "id": "5802f30e-f064-482a-a50f-8ffc35f9d808",
+      "createdAt": "2026-09-22T06:21:28.644Z"
     },
     {
-      "courseId": "f2114a62-517c-496e-a85a-a27390dd5843",
-      "title": "Test",
+      "courseId": "course-2",
+      "title": "Schema basics",
       "sequenceOrder": 1,
-      "id": "3e83e3ee-20b6-4d62-9d07-475b8767b068",
-      "createdAt": "2026-08-27T06:00:31.779Z"
+      "id": "4290dcc2-9317-42f2-af8d-b9a48cf864d4",
+      "createdAt": "2026-09-22T06:29:34.080Z"
     },
     {
-      "courseId": "course-1",
-      "title": "asda",
-      "sequenceOrder": 3,
-      "id": "62762f96-4384-497f-9eaa-601e563a72ee",
-      "createdAt": "2026-08-27T09:42:17.678Z"
+      "courseId": "2a227af0-8241-4bcb-be90-93367d9869e7",
+      "title": "asdasdas",
+      "sequenceOrder": 1,
+      "id": "19356e72-1e38-4ac8-acdb-9d7efa1cdf88",
+      "createdAt": "2026-09-22T09:45:25.972Z"
+    },
+    {
+      "courseId": "2a227af0-8241-4bcb-be90-93367d9869e7",
+      "title": "asdsadda",
+      "sequenceOrder": 2,
+      "id": "422a1b05-1635-4609-a701-147a0024b63f",
+      "createdAt": "2026-09-22T09:46:04.530Z"
     }
   ],
   "lessons": [
@@ -92,7 +96,7 @@
       "id": "lesson-1",
       "moduleId": "module-1",
       "title": "What is the Web?",
-      "sequenceOrder": 1,
+      "sequenceOrder": 2,
       "contentType": "video",
       "contentRef": "https://example.com/lesson-1",
       "durationMinutes": 12,
@@ -102,31 +106,81 @@
       "id": "lesson-2",
       "moduleId": "module-1",
       "title": "Your First HTML Page",
-      "sequenceOrder": 2,
+      "sequenceOrder": 1,
       "contentType": "text",
-      "contentRef": "https://example.com/lesson-2",
+      "contentRef": "Every HTML page starts with a doctype, then an html element that holds a head and a body. The head is metadata: title, character set, links to stylesheets. The body is what people see.\n\nHeadings, paragraphs, lists, links, and images are the core elements. Nest them the way the content nests: a section contains a heading and the paragraphs that belong to it.\n\nBrowsers are forgiving of mistakes, which is why broken markup can still “work.” Write the structure you mean anyway — later CSS and accessibility tools depend on it.",
       "durationMinutes": 20,
       "createdAt": "2026-01-15T10:00:00.000Z"
     },
     {
-      "id": "lesson-3",
-      "moduleId": "module-2",
-      "title": "The CSS box model",
+      "moduleId": "4290dcc2-9317-42f2-af8d-b9a48cf864d4",
+      "title": "Tables and keys",
       "sequenceOrder": 1,
       "contentType": "text",
-      "contentRef": "",
-      "durationMinutes": 18,
-      "createdAt": "2026-01-16T09:30:00.000Z"
+      "contentRef": "A table stores one kind of thing. A primary key uniquely identifies each row.\n\nForeign keys point at another table’s primary key. That is how related records stay connected.",
+      "durationMinutes": 20,
+      "id": "a1937b14-33f8-476d-9928-3ebd1eda453a",
+      "createdAt": "2026-09-22T06:30:03.740Z"
     },
     {
-      "moduleId": "62762f96-4384-497f-9eaa-601e563a72ee",
-      "title": "asdad",
+      "moduleId": "4290dcc2-9317-42f2-af8d-b9a48cf864d4",
+      "title": "Primary keys",
+      "sequenceOrder": 2,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"What does a primary key do?\",\"choices\":[\"Identifies each row uniquely\",\"Stores CSS for the page\"]}",
+      "durationMinutes": null,
+      "id": "1902d8cf-80ea-42bb-a1d5-de8cf1895e8e",
+      "createdAt": "2026-09-22T06:30:39.434Z"
+    },
+    {
+      "moduleId": "5802f30e-f064-482a-a50f-8ffc35f9d808",
+      "title": "test",
+      "sequenceOrder": 1,
+      "contentType": "video",
+      "contentRef": "",
+      "durationMinutes": 10,
+      "id": "b156eec8-c3cb-4d98-bd3c-6a4989b7328f",
+      "createdAt": "2026-09-22T06:35:06.221Z"
+    },
+    {
+      "moduleId": "19356e72-1e38-4ac8-acdb-9d7efa1cdf88",
+      "title": "01",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "asdsdasdasda",
+      "durationMinutes": 213,
+      "id": "14e652f1-5071-424b-aa88-838935667fc0",
+      "createdAt": "2026-09-22T09:45:38.101Z"
+    },
+    {
+      "moduleId": "19356e72-1e38-4ac8-acdb-9d7efa1cdf88",
+      "title": "asdsaddsa",
+      "sequenceOrder": 2,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"asdad\",\"choices\":[\"asdasd\"]}",
+      "durationMinutes": null,
+      "id": "1fa87efa-0e48-4f9e-b649-87f4171646a3",
+      "createdAt": "2026-09-22T09:45:49.449Z"
+    },
+    {
+      "moduleId": "19356e72-1e38-4ac8-acdb-9d7efa1cdf88",
+      "title": "adaas",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "",
+      "durationMinutes": null,
+      "id": "aa8b42b8-e431-4364-bdfd-9257f45e7ca5",
+      "createdAt": "2026-09-22T09:46:30.304Z"
+    },
+    {
+      "moduleId": "422a1b05-1635-4609-a701-147a0024b63f",
+      "title": "asdsda",
       "sequenceOrder": 1,
       "contentType": "text",
       "contentRef": "",
       "durationMinutes": null,
-      "id": "1601954c-09a9-4de3-acd9-16e048105596",
-      "createdAt": "2026-08-27T09:42:23.013Z"
+      "id": "d9096312-b4f6-4d6c-8984-00b9184ed46b",
+      "createdAt": "2026-09-22T09:47:01.932Z"
     }
   ],
   "enrollments": [
@@ -139,6 +193,16 @@
       "completedAt": "2026-08-27T09:41:51.925Z",
       "createdAt": "2026-08-27T09:29:19.885Z",
       "updatedAt": "2026-08-27T09:41:51.925Z"
+    },
+    {
+      "id": "d5273165-4944-4610-bbba-7c72bbf204c6",
+      "studentId": "user-student-1",
+      "courseId": "course-2",
+      "status": "active",
+      "enrolledAt": "2026-09-22T08:19:26.263Z",
+      "completedAt": null,
+      "createdAt": "2026-09-22T08:19:26.263Z",
+      "updatedAt": "2026-09-22T08:19:26.263Z"
     }
   ],
   "lmsAccounts": [
@@ -150,6 +214,15 @@
       "externalLmsId": "lms-3638ae28",
       "createdAt": "2026-08-27T09:29:19.885Z",
       "updatedAt": "2026-08-27T09:29:19.885Z"
+    },
+    {
+      "id": "17e47f9c-c08a-47ae-bcf9-25991740ec46",
+      "enrollmentId": "d5273165-4944-4610-bbba-7c72bbf204c6",
+      "provisionedAt": "2026-09-22T08:19:26.263Z",
+      "syncStatus": "provisioned",
+      "externalLmsId": "lms-d5273165",
+      "createdAt": "2026-09-22T08:19:26.263Z",
+      "updatedAt": "2026-09-22T08:19:26.263Z"
     }
   ],
   "lessonProgress": [
@@ -174,24 +247,14 @@
       "updatedAt": "2026-08-27T09:41:51.925Z"
     },
     {
-      "id": "e55fce11-74d7-4473-955a-398dd15f2ce5",
-      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
-      "lessonId": "lesson-3",
-      "status": "completed",
-      "completedAt": "2026-08-27T09:41:50.259Z",
-      "score": null,
-      "createdAt": "2026-08-27T09:41:48.582Z",
-      "updatedAt": "2026-08-27T09:41:50.259Z"
-    },
-    {
-      "id": "2f73ad7f-625f-4ca8-b7c8-70a1e06abe5c",
-      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
-      "lessonId": "1601954c-09a9-4de3-acd9-16e048105596",
+      "id": "c956b0dc-7d67-429a-916c-f4ad86f1bc88",
+      "enrollmentId": "d5273165-4944-4610-bbba-7c72bbf204c6",
+      "lessonId": "a1937b14-33f8-476d-9928-3ebd1eda453a",
       "status": "in_progress",
       "completedAt": null,
       "score": null,
-      "createdAt": "2026-08-27T09:42:57.862Z",
-      "updatedAt": "2026-08-27T09:42:57.862Z"
+      "createdAt": "2026-09-22T08:21:10.508Z",
+      "updatedAt": "2026-09-22T08:21:10.508Z"
     }
   ],
   "certificates": [
@@ -203,6 +266,56 @@
       "fileUrl": "/verify/SSA-2026-U9FJQD",
       "verificationStatus": "valid",
       "createdAt": "2026-08-27T09:50:35.112Z"
+    }
+  ],
+  "integrationEvents": [
+    {
+      "id": "event-confirmed-1",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "eventType": "enrollment.confirmed",
+      "payload": {
+        "courseId": "course-1",
+        "studentId": "user-student-1",
+        "lmsAccountId": "be91edbc-5a74-4af8-8d98-81747f83fe68",
+        "syncStatus": "provisioned"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-08-27T09:29:19.885Z",
+      "processedAt": "2026-08-27T09:29:19.885Z"
+    },
+    {
+      "id": "event-completed-1",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "eventType": "enrollment.completed",
+      "payload": {
+        "courseId": "course-1",
+        "studentId": "user-student-1",
+        "certificateId": "8022718c-0492-463f-a04f-1b8ddba1c076",
+        "referenceNumber": "SSA-2026-U9FJQD"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-08-27T09:41:51.925Z",
+      "processedAt": "2026-08-27T09:41:51.925Z"
+    },
+    {
+      "id": "1ffc8b3e-e6d1-4384-a29e-f5ba39912269",
+      "enrollmentId": "d5273165-4944-4610-bbba-7c72bbf204c6",
+      "eventType": "enrollment.confirmed",
+      "payload": {
+        "courseId": "course-2",
+        "studentId": "user-student-1",
+        "lmsAccountId": "17e47f9c-c08a-47ae-bcf9-25991740ec46",
+        "syncStatus": "provisioned"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-09-22T08:19:26.263Z",
+      "processedAt": "2026-09-22T08:19:26.263Z"
     }
   ]
 }

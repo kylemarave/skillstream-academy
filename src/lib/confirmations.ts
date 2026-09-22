@@ -2,6 +2,8 @@ export const confirmationKeys = [
   "signed-in",
   "signed-out",
   "enrolled",
+  "access-pending",
+  "access-failed",
   "lesson-complete",
   "certified",
   "course-created",
@@ -9,13 +11,19 @@ export const confirmationKeys = [
   "lesson-added",
   "published",
   "unpublished",
+  "archived",
+  "restored",
+  "saved",
+  "deleted",
+  "order-saved",
+  "revoked",
 ] as const;
 
 export type ConfirmationKey = (typeof confirmationKeys)[number];
 
 export const confirmationCopy: Record<
   ConfirmationKey,
-  { title: string; detail?: string }
+  { title: string; detail?: string; tone?: "success" | "danger" }
 > = {
   "signed-in": {
     title: "Signed in",
@@ -28,6 +36,15 @@ export const confirmationCopy: Record<
   enrolled: {
     title: "Enrollment confirmed",
     detail: "Course access is ready. Start the first lesson when you are.",
+  },
+  "access-pending": {
+    title: "Enrollment confirmed",
+    detail: "Course access is being set up. Lessons open when it finishes.",
+  },
+  "access-failed": {
+    title: "Enrollment confirmed",
+    detail: "Course access did not provision. Retry is Planned.",
+    tone: "danger",
   },
   "lesson-complete": {
     title: "Lesson complete",
@@ -53,7 +70,29 @@ export const confirmationCopy: Record<
   },
   unpublished: {
     title: "Returned to draft",
-    detail: "Students can no longer see this course.",
+    detail: "Students can no longer see this course in the catalog.",
+  },
+  archived: {
+    title: "Archived",
+    detail: "Off the catalog. Students who already enrolled keep access.",
+  },
+  restored: {
+    title: "Restored to draft",
+    detail: "This is a private draft again. Publish when you want it in the catalog.",
+  },
+  saved: {
+    title: "Saved",
+  },
+  deleted: {
+    title: "Deleted",
+  },
+  "order-saved": {
+    title: "Order saved",
+  },
+  revoked: {
+    title: "Certificate revoked",
+    detail: "The reference stays in the registry. Public verify now shows it as revoked.",
+    tone: "danger",
   },
 };
 

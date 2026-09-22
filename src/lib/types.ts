@@ -17,6 +17,16 @@ export type LessonProgressStatus = "not_started" | "in_progress" | "completed";
 
 export type CertificateVerificationStatus = "valid" | "revoked";
 
+export type IntegrationEventType =
+  | "enrollment.confirmed"
+  | "enrollment.completed";
+
+export type IntegrationEventStatus =
+  | "pending"
+  | "processing"
+  | "succeeded"
+  | "failed";
+
 export interface User {
   id: string;
   email: string;
@@ -39,7 +49,6 @@ export interface Course {
   instructorId: string;
   title: string;
   description: string;
-  price: number;
   status: CourseStatus;
   createdAt: string;
   updatedAt: string;
@@ -106,6 +115,18 @@ export interface Certificate {
   createdAt: string;
 }
 
+export interface IntegrationEvent {
+  id: string;
+  enrollmentId: string;
+  eventType: IntegrationEventType;
+  payload: Record<string, unknown>;
+  status: IntegrationEventStatus;
+  retryCount: number;
+  lastError: string | null;
+  createdAt: string;
+  processedAt: string | null;
+}
+
 export interface DataStore {
   users: User[];
   courses: Course[];
@@ -115,4 +136,5 @@ export interface DataStore {
   lmsAccounts: LmsAccount[];
   lessonProgress: LessonProgress[];
   certificates: Certificate[];
+  integrationEvents: IntegrationEvent[];
 }
