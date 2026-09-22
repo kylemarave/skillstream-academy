@@ -49,6 +49,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Instructor roster last activity, needs-attention, and student detail
 - Courses are free — no price, checkout, or payment copy
 - Instructor can revoke a certificate; public verify still finds the reference and shows it as revoked
+- Student catalog title search
 
 ## Not built — keep labeled Planned
 - Hashed production auth
@@ -69,6 +70,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Advanced analytics / personalized recommendations
 - Blockchain certificate anchoring
 - Payments, checkout, refunds, and course prices
+- Catalog topic filters, sort, pagination, outcomes, and instructor profile
 
 ---
 
@@ -237,11 +239,9 @@ Out of V1. Courses are free. No checkout, receipts, refunds, or course prices.
 
 ## 4.2 Catalog discovery
 - [x] Published course list
-- [ ] Search
-- [ ] Topic filters
-- [ ] Sort + pagination
-- [ ] Outcomes, duration, level, prerequisites
-- [ ] Instructor profile (users.bio)
+- [x] Search
+
+Out of V1. No topic filters, sort, pagination, outcomes, or instructor profile.
 
 ## 4.3 Responsive and accessibility
 - [x] Shared buttons, cards, fields, labels

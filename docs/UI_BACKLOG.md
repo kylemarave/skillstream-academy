@@ -128,8 +128,7 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Catalog discovery
 
-- Implement search, topic filters, sorting, and pagination.
-- Add course outcomes, duration, level, prerequisites, and instructor profile.
+- Title search is live on the student catalog (`?q=`). Topic filters, sort, pagination, outcomes, and instructor profile are Out of V1.
 
 ### Notifications
 
@@ -155,3 +154,4 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 - Co-teaching.
 - Native mobile application.
 - Advanced analytics and personalized learning recommendations.
+- Catalog topic filters, sort, pagination, outcomes, and instructor profile.

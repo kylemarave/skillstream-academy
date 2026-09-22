@@ -118,7 +118,7 @@ export function AppShell({
         id="main-content"
         className="mx-auto w-full max-w-5xl px-5 py-8 sm:px-7 lg:px-10 lg:py-10"
       >
-        <header className="mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-line pb-6">
+        <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-line pb-6">
           <div className="min-w-0">
             <h1 className="page-title">{title}</h1>
             {subtitle ? (
@@ -127,7 +127,11 @@ export function AppShell({
               </p>
             ) : null}
           </div>
-          {actions ? <div className="flex gap-2">{actions}</div> : null}
+          {actions ? (
+            <div className="flex w-full min-w-0 items-center justify-end gap-2 sm:w-auto">
+              {actions}
+            </div>
+          ) : null}
         </header>
 
         <Suspense fallback={null}>
