@@ -30,12 +30,12 @@ export const instructorJourneySteps = [
   {
     id: "support",
     title: "Support",
-    description: "Track progress and answer escalations.",
+    description: "Track progress and see student questions.",
   },
 ] as const;
 
 /*
-  Enrollment and certification run in this prototype. AI escalation does not.
+  Enrollment and certification run in this prototype. Student questions reach the instructor inbox. Assistant replies do not.
 */
 export const integrations = [
   {

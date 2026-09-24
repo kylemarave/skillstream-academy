@@ -16,7 +16,9 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
+    pathname === "/admin/login" ||
     PUBLIC_PATHS.includes(pathname) ||
+    pathname.startsWith("/login/") ||
     pathname.startsWith("/api/") ||
     pathname.startsWith("/_next")
   ) {
@@ -32,7 +34,10 @@ export function middleware(request: NextRequest) {
   const session = raw ? decodeSession(raw) : null;
 
   if (!session) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = new URL(
+      requiredRole === "admin" ? "/admin/login" : "/login",
+      request.url,
+    );
     loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
   }

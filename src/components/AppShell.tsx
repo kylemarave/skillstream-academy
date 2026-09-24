@@ -70,7 +70,10 @@ export function AppShell({
         <div className="flex items-center justify-between gap-3 px-5 py-3 lg:block lg:px-6 lg:pt-7 lg:pb-8">
           <BrandMark subtitle={roleLabel} />
           <div className="lg:hidden">
-            <LogoutButton iconOnly />
+            <LogoutButton
+              iconOnly
+              redirectTo={user.role === "admin" ? "/admin/login" : "/login"}
+            />
           </div>
         </div>
 
@@ -109,7 +112,9 @@ export function AppShell({
             {user.email}
           </p>
           <div className="mt-3">
-            <LogoutButton />
+            <LogoutButton
+              redirectTo={user.role === "admin" ? "/admin/login" : "/login"}
+            />
           </div>
         </div>
       </aside>

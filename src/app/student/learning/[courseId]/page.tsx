@@ -8,7 +8,8 @@ import { ProgressMeter } from "@/components/player/ProgressMeter";
 import { EnrollmentBadge } from "@/components/EnrollmentBadge";
 import { requireRole } from "@/lib/auth";
 import { accessCopy, canAccessLessons, courseAccessState } from "@/lib/access";
-import { getPlayerState } from "@/lib/db";
+import { getPlayerState, listQuestionsForEnrollment } from "@/lib/db";
+import { AskQuestionForm } from "@/components/player/AskQuestionForm";
 import { studentNav } from "@/lib/nav";
 import { contentTypeLabels } from "@/lib/player";
 
@@ -31,6 +32,7 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
       ? `/student/learning/${course.id}/lessons/${summary.nextLesson.id}`
       : null;
   const courseComplete = enrollment.status === "completed";
+  const questions = await listQuestionsForEnrollment(enrollment.id);
 
   return (
     <AppShell
@@ -125,6 +127,37 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
                 </Link>
               )}
             </div>
+          </section>
+
+          <section aria-labelledby="question-title" className="card px-5 py-5">
+            <h2 id="question-title" className="section-title">
+              Ask your instructor
+            </h2>
+            <p className="mt-1 text-sm text-muted">
+              This goes to the course instructor as pending. An assistant reply
+              is not wired yet.
+            </p>
+            <div className="mt-4">
+              <AskQuestionForm courseId={course.id} courseTitle={course.title} />
+            </div>
+            {questions.length > 0 ? (
+              <ul className="mt-5 divide-y divide-line border-t border-line">
+                {questions.map((question) => (
+                  <li key={question.id} className="py-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="text-sm">{question.content}</p>
+                      <span className="shrink-0 rounded-md border border-line bg-subtle px-1.5 py-0.5 text-xs font-medium text-muted">
+                        {question.status === "pending"
+                          ? "Pending"
+                          : question.status === "in_progress"
+                            ? "In progress"
+                            : "Resolved"}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </section>
 
           <section aria-labelledby="modules-title" className="card">

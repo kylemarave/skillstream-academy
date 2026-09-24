@@ -42,6 +42,10 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
   from the course page, where the empty-content warning can be shown.
 - The landing navigation no longer has a mobile menu; the section links are
   hidden below `md` and the page is short enough to scroll.
+- The public footer (landing, sign-in, and verify) reads “Skillstream Academy ·
+  Enroll, learn, and verify a certificate,” with a link to `/verify` and © 2026.
+  It does not say “academic project” or “no real student data,” because the site
+  is deployed. It sits at the bottom of the page.
 
 ## P0 — Required for a usable capstone demo
 
@@ -49,7 +53,7 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 - Replace the disabled enrollment control with a working enrollment flow.
 - Capture enrollment confirmation and create the linked LMS account.
-- Show success, provisioning-in-progress, and provisioning-failed states. Courses are free; there is no payment-failed state.
+- Show success, provisioning-in-progress, and provisioning-failed states.
 - Enrollment becomes active only after LMS access is provisioned; the player stays blocked until then.
 - Acceptance: a student can enroll and see the course become active without editing seed data.
 
@@ -104,11 +108,15 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 - List enrolled students by course.
 - Last activity, completion date, needs-attention (no lesson started, idle 7 days, or LMS provision failed), and student detail with lesson status are live.
 
-### Build the AI escalation inbox
+### Build the lesson chatbot
 
-- List pending, in-progress, and resolved escalations.
-- Show conversation context, linked course/module, assignment, response, and resolution.
-- Notify the student when status changes.
+The chatbot answers a student’s question about a lesson. The knowledge base is that course’s lessons only: reading text, and a quiz’s prompt and choices. A video is a link, so it has no transcript to answer from. If the lessons do not contain the answer, the chatbot says so and stops. It does not send the question to the instructor.
+
+- Show a course chat thread: the student’s question, then a place for the assistant reply.
+- Save the question on ai_conversations and ai_messages.
+- Answer only from that course’s lesson text.
+- Connect GPT-6 Luna later. Until then, leave the assistant reply empty. Do not invent an answer.
+- The question box on the course page still files a pending escalation. That is not this chatbot.
 
 ### Add complete interaction feedback
 
@@ -132,7 +140,7 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Notifications
 
-- Add in-app notifications for enrollment, LMS access, escalation updates, and certificates.
+- Add in-app notifications for enrollment, LMS access, and certificates.
 - Add read/unread state and notification preferences.
 
 ### Admin operations

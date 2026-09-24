@@ -2,11 +2,14 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomBytes, randomUUID } from "crypto";
 import type {
+  AiConversation,
+  AiMessage,
   Certificate,
   Course,
   CourseModule,
   DataStore,
   Enrollment,
+  Escalation,
   Lesson,
   LessonProgress,
   LmsAccount,
@@ -32,11 +35,68 @@ async function readStore(): Promise<DataStore> {
     lessonProgress: parsed.lessonProgress ?? [],
     certificates: parsed.certificates ?? [],
     integrationEvents: parsed.integrationEvents ?? [],
+    aiConversations: parsed.aiConversations ?? [],
+    aiMessages: parsed.aiMessages ?? [],
+    escalations: parsed.escalations ?? [],
   };
 }
 
 async function writeStore(store: DataStore): Promise<void> {
   await fs.writeFile(DATA_PATH, JSON.stringify(store, null, 2), "utf-8");
+}
+
+export async function registerUser(input: {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: "student" | "instructor";
+}): Promise<
+  | { ok: true; user: User }
+  | { ok: false; error: string; status: number }
+> {
+  const email = input.email.trim().toLowerCase();
+  const firstName = input.firstName.trim();
+  const lastName = input.lastName.trim();
+  const password = input.password;
+
+  if (!firstName || !lastName) {
+    return { ok: false, error: "First and last name are required.", status: 400 };
+  }
+  if (!email || !email.includes("@")) {
+    return { ok: false, error: "A valid email is required.", status: 400 };
+  }
+  if (password.length < 8) {
+    return {
+      ok: false,
+      error: "Password must be at least 8 characters.",
+      status: 400,
+    };
+  }
+
+  const store = await readStore();
+  const existing = store.users.find(
+    (user) => user.email.toLowerCase() === email,
+  );
+  if (existing) {
+    return {
+      ok: false,
+      error: "An account with this email already exists. Sign in instead.",
+      status: 409,
+    };
+  }
+
+  const user: User = {
+    id: randomUUID(),
+    email,
+    password,
+    firstName,
+    lastName,
+    role: input.role,
+  };
+  store.users.push(user);
+  await writeStore(store);
+  return { ok: true, user };
 }
 
 export async function getUserByEmail(email: string): Promise<User | undefined> {
@@ -1018,4 +1078,144 @@ export async function getPublicCertificate(referenceNumber: string) {
     studentName: `${student.firstName} ${student.lastName}`,
     issuedAt: certificate.issuedAt,
   };
+}
+
+export async function askCourseQuestion(
+  studentId: string,
+  courseId: string,
+  content: string,
+) {
+  const question = content.trim();
+  if (!question) {
+    return { ok: false as const, error: "Write a question first.", status: 400 };
+  }
+  if (question.length > 2000) {
+    return {
+      ok: false as const,
+      error: "Keep the question under 2,000 characters.",
+      status: 400,
+    };
+  }
+
+  const store = await readStore();
+  const enrollment = store.enrollments.find(
+    (item) =>
+      item.studentId === studentId &&
+      item.courseId === courseId &&
+      isOpenEnrollment(item.status),
+  );
+  if (!enrollment) {
+    return { ok: false as const, error: "Not enrolled.", status: 404 };
+  }
+
+  const course = store.courses.find((item) => item.id === courseId);
+  if (!course) {
+    return { ok: false as const, error: "Course not found.", status: 404 };
+  }
+
+  const contentCourse = await getCourseWithContent(courseId);
+  const lessons = contentCourse ? flattenCourseLessons(contentCourse.modules) : [];
+  const summary = summarizeProgress(
+    lessons,
+    progressForEnrollment(store, enrollment.id),
+  );
+  const now = new Date().toISOString();
+
+  const conversation: AiConversation = {
+    id: randomUUID(),
+    studentId,
+    enrollmentId: enrollment.id,
+    startedAt: now,
+    endedAt: null,
+    contextSnapshot: {
+      courseId: course.id,
+      courseTitle: course.title,
+      enrollmentStatus: enrollment.status,
+      completed: summary.completed,
+      total: summary.total,
+      percent: summary.percent,
+      nextLessonTitle: summary.nextLesson?.title ?? null,
+    },
+  };
+  const message: AiMessage = {
+    id: randomUUID(),
+    conversationId: conversation.id,
+    role: "student",
+    content: question,
+    createdAt: now,
+  };
+  const escalation: Escalation = {
+    id: randomUUID(),
+    conversationId: conversation.id,
+    instructorId: course.instructorId,
+    status: "pending",
+    resolutionNotes: null,
+    createdAt: now,
+    resolvedAt: null,
+  };
+
+  store.aiConversations.push(conversation);
+  store.aiMessages.push(message);
+  store.escalations.push(escalation);
+  await writeStore(store);
+
+  return { ok: true as const, escalation, message };
+}
+
+export async function listQuestionsForEnrollment(enrollmentId: string) {
+  const store = await readStore();
+  return store.escalations
+    .filter((escalation) => {
+      const conversation = store.aiConversations.find(
+        (item) => item.id === escalation.conversationId,
+      );
+      return conversation?.enrollmentId === enrollmentId;
+    })
+    .map((escalation) => {
+      const message = store.aiMessages.find(
+        (item) =>
+          item.conversationId === escalation.conversationId &&
+          item.role === "student",
+      );
+      return {
+        id: escalation.id,
+        status: escalation.status,
+        createdAt: escalation.createdAt,
+        content: message?.content ?? "",
+      };
+    })
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function listEscalationsForInstructor(instructorId: string) {
+  const store = await readStore();
+  return store.escalations
+    .filter((escalation) => escalation.instructorId === instructorId)
+    .map((escalation) => {
+      const conversation = store.aiConversations.find(
+        (item) => item.id === escalation.conversationId,
+      );
+      const message = store.aiMessages.find(
+        (item) =>
+          item.conversationId === escalation.conversationId &&
+          item.role === "student",
+      );
+      const student = store.users.find(
+        (item) => item.id === conversation?.studentId,
+      );
+      const course = store.courses.find(
+        (item) => item.id === conversation?.contextSnapshot?.courseId,
+      );
+      return {
+        id: escalation.id,
+        status: escalation.status,
+        createdAt: escalation.createdAt,
+        question: message?.content ?? "",
+        studentName: student
+          ? `${student.firstName} ${student.lastName}`
+          : "Student",
+        courseTitle: course?.title ?? conversation?.contextSnapshot?.courseTitle ?? "Course",
+      };
+    })
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }

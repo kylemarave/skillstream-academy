@@ -1,5 +1,6 @@
 export const confirmationKeys = [
   "signed-in",
+  "account-created",
   "signed-out",
   "enrolled",
   "access-pending",
@@ -17,6 +18,7 @@ export const confirmationKeys = [
   "deleted",
   "order-saved",
   "revoked",
+  "question-sent",
 ] as const;
 
 export type ConfirmationKey = (typeof confirmationKeys)[number];
@@ -28,6 +30,10 @@ export const confirmationCopy: Record<
   "signed-in": {
     title: "Signed in",
     detail: "You are in your workspace.",
+  },
+  "account-created": {
+    title: "Account created",
+    detail: "You are signed in.",
   },
   "signed-out": {
     title: "Signed out",
@@ -88,6 +94,10 @@ export const confirmationCopy: Record<
   },
   "order-saved": {
     title: "Order saved",
+  },
+  "question-sent": {
+    title: "Question sent",
+    detail: "Your instructor can see it as pending.",
   },
   revoked: {
     title: "Certificate revoked",

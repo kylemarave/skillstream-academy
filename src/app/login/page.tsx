@@ -1,10 +1,16 @@
 import { Suspense } from "react";
-import { LoginForm } from "@/components/LoginForm";
+import { RoleChoice } from "@/components/auth/RoleChoice";
 
-export default function LoginPage() {
+type PageProps = {
+  searchParams: Promise<{ next?: string }>;
+};
+
+export default async function LoginPage({ searchParams }: PageProps) {
+  const { next } = await searchParams;
+
   return (
     <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
-      <LoginForm />
+      <RoleChoice next={next} />
     </Suspense>
   );
 }

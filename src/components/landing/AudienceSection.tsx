@@ -38,8 +38,8 @@ export function AudienceSection() {
           Students and instructors, in the same academy
         </h2>
         <p className="mt-3 max-w-[40rem] text-muted">
-          Sign in with a demo account for either role. Features that are not
-          built yet are marked Planned.
+          Create a student or instructor account, or sign in. Features that
+          are not built yet are marked Planned.
         </p>
 
         <div className="mt-10 grid gap-12 md:grid-cols-2 md:gap-16">

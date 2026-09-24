@@ -115,6 +115,45 @@ export interface Certificate {
   createdAt: string;
 }
 
+export type AiMessageRole = "student" | "assistant" | "system";
+
+export type EscalationStatus = "pending" | "in_progress" | "resolved";
+
+export interface AiConversation {
+  id: string;
+  studentId: string;
+  enrollmentId: string | null;
+  startedAt: string;
+  endedAt: string | null;
+  contextSnapshot: {
+    courseId: string;
+    courseTitle: string;
+    enrollmentStatus: EnrollmentStatus;
+    completed: number;
+    total: number;
+    percent: number;
+    nextLessonTitle: string | null;
+  } | null;
+}
+
+export interface AiMessage {
+  id: string;
+  conversationId: string;
+  role: AiMessageRole;
+  content: string;
+  createdAt: string;
+}
+
+export interface Escalation {
+  id: string;
+  conversationId: string;
+  instructorId: string;
+  status: EscalationStatus;
+  resolutionNotes: string | null;
+  createdAt: string;
+  resolvedAt: string | null;
+}
+
 export interface IntegrationEvent {
   id: string;
   enrollmentId: string;
@@ -137,4 +176,7 @@ export interface DataStore {
   lessonProgress: LessonProgress[];
   certificates: Certificate[];
   integrationEvents: IntegrationEvent[];
+  aiConversations: AiConversation[];
+  aiMessages: AiMessage[];
+  escalations: Escalation[];
 }

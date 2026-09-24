@@ -7,7 +7,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 **Integrations**
 - Enrollment → LMS access — Live
 - Completion → Certificate — Live
-- AI assistant → Instructor escalation — Planned
+- Lesson chatbot — Planned. Answers a student’s lesson question from that course’s lesson text only. If the lessons do not contain the answer, it says so and stops. It does not send the question to the instructor.
 
 **Rule:** Planned work stays labeled Planned. Do not ship UI that looks finished if it is not wired.
 
@@ -25,7 +25,8 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Identity — users, user_sessions
 - Learning — courses, course_modules, lessons, enrollments, lms_accounts, lesson_progress
 - Credential — certificates
-- AI / comms — ai_conversations, ai_messages, escalations, notifications
+- AI — ai_conversations, ai_messages. Answers come from lesson text. The escalations rows are the earlier question box, not the chatbot.
+- Comms — notifications
 - Ops — integration_events, audit_logs
 
 ## Already working
@@ -40,6 +41,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Public /verify by reference
 - Basic instructor roster
 - Landing page
+- Public footer on the landing page, sign-in, and verify: “Skillstream Academy · Enroll, learn, and verify a certificate,” a link to /verify, and © 2026. It does not say “academic project” or “no real student data,” because the site is deployed.
 - Confirm-before dialog + after-success notice on every live mutating action
 - Instructor edit, delete, and reorder for courses, modules, and lessons
 - Instructor lesson type, reading/video URL, duration, and quiz prompt
@@ -47,7 +49,6 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Archive course without deleting enrollments
 - Integration events for LMS provision and certificate issue (retries Planned)
 - Instructor roster last activity, needs-attention, and student detail
-- Courses are free — no price, checkout, or payment copy
 - Instructor can revoke a certificate; public verify still finds the reference and shows it as revoked
 - Student catalog title search
 
@@ -55,8 +56,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Hashed production auth
 - Relational database
 - PDF certificate files
-- AI chat
-- Escalation inbox
+- Lesson chatbot (thread and knowledge-base rule first; model reply later, with no invented answer)
 - Admin operations
 - Notifications
 - Integration-event retries
@@ -69,7 +69,6 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Native mobile app
 - Advanced analytics / personalized recommendations
 - Blockchain certificate anchoring
-- Payments, checkout, refunds, and course prices
 - Catalog topic filters, sort, pagination, outcomes, and instructor profile
 
 ---
@@ -81,7 +80,6 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - [ ] Sign-off on ERD
 - [ ] Confirm one active enrollment per student per course
 - [ ] Define PII / data-retention period
-- [ ] Define escalation SLA
 - [ ] Define max integration-event retries
 - [ ] Decide certificate tamper-evidence (signed record + public lookup)
 - [ ] Decide if external_lms_id is used in V1 or reserved
@@ -179,16 +177,23 @@ Done when: two simultaneous edits cannot clobber each other.
 - [x] Needs-attention filter
 - [x] Student detail view
 
-## 2.4 AI assistant + escalation
-- [ ] Student chat (ai_conversations + ai_messages)
-- [ ] Ground replies in enrollment progress (context_snapshot)
-- [ ] Escalation when the assistant cannot resolve
-- [ ] Instructor inbox: pending / in progress / resolved
-- [ ] Conversation context + linked course/module
-- [ ] Instructor response + resolution notes
-- [ ] Student-visible escalation status
-- [ ] Notify student on status change
-- [ ] Keep /instructor/escalations as Planned until this is wired — do not fake live data
+## 2.4 Lesson chatbot
+The chatbot answers a student’s question about a lesson. The knowledge base is that course’s lessons only:
+
+- Reading: the lesson text
+- Quiz: the prompt and choices
+- Video: a link only, so there is no transcript to answer from
+
+It does not use the instructor, the escalation inbox, or anything outside that course. If the lessons do not contain the answer, the chatbot says so and stops.
+
+- [ ] Course chat thread: the student’s question, then a place for the assistant reply
+- [ ] Save the question on ai_conversations and ai_messages
+- [ ] Answer only from that course’s lesson text
+- [ ] If the lessons do not contain the answer, say so and stop
+- [ ] Do not create an instructor escalation for a lesson question
+- [ ] Connect GPT-6 Luna later. Until then, leave the assistant reply empty. Do not invent an answer.
+
+The question box on the course page still files a pending escalation. That is not this chatbot.
 
 ## 2.5 Interaction feedback
 - [x] Confirm dialog before every live mutating action
@@ -201,25 +206,21 @@ Done when: two simultaneous edits cannot clobber each other.
 
 # Phase 3 — Events and notifications
 
-## 3.1 Payments
-Out of V1. Courses are free. No checkout, receipts, refunds, or course prices.
-
-## 3.2 Integration events
+## 3.1 Integration events
 - [x] Write enrollment.confirmed and enrollment.completed
 - [x] Status: pending | processing | succeeded | failed
 - [ ] Retry with backoff + retry_count / last_error
 - [x] Enrollment becomes active only when LMS sync_status = provisioned
 - [ ] Reconciliation so an enrolled student cannot sit in confirmed + failed forever
 
-## 3.3 Notifications
+## 3.2 Notifications
 - [ ] lms_account_ready
 - [ ] certificate_issued
-- [ ] escalation_update
 - [ ] enrollment_confirmed
 - [ ] In-app unread / read (read_at)
 - [ ] Notification preferences
 
-## 3.4 Audit logs
+## 3.3 Audit logs
 - [ ] Append-only log for enrollments, certificate issue/revoke, admin actions
 - [ ] Actor, action, target, metadata
 - [ ] No updates or deletes
@@ -266,7 +267,7 @@ Check these before calling a phase done.
 - [ ] Student can finish enroll → learn → certify without editing seed data
 - [ ] Instructor can publish a course and see roster progress
 - [ ] Public verify works with no account
-- [ ] Planned features (AI, PDF, admin) are labeled Planned
+- [ ] Planned features (lesson chatbot, PDF, admin) are labeled Planned
 - [ ] No invented testimonials or AI answers
 - [ ] Certificate reference is never client-supplied
 - [ ] Role changes only via admin
@@ -383,7 +384,6 @@ Check these before calling a phase done.
 - [ ] Retry a failed LMS or certificate sync
 - [ ] Suspend / deactivate a user
 - [ ] Change a user role
-- [ ] Resolve an escalation
 - [ ] Retry a failed integration event
 
 ## System-wide rules
@@ -401,5 +401,5 @@ Check these before calling a phase done.
 
 1. Auth + database
 2. Integration-event retries (write of confirmed/completed is live)
-3. AI + escalations
+3. Lesson chatbot
 4. Admin ops + notifications

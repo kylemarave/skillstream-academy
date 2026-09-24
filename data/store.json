@@ -23,6 +23,14 @@
       "firstName": "Sam",
       "lastName": "Okonkwo",
       "role": "admin"
+    },
+    {
+      "id": "0e470805-8882-4dbe-bf11-a8a6b8d4cf73",
+      "email": "k@gmail.com",
+      "password": "11111111",
+      "firstName": "Kyle",
+      "lastName": "Marave",
+      "role": "student"
     }
   ],
   "courses": [
@@ -203,6 +211,16 @@
       "completedAt": null,
       "createdAt": "2026-09-22T08:19:26.263Z",
       "updatedAt": "2026-09-22T08:19:26.263Z"
+    },
+    {
+      "id": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
+      "studentId": "0e470805-8882-4dbe-bf11-a8a6b8d4cf73",
+      "courseId": "course-1",
+      "status": "active",
+      "enrolledAt": "2026-09-24T19:42:58.284Z",
+      "completedAt": null,
+      "createdAt": "2026-09-24T19:42:58.284Z",
+      "updatedAt": "2026-09-24T19:42:58.284Z"
     }
   ],
   "lmsAccounts": [
@@ -223,6 +241,15 @@
       "externalLmsId": "lms-d5273165",
       "createdAt": "2026-09-22T08:19:26.263Z",
       "updatedAt": "2026-09-22T08:19:26.263Z"
+    },
+    {
+      "id": "b3b78127-d279-4bf5-84e1-cf58383406f1",
+      "enrollmentId": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
+      "provisionedAt": "2026-09-24T19:42:58.284Z",
+      "syncStatus": "provisioned",
+      "externalLmsId": "lms-1f1a0ad4",
+      "createdAt": "2026-09-24T19:42:58.284Z",
+      "updatedAt": "2026-09-24T19:42:58.284Z"
     }
   ],
   "lessonProgress": [
@@ -255,6 +282,36 @@
       "score": null,
       "createdAt": "2026-09-22T08:21:10.508Z",
       "updatedAt": "2026-09-22T08:21:10.508Z"
+    },
+    {
+      "id": "3daa180c-b7c7-4990-9edc-5bd7acd919e4",
+      "enrollmentId": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
+      "lessonId": "b156eec8-c3cb-4d98-bd3c-6a4989b7328f",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-09-24T19:43:05.662Z",
+      "updatedAt": "2026-09-24T19:43:05.662Z"
+    },
+    {
+      "id": "239aee28-9e08-4370-9d97-f1223b9b5fac",
+      "enrollmentId": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
+      "lessonId": "lesson-2",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-09-24T19:43:07.961Z",
+      "updatedAt": "2026-09-24T19:43:07.961Z"
+    },
+    {
+      "id": "1b2c0143-1f60-462e-ac14-4eec8e500d83",
+      "enrollmentId": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
+      "lessonId": "lesson-1",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-09-24T19:43:09.234Z",
+      "updatedAt": "2026-09-24T19:43:09.234Z"
     }
   ],
   "certificates": [
@@ -316,6 +373,60 @@
       "lastError": null,
       "createdAt": "2026-09-22T08:19:26.263Z",
       "processedAt": "2026-09-22T08:19:26.263Z"
+    },
+    {
+      "id": "abae0d90-9e80-4fb4-8a7a-544793d5573e",
+      "enrollmentId": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
+      "eventType": "enrollment.confirmed",
+      "payload": {
+        "courseId": "course-1",
+        "studentId": "0e470805-8882-4dbe-bf11-a8a6b8d4cf73",
+        "lmsAccountId": "b3b78127-d279-4bf5-84e1-cf58383406f1",
+        "syncStatus": "provisioned"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-09-24T19:42:58.284Z",
+      "processedAt": "2026-09-24T19:42:58.284Z"
+    }
+  ],
+  "aiConversations": [
+    {
+      "id": "a4758730-d5f4-42a3-b726-463246309ce4",
+      "studentId": "0e470805-8882-4dbe-bf11-a8a6b8d4cf73",
+      "enrollmentId": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
+      "startedAt": "2026-09-24T19:52:08.880Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "course-1",
+        "courseTitle": "Intro to Web Development",
+        "enrollmentStatus": "active",
+        "completed": 0,
+        "total": 3,
+        "percent": 0,
+        "nextLessonTitle": "Your First HTML Page"
+      }
+    }
+  ],
+  "aiMessages": [
+    {
+      "id": "9ae9f141-32b0-437c-a289-afcc9ae89b09",
+      "conversationId": "a4758730-d5f4-42a3-b726-463246309ce4",
+      "role": "student",
+      "content": "Hello sir I have a question regarding to the system",
+      "createdAt": "2026-09-24T19:52:08.880Z"
+    }
+  ],
+  "escalations": [
+    {
+      "id": "5c80dbc2-29be-4bc0-8a1a-b5e01d52e752",
+      "conversationId": "a4758730-d5f4-42a3-b726-463246309ce4",
+      "instructorId": "user-instructor-1",
+      "status": "pending",
+      "resolutionNotes": null,
+      "createdAt": "2026-09-24T19:52:08.880Z",
+      "resolvedAt": null
     }
   ]
 }

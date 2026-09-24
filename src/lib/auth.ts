@@ -3,12 +3,22 @@ import { redirect } from "next/navigation";
 import { getUserById } from "./db";
 import {
   decodeSession,
+  encodeSession,
   roleHomePath,
   SESSION_COOKIE,
 } from "./session";
 import type { SessionUser, UserRole } from "./types";
 
 export { encodeSession, SESSION_COOKIE, roleHomePath } from "./session";
+
+export async function startSession(user: SessionUser) {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE, encodeSession(user), {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+  });
+}
 
 export async function getSession(): Promise<SessionUser | null> {
   const cookieStore = await cookies();

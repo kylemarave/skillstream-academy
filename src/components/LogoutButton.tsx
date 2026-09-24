@@ -7,16 +7,20 @@ import { ConfirmDialog, useConfirmDialog } from "./feedback/ConfirmDialog";
 
 interface LogoutButtonProps {
   iconOnly?: boolean;
+  redirectTo?: string;
 }
 
-export function LogoutButton({ iconOnly = false }: LogoutButtonProps) {
+export function LogoutButton({
+  iconOnly = false,
+  redirectTo = "/login",
+}: LogoutButtonProps) {
   const router = useRouter();
   const confirm = useConfirmDialog();
 
   async function handleLogout() {
     await confirm.run(async () => {
       await fetch("/api/auth/logout", { method: "POST" });
-      router.push(withConfirmed("/login", "signed-out"));
+      router.push(withConfirmed(redirectTo, "signed-out"));
       router.refresh();
     });
   }

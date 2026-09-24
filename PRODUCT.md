@@ -16,7 +16,7 @@ Also real: students (browse, enroll, complete lessons, share a certificate refer
 
 Skillstream Academy is a single-academy learning platform whose job is to connect enrollment, course access, completion, and a publicly verifiable credential so nobody has to chase those handoffs by hand.
 
-Success for the primary user: they can sign in as student and instructor, complete the published path, and verify a certificate without logging in — and they can still see the rest of the intended V1 (AI assistant, escalations, PDF certificates) labeled as planned rather than missing.
+Success for the primary user: they can sign in as student and instructor, complete the published path, and verify a certificate without logging in — and they can still see the rest of the intended V1 (lesson chatbot, PDF certificates) labeled as planned rather than missing.
 
 ## Positioning
 
@@ -29,21 +29,23 @@ Two claims a generic LMS install would not automatically make true:
 
 Evaluators use seeded demo accounts (student, instructor, admin) on a local Next.js app. Data lives in a JSON file store until a real database exists. Courses are free; confirming enrollment sets up course access.
 
-V1 scope from the approved ERD: one academy, one instructor per course. The human journey is enroll → learn → get certified. Supporting integrations in the model: registration ↔ LMS, LMS ↔ certificates, portal ↔ AI assistant with instructor escalation.
+V1 scope from the approved ERD: one academy, one instructor per course. The human journey is enroll → learn → get certified. Supporting integrations in the model: registration ↔ LMS, LMS ↔ certificates, and a lesson chatbot. The chatbot answers a student’s question about a lesson using only that course’s lesson text. If the lessons do not contain the answer, it says so and stops. It does not send the question to the instructor.
 
 ## Capabilities and Constraints
 
 Working in this prototype: role login, instructor course/module/lesson create and publish, student catalog and enrollment, LMS account provisioned on enroll, lesson player with progress, enrollment completed when all lessons are done, certificate issued on completion, public `/verify` by reference.
 
-Not implemented and must not be presented as live: hashed production auth, relational database, PDF certificate files, AI chat, escalation inbox, admin operations.
+Not implemented and must not be presented as live: hashed production auth, relational database, PDF certificate files, the lesson chatbot, admin operations. The course question box still files a pending escalation; that is not the chatbot.
 
-Open tension (confirmed both): the judged path must not fake completion; the full V1 story (including AI and escalations) stays visible where it is not built. Record planned work as planned. Do not ship UI that looks like those systems already ran.
+Open tension (confirmed both): the judged path must not fake completion; the full V1 story (including the lesson chatbot) stays visible where it is not built. Record planned work as planned. Do not invent an assistant answer before the model is connected.
 
-Terminology: enrollment, LMS access/provisioning, lesson progress, certificate reference, public verification, escalation.
+Terminology: enrollment, LMS access/provisioning, lesson progress, certificate reference, public verification, lesson chatbot.
 
 ## Brand Commitments
 
 Name: Skillstream Academy. Voice: plain, academic, specific about what works vs what is planned. No invented schools, testimonials, or press.
+
+Public footer, on the landing page, sign-in, and verify: “Skillstream Academy · Enroll, learn, and verify a certificate,” a link to `/verify`, and © 2026. It does not say “academic project” or “no real student data,” because the site is deployed.
 
 Visual identity is the LMS category standard, executed at the craft level of Canvas, Moodle, and Coursera: teal on slate, type-first marketing, Sign in as the primary action. No metaphor worlds.
 

@@ -1,4 +1,5 @@
-import type { SessionUser, UserRole } from "./types";
+import type { SessionUser } from "./types";
+export { destinationAfterAuth, roleHomePath, rolePrefix } from "./roleHome";
 
 export const SESSION_COOKIE = "ssa_session";
 
@@ -15,15 +16,3 @@ export function decodeSession(value: string): SessionUser | null {
   }
 }
 
-export function roleHomePath(role: UserRole): string {
-  switch (role) {
-    case "student":
-      return "/student/dashboard";
-    case "instructor":
-      return "/instructor/dashboard";
-    case "admin":
-      return "/admin";
-    default:
-      return "/login";
-  }
-}

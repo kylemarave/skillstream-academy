@@ -14,7 +14,7 @@ import { StatCard } from "@/components/dashboard/StatCard";
 import { instructorJourneySteps } from "@/components/dashboard/constants";
 import { StatusBadge } from "@/components/StatusBadge";
 import { requireRole } from "@/lib/auth";
-import { listCourses } from "@/lib/db";
+import { listCourses, listEscalationsForInstructor } from "@/lib/db";
 import { instructorNav } from "@/lib/nav";
 
 export default async function InstructorDashboardPage() {
@@ -22,6 +22,10 @@ export default async function InstructorDashboardPage() {
   const courses = await listCourses({ instructorId: session.id });
   const draftCount = courses.filter((c) => c.status === "draft").length;
   const publishedCount = courses.filter((c) => c.status === "published").length;
+  const escalations = await listEscalationsForInstructor(session.id);
+  const pendingEscalations = escalations.filter(
+    (row) => row.status === "pending",
+  ).length;
 
   return (
     <AppShell
@@ -64,7 +68,7 @@ export default async function InstructorDashboardPage() {
           />
           <StatCard
             label="Escalations"
-            value={0}
+            value={pendingEscalations}
             hint="Waiting on you"
             icon={MessageSquareText}
             tone="muted"
@@ -149,7 +153,7 @@ export default async function InstructorDashboardPage() {
             />
             <QuickActionCard
               title="Escalation inbox"
-              description="Answer questions the AI assistant could not."
+              description="Questions students send from a course."
               href="/instructor/escalations"
               icon={MessageSquareText}
             />

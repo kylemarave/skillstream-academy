@@ -15,9 +15,9 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-canvas text-ink">
+    <div className="flex min-h-screen flex-col bg-canvas text-ink">
       <LandingNav />
-      <main id="main-content">
+      <main id="main-content" className="flex-1">
         <HeroSection />
         <HowItWorksSection />
         <FeaturesSection />
