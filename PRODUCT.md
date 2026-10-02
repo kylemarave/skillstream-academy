@@ -10,13 +10,13 @@ web
 
 Primary: a faculty member or similar evaluator judging the capstone. They must walk enroll → learn → certify on a demo account and see that those steps actually run, without features that look finished but are not.
 
-Also real: students (browse, enroll, complete lessons, share a certificate reference) and instructors (author modules/lessons, publish, view roster/progress). Admin exists as a placeholder and is not the lead audience.
+Also real: students (browse, enroll, complete lessons, download a certificate) and instructors (author modules and lessons, submit a draft, view roster and progress). An admin reviews a submitted course and publishes it or sends it back. The admin home still labels user management, system health, and reporting as planned.
 
 ## Product Purpose
 
 Skillstream Academy is a single-academy learning platform whose job is to connect enrollment, course access, completion, and a publicly verifiable credential so nobody has to chase those handoffs by hand.
 
-Success for the primary user: they can sign in as student and instructor, complete the published path, and verify a certificate without logging in — and they can still see the rest of the intended V1 (lesson chatbot, PDF certificates) labeled as planned rather than missing.
+Success for the primary user: they can sign in as student, instructor, or admin, walk enroll → learn → certify, download the certificate PDF, and verify the reference without an account. Password recovery, a hosted database, notifications, and the rest of the admin console stay labeled planned.
 
 ## Positioning
 
@@ -33,11 +33,11 @@ V1 scope from the approved ERD: one academy, one instructor per course. The huma
 
 ## Capabilities and Constraints
 
-Working in this prototype: role login, instructor course/module/lesson create and publish, student catalog and enrollment, LMS account provisioned on enroll, lesson player with progress, enrollment completed when all lessons are done, certificate issued on completion, public `/verify` by reference.
+Working in this prototype: role login with bcrypt passwords and a signed session that expires in 7 days, instructor course authoring and submit-for-review, admin approve-or-return, student catalog and enrollment, LMS account provisioned on enroll, lesson player with progress, quiz answers checked against the marked choice, enrollment completed when all lessons are done, certificate issued on completion with a downloadable PDF, public `/verify` by reference, a lesson chatbot, and a draft course created from a PDF.
 
-Not implemented and must not be presented as live: hashed production auth, relational database, PDF certificate files, admin operations. A student question is answered by GPT-6 Luna from that course’s lesson text. If the lessons do not contain the answer, the reply says so and stops. If the key is missing or the call fails, the question stays saved and the reply stays empty.
+Not implemented and must not be presented as live: password recovery, a relational database, admin user management, system health, reassign, reporting, notifications, integration-event retries, and audit logs. A student question is answered by GPT-6 Luna from that course’s lesson text. If the lessons do not contain the answer, the reply says so and stops. If the key is missing or the call fails, the question stays saved and the reply stays empty. An assignment still records a score of 100 on submit.
 
-Open tension (confirmed both): the judged path must not fake completion; the full V1 story (including the lesson chatbot) stays visible where it is not built. Record planned work as planned. Do not invent an assistant answer before the model is connected.
+Open tension: the judged path must not fake completion. A wrong quiz answer stays incomplete. Record planned work as planned. Do not invent an assistant answer.
 
 Terminology: enrollment, LMS access/provisioning, lesson progress, certificate reference, public verification, lesson chatbot.
 
@@ -51,7 +51,7 @@ Visual identity is the LMS category standard, executed at the craft level of Can
 
 ## Evidence on Hand
 
-Demo logins and seed course content in `data/store.json`. Public verification of issued references at `/verify`. No customer quotes, case studies, or real certificate PDFs. Future work must not fabricate them.
+Demo logins and seed course content in `data/store.json`. Passwords in that file are bcrypt hashes. Public verification of issued references at `/verify`, with a PDF download of the same record. No customer quotes or case studies. Future work must not fabricate them.
 
 ## Product Principles
 

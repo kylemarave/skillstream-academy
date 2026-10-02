@@ -32,7 +32,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 ## Already working
 - Role login (student, instructor, admin)
 - Passwords are bcrypt hashes. The session cookie is signed, expires in 7 days, and logout revokes it.
-- Instructor create course, modules, lessons, publish
+- Instructor creates a course, modules, and lessons, then submits the draft for review. An admin publishes it.
 - Student catalog and enrollment
 - LMS account created on enroll; course is active only after access is provisioned
 - Student provisioning states: in progress, failed, and player blocked until access is ready
@@ -59,7 +59,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 ## Not built — keep labeled Planned
 - Password recovery
 - Relational database
-- Admin operations
+- Admin user management, system health, reassign, and reporting
 - Notifications
 - Integration-event retries
 - Audit logs
@@ -108,8 +108,9 @@ Keep this path real. A student must be able to enroll, finish lessons, and verif
 - [x] Persist lesson_progress (in_progress / completed)
 - [x] Completing the last lesson sets enrollment to completed
 - [x] Confirm before marking a lesson complete; success banner after
-- [ ] Real quiz / assignment scoring (quiz/assignment currently auto-score 100)
-- [x] Video, quiz, and assignment types in authoring (scoring still Planned)
+- [x] Quiz grading. The instructor marks the correct choice. A wrong choice does not complete the lesson. A right choice records 100.
+- [ ] Assignment scoring. Submitting an assignment still records 100. There is no file upload.
+- [x] Video, quiz, and assignment types in authoring
 - [x] Lesson duration and content URL/body in authoring
 
 ## 1.3 Certificates
@@ -152,9 +153,9 @@ Done when: two simultaneous edits cannot clobber each other.
 ## 2.1 Course authoring
 - [x] Create course (draft)
 - [x] Add modules and lessons
-- [x] Publish from the course page
-- [x] Warn before publishing a course with no lessons
-- [x] Confirm before create / add module / add lesson / publish / unpublish
+- [x] Submit for review from the course page. The instructor cannot set the course to published.
+- [x] Checklist blocks submit when required items are missing
+- [x] Confirm before create / add module / add lesson / submit / return to draft
 - [x] Success notice after those mutations
 - [x] Edit course title and description
 - [x] Edit / delete modules and lessons
@@ -164,7 +165,7 @@ Done when: two simultaneous edits cannot clobber each other.
 - [x] Explicit save confirmation (“Saved”)
 - [x] Completeness checklist before publish
 - [x] Archive course without deleting enrollments
-- [x] Create a draft course from a PDF (modules and lessons; stays private until publish)
+- [x] Create a draft course from a PDF (modules and lessons; stays private until an admin publishes it)
 
 ## 2.2 Admin course review
 - [x] Submit for review
@@ -203,7 +204,7 @@ The instructor Escalations page is removed. Lesson questions stay on the course.
 - [x] Success notice after every live mutating action
 - [x] Route-level loading
 - [ ] Retry on network/server failure
-- [ ] Confirm destructive actions for edit/delete when those exist
+- [x] Confirm before delete for a course, module, or lesson
 
 ---
 
@@ -233,7 +234,8 @@ The instructor Escalations page is removed. Lesson questions stay on the course.
 # Phase 4 — Admin ops and hardening
 
 ## 4.1 Admin console
-- [ ] /admin/courses — publish, archive, reassign
+- [x] /admin/courses — review queue. Approve publishes. Send back keeps the draft and stores feedback.
+- [ ] /admin/courses — archive and reassign from the admin console
 - [ ] /admin/enrollments — search and repair bad records
 - [ ] /admin/system-health — failed events, retry, reconcile
 - [ ] /admin/users — accounts, roles, suspend/deactivate
@@ -259,7 +261,7 @@ Out of V1. No topic filters, sort, pagination, outcomes, or instructor profile.
 - [ ] Empty-state and data-list components
 - [ ] Storybook or equivalent
 - [ ] Document responsive, content, and a11y rules
-- [ ] Update README (it still mentions the old Ink & Paper palette)
+- [x] Update README (palette and routes match the app)
 
 ---
 
@@ -267,12 +269,12 @@ Out of V1. No topic filters, sort, pagination, outcomes, or instructor profile.
 
 Check these before calling a phase done.
 
-- [ ] Student can finish enroll → learn → certify without editing seed data
-- [ ] Instructor can publish a course and see roster progress
-- [ ] Public verify works with no account
-- [ ] Planned features (admin) are labeled Planned
-- [ ] No invented testimonials or AI answers
-- [ ] Certificate reference is never client-supplied
+- [x] Student can finish enroll → learn → certify without editing seed data
+- [x] Instructor can submit a course and see roster progress. An admin publishes it.
+- [x] Public verify works with no account
+- [x] Remaining admin work (users, system health, reassign, reporting) is labeled Planned
+- [x] No invented testimonials. The lesson assistant stops when the lessons do not contain the answer.
+- [x] Certificate reference is never client-supplied
 - [ ] Role changes only via admin
 - [ ] Tests for enrollment, progress → completion, certificate uniqueness, verify lookup
 - [ ] Accessibility check on player, roster, verify, and authoring
@@ -383,7 +385,11 @@ Check these before calling a phase done.
 
 ## Not built yet — add Before + After when you ship them
 
-- [ ] Approve / return / archive / reassign a course
+- [x] Approve or send a course back
+  Before: Done — “Publish this course?” / “Send this course back?”
+  After: Done — “Published” or “Sent back”
+  Fail: Done — inline error; feedback is required to send a course back
+- [ ] Archive or reassign a course from the admin console
 - [ ] Retry a failed LMS or certificate sync
 - [ ] Suspend / deactivate a user
 - [ ] Change a user role
@@ -402,7 +408,8 @@ Check these before calling a phase done.
 
 # Suggested build order
 
-1. Auth + database
-2. Integration-event retries (write of confirmed/completed is live)
-3. Lesson chatbot — Live
-4. Admin ops + notifications
+1. Relational database, migrations, and seed data (teammate)
+2. Password recovery
+3. Integration-event retries
+4. Admin user management, system health, reassign, and reporting
+5. Notifications and audit logs
