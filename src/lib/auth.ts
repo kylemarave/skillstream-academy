@@ -1,23 +1,55 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getUserById } from "./db";
 import {
-  decodeSession,
-  encodeSession,
+  createUserSession,
+  getUserById,
+  getUserSession,
+  revokeUserSession,
+} from "./db";
+import {
+  readSessionCookie,
   roleHomePath,
   SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
+  sessionIsCurrent,
+  signSession,
 } from "./session";
 import type { SessionUser, UserRole } from "./types";
 
-export { encodeSession, SESSION_COOKIE, roleHomePath } from "./session";
+export { SESSION_COOKIE, roleHomePath } from "./session";
 
-export async function startSession(user: SessionUser) {
+export async function startSession(user: SessionUser): Promise<boolean> {
+  const expiresAt = new Date(Date.now() + SESSION_TTL_SECONDS * 1000);
+  const record = await createUserSession(user.id, expiresAt.toISOString());
+  const token = await signSession({
+    sid: record.id,
+    role: user.role,
+    exp: Math.floor(expiresAt.getTime() / 1000),
+  });
+  if (!token) {
+    await revokeUserSession(record.id);
+    return false;
+  }
+
   const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, encodeSession(user), {
+  cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
+    maxAge: SESSION_TTL_SECONDS,
+    secure: process.env.NODE_ENV === "production",
   });
+  return true;
+}
+
+export async function endSession(): Promise<void> {
+  const cookieStore = await cookies();
+  const raw = cookieStore.get(SESSION_COOKIE)?.value;
+  if (raw) {
+    const claims = await readSessionCookie(raw);
+    if (claims) await revokeUserSession(claims.sid);
+  }
+  cookieStore.delete(SESSION_COOKIE);
 }
 
 export async function getSession(): Promise<SessionUser | null> {
@@ -25,10 +57,14 @@ export async function getSession(): Promise<SessionUser | null> {
   const raw = cookieStore.get(SESSION_COOKIE)?.value;
   if (!raw) return null;
 
-  const session = decodeSession(raw);
-  if (!session) return null;
+  const claims = await readSessionCookie(raw);
+  if (!claims || !sessionIsCurrent(claims)) return null;
 
-  const user = await getUserById(session.id);
+  const record = await getUserSession(claims.sid);
+  if (!record || record.revokedAt) return null;
+  if (new Date(record.expiresAt).getTime() <= Date.now()) return null;
+
+  const user = await getUserById(record.userId);
   if (!user) return null;
 
   return {

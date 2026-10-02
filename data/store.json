@@ -3,34 +3,72 @@
     {
       "id": "user-student-1",
       "email": "student@skillstream.academy",
-      "password": "password123",
       "firstName": "Alex",
       "lastName": "Rivera",
-      "role": "student"
+      "role": "student",
+      "passwordHash": "$2b$10$QIX/lYOdYOHxGfRr.C3mOe4QBtaLkqLV4Be3sQsuwM3xFUeXDYYH6"
     },
     {
       "id": "user-instructor-1",
       "email": "instructor@skillstream.academy",
-      "password": "password123",
       "firstName": "Jordan",
       "lastName": "Chen",
-      "role": "instructor"
+      "role": "instructor",
+      "passwordHash": "$2b$10$a5Pc2hUhcBFJFYzXtPDJsO2C2aJ/hF/3tAAIGfNiCZLrGYhND.Wn6"
     },
     {
       "id": "user-admin-1",
       "email": "admin@skillstream.academy",
-      "password": "password123",
       "firstName": "Sam",
       "lastName": "Okonkwo",
-      "role": "admin"
+      "role": "admin",
+      "passwordHash": "$2b$10$RbR55WmGi8P4FfVh4US02e8GslDM3VAB/cO9XkHkz7LrFQcGQZ9mi"
     },
     {
       "id": "0e470805-8882-4dbe-bf11-a8a6b8d4cf73",
       "email": "k@gmail.com",
-      "password": "11111111",
+      "firstName": "Kyle",
+      "lastName": "Marave",
+      "role": "student",
+      "passwordHash": "$2b$10$zJ5hmPPDWNIf1mwHr16/o.6OONBoogRkRfvIgLctlR5OvQlpVNXIa"
+    },
+    {
+      "id": "2d148d77-8d7b-48d1-9ea6-259229fff327",
+      "email": "t@gmail.com",
+      "passwordHash": "$2b$10$ABKy/67n06TvBfH9xWEoSuouJNF1ZWubRDqtxJrIb56fGJar/Xqga",
       "firstName": "Kyle",
       "lastName": "Marave",
       "role": "student"
+    }
+  ],
+  "sessions": [
+    {
+      "id": "38f9d1f2-1787-4afb-b5e7-4db093d566de",
+      "userId": "2d148d77-8d7b-48d1-9ea6-259229fff327",
+      "expiresAt": "2026-10-09T22:06:46.954Z",
+      "createdAt": "2026-10-02T22:06:46.955Z",
+      "revokedAt": "2026-10-02T22:15:19.232Z"
+    },
+    {
+      "id": "d3499cda-87d6-4492-88da-0dc4a05e215f",
+      "userId": "user-instructor-1",
+      "expiresAt": "2026-10-09T22:14:09.022Z",
+      "createdAt": "2026-10-02T22:14:09.029Z",
+      "revokedAt": null
+    },
+    {
+      "id": "479ea6ae-7580-4f82-90c3-408775ea13fd",
+      "userId": "user-admin-1",
+      "expiresAt": "2026-10-09T22:14:14.852Z",
+      "createdAt": "2026-10-02T22:14:14.879Z",
+      "revokedAt": null
+    },
+    {
+      "id": "6f9d86db-eedb-4167-a397-ab6847b8b41c",
+      "userId": "user-instructor-1",
+      "expiresAt": "2026-10-09T22:15:28.606Z",
+      "createdAt": "2026-10-02T22:15:28.608Z",
+      "revokedAt": null
     }
   ],
   "courses": [
@@ -41,7 +79,10 @@
       "description": "Learn HTML, CSS, and JavaScript fundamentals through hands-on projects.",
       "status": "published",
       "createdAt": "2026-01-15T08:00:00.000Z",
-      "updatedAt": "2026-09-22T07:17:52.354Z"
+      "updatedAt": "2026-09-22T07:17:52.354Z",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null
     },
     {
       "id": "course-2",
@@ -50,7 +91,10 @@
       "description": "ERDs, normalization, and SQL for application developers.",
       "status": "published",
       "createdAt": "2026-02-01T08:00:00.000Z",
-      "updatedAt": "2026-09-22T08:20:00.000Z"
+      "updatedAt": "2026-09-22T08:20:00.000Z",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null
     },
     {
       "instructorId": "user-instructor-1",
@@ -59,7 +103,46 @@
       "status": "draft",
       "id": "2a227af0-8241-4bcb-be90-93367d9869e7",
       "createdAt": "2026-09-22T09:45:22.639Z",
-      "updatedAt": "2026-09-22T09:45:22.639Z"
+      "updatedAt": "2026-09-22T09:45:22.639Z",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null
+    },
+    {
+      "id": "f1054129-19b0-4367-b41d-826c6a4f9ebe",
+      "instructorId": "user-instructor-1",
+      "title": "Database Tables and Keys",
+      "description": "Learn what a table stores and how primary and foreign keys relate rows across tables.",
+      "status": "draft",
+      "createdAt": "2026-10-02T21:33:00.766Z",
+      "updatedAt": "2026-10-02T22:14:15.643Z",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null
+    },
+    {
+      "id": "c7c1ac74-874c-4016-b374-017fd6841101",
+      "instructorId": "user-instructor-1",
+      "title": "Systems Integration & Architecture: Weeks 2–5 Cram Reviewer",
+      "description": "Exam-focused review of systems integration and architecture, project and software life cycles, requirements and modeling diagrams, and architectural patterns and styles.",
+      "status": "published",
+      "createdAt": "2026-10-02T21:34:59.267Z",
+      "updatedAt": "2026-10-02T21:35:37.079Z",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null
+    },
+    {
+      "instructorId": "user-instructor-1",
+      "title": "asdads",
+      "description": "tesy",
+      "status": "archived",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null,
+      "id": "0827b986-247f-4633-b142-fab4daadccf6",
+      "createdAt": "2026-10-02T22:15:37.848Z",
+      "updatedAt": "2026-10-02T22:15:57.257Z"
     }
   ],
   "modules": [
@@ -97,6 +180,48 @@
       "sequenceOrder": 2,
       "id": "422a1b05-1635-4609-a701-147a0024b63f",
       "createdAt": "2026-09-22T09:46:04.530Z"
+    },
+    {
+      "id": "fb6cffbe-3385-497b-9e12-4f4b665859e5",
+      "courseId": "f1054129-19b0-4367-b41d-826c6a4f9ebe",
+      "title": "Tables and Keys",
+      "sequenceOrder": 1,
+      "createdAt": "2026-10-02T21:33:00.766Z"
+    },
+    {
+      "id": "d58530df-3142-484c-9f0f-3c607b101bc3",
+      "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+      "title": "Week 2: Systems Integration & Architecture",
+      "sequenceOrder": 2,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "a213ac07-745b-4cbd-b33d-ecd2569896b1",
+      "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+      "title": "Week 3: Project Life Cycle and SDLC",
+      "sequenceOrder": 1,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "fe23628f-746e-4fcd-a942-293f3723435f",
+      "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+      "title": "Week 4: Requirements and Modeling",
+      "sequenceOrder": 3,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "44d121ad-658d-478f-b622-a1857f738a46",
+      "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+      "title": "Week 5: Architectural Patterns and Styles",
+      "sequenceOrder": 4,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "courseId": "0827b986-247f-4633-b142-fab4daadccf6",
+      "title": "asdads",
+      "sequenceOrder": 1,
+      "id": "432fd33f-d808-466a-8cac-c919d7993f42",
+      "createdAt": "2026-10-02T22:15:44.157Z"
     }
   ],
   "lessons": [
@@ -135,7 +260,7 @@
       "title": "Primary keys",
       "sequenceOrder": 2,
       "contentType": "quiz",
-      "contentRef": "{\"prompt\":\"What does a primary key do?\",\"choices\":[\"Identifies each row uniquely\",\"Stores CSS for the page\"]}",
+      "contentRef": "{\"prompt\":\"What does a primary key do?\",\"choices\":[\"Identifies each row uniquely\",\"Stores CSS for the page\"],\"correctIndex\":0}",
       "durationMinutes": null,
       "id": "1902d8cf-80ea-42bb-a1d5-de8cf1895e8e",
       "createdAt": "2026-09-22T06:30:39.434Z"
@@ -165,7 +290,7 @@
       "title": "asdsaddsa",
       "sequenceOrder": 2,
       "contentType": "quiz",
-      "contentRef": "{\"prompt\":\"asdad\",\"choices\":[\"asdasd\"]}",
+      "contentRef": "{\"prompt\":\"asdad\",\"choices\":[\"asdasd\"],\"correctIndex\":0}",
       "durationMinutes": null,
       "id": "1fa87efa-0e48-4f9e-b649-87f4171646a3",
       "createdAt": "2026-09-22T09:45:49.449Z"
@@ -189,6 +314,206 @@
       "durationMinutes": null,
       "id": "d9096312-b4f6-4d6c-8984-00b9184ed46b",
       "createdAt": "2026-09-22T09:47:01.932Z"
+    },
+    {
+      "id": "6f76d1f1-5731-4f69-b963-047d1d233d1f",
+      "moduleId": "fb6cffbe-3385-497b-9e12-4f4b665859e5",
+      "title": "What a Table Stores",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "A table stores one kind of thing.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:33:00.766Z"
+    },
+    {
+      "id": "09ce6491-482a-415f-b931-c0c79fc400e8",
+      "moduleId": "fb6cffbe-3385-497b-9e12-4f4b665859e5",
+      "title": "Primary Keys",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "A primary key uniquely identifies each row in a table.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:33:00.766Z"
+    },
+    {
+      "id": "ff44230d-7620-4add-94f9-590833e53c05",
+      "moduleId": "fb6cffbe-3385-497b-9e12-4f4b665859e5",
+      "title": "Foreign Keys",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "A foreign key points at another table's primary key.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:33:00.766Z"
+    },
+    {
+      "id": "930520b0-0a3f-4bb7-b923-597fc6687821",
+      "moduleId": "fb6cffbe-3385-497b-9e12-4f4b665859e5",
+      "title": "Check Your Understanding",
+      "sequenceOrder": 4,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"What does a primary key do?\",\"choices\":[\"Uniquely identifies each row\",\"Stores one kind of thing\",\"Points at another table's primary key\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:33:00.766Z"
+    },
+    {
+      "id": "94416ce8-ccb2-4538-9f26-47a52b645d9c",
+      "moduleId": "d58530df-3142-484c-9f0f-3c607b101bc3",
+      "title": "Systems and Systems Integration",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "A system is interconnected components working together to achieve a specific goal. Systems integration connects independent systems, applications, databases, or services so they communicate and function as one unified system. Without integration, organizations may face data duplication, manual data entry, more errors, slower processes, and data silos. Integration supports automatic data flow, streamlined processes, consistent information, and better collaboration. Its benefits include data accuracy, efficiency, better decisions, lower costs, improved customer experience, scalability, security, analytics support, and competitive advantage.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "111d77d6-28b3-4a1f-973c-d81974e52fd8",
+      "moduleId": "d58530df-3142-484c-9f0f-3c607b101bc3",
+      "title": "System Architecture and Layers",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "System architecture is the blueprint or fundamental structure of a system: its components, relationships, interactions, and design principles. Its layers include Presentation (user interface), Application (business logic), Data (store and manage data), Integration (connect systems), Security (protect system and data), Infrastructure (hardware or cloud environment), Communication (component-to-component communication), API Gateway (exposed functionality), Monitoring and Observability (system health), and AI and Intelligence (prediction, recommendations, and GenAI).",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "63bf514c-9408-4a46-afae-e0df0b5383ad",
+      "moduleId": "d58530df-3142-484c-9f0f-3c607b101bc3",
+      "title": "Architecture Terms",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "Authentication asks, “Who are you?” Authorization asks, “What are you allowed to access?” Synchronous communication has an immediate response; asynchronous communication happens later. An API lets systems expose or use functionality. Observability consists of metrics, logs, and traces.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "43beaf0b-6a6e-421e-84c5-ddd1e648eb63",
+      "moduleId": "d58530df-3142-484c-9f0f-3c607b101bc3",
+      "title": "Systems Integration Check",
+      "sequenceOrder": 4,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"What does system integration connect?\",\"choices\":[\"Independent systems, applications, databases, or services\",\"Only hardware components\",\"Only project schedules\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "4c2c47d6-be11-4e95-83bd-412bfe0f6e6c",
+      "moduleId": "a213ac07-745b-4cbd-b33d-ecd2569896b1",
+      "title": "Project Life Cycle",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "The Project Life Cycle (PLC) manages the entire project. Its five phases are Initiation, Planning, Execution, Monitoring and Controlling, and Closure. Initiation considers the business need, objectives, feasibility, stakeholders, approval, and Project Charter. Feasibility types are Technical, Economic, Operational, Legal, and Schedule.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "8c5bd3ee-246b-4386-b362-17cbc592bc54",
+      "moduleId": "a213ac07-745b-4cbd-b33d-ecd2569896b1",
+      "title": "Planning Through Closure",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "Planning covers scope, schedule, budget, risks, resources, communication, and the Work Breakdown Structure (WBS), which breaks a project into smaller tasks. Tools include Gantt charts, network diagrams, and CPM. Execution turns plans into actual work through team management, resource use, development, quality assurance, and procurement. Monitoring and Controlling compares actual performance with the plan and includes performance, risk, and quality monitoring, change control, and issue management. Closure includes final acceptance, deliverable handover, lessons learned, resource release, and documentation.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "2546d65d-332e-4bdc-bcf4-6fcbe15373c9",
+      "moduleId": "a213ac07-745b-4cbd-b33d-ecd2569896b1",
+      "title": "Software Development Life Cycle",
+      "sequenceOrder": 4,
+      "contentType": "text",
+      "contentRef": "The Software Development Life Cycle (SDLC) specifically manages software development. It is the structured process for designing, developing, testing, deploying, and maintaining software. Its six phases are Requirements Analysis (what the user needs), System Design (how to build it), Development/Coding, Testing (find defects), Deployment (release it), and Maintenance (fix or improve it). Testing types include Functional Testing, Integration Testing, System Testing, and UAT (User Acceptance Testing). PLC manages the project; SDLC manages the software.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "62cf569c-df01-4e86-ab7d-a91d93f6f5c5",
+      "moduleId": "a213ac07-745b-4cbd-b33d-ecd2569896b1",
+      "title": "Life Cycle Check",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"Which PLC phase compares actual performance with the plan?\",\"choices\":[\"Initiation\",\"Execution\",\"Monitoring and Controlling\",\"Closure\"],\"correctIndex\":2}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "a37ee4af-0933-4893-b5c7-030a964543fa",
+      "moduleId": "fe23628f-746e-4fcd-a942-293f3723435f",
+      "title": "Requirements Modeling and Use Cases",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "Requirements modeling documents, analyzes, and visualizes what a system must do before development. Requirement types include Business, Stakeholder, Functional, and Non-functional. Without requirements modeling, the wrong system may be built, features may be missed, stakeholders may have different expectations, and rework costs may increase. A Use Case Diagram shows how users interact with a system and focuses on its services. Its components are Actor (who interacts), Use Case (what the system does), and System Boundary (what is inside or outside).",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "3e006495-8d29-482d-8031-501ebc639104",
+      "moduleId": "fe23628f-746e-4fcd-a942-293f3723435f",
+      "title": "Data Flow Diagrams",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "A Data Flow Diagram (DFD) focuses on data: where it comes from, how it is processed, where it is stored, and where it goes. Unlike a Use Case Diagram, it focuses on information flow, not user interactions. Its components are External Entity, Process, Data Flow, and Data Store. Level 0 shows the entire system as one process, external entities, and major data flows, without internal processes or database details. Level 1 breaks the system into major processes. Level 2 expands a Level 1 process into subprocesses; this is called functional decomposition.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "a945a0a7-ea6a-4724-9352-3a3d9966670c",
+      "moduleId": "fe23628f-746e-4fcd-a942-293f3723435f",
+      "title": "UML and BPMN",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "UML (Unified Modeling Language) is used to visualize, specify, construct, and document software systems. Structural UML describes what a system is: Class Diagrams show classes, attributes, methods, and relationships; Component Diagrams show software modules and dependencies; Deployment Diagrams show hardware/software deployment. Behavioral UML describes how a system acts: Use Case Diagrams show users and systems, Activity Diagrams show workflows, and Sequence Diagrams show interactions over time. BPMN (Business Process Model and Notation) is used to visualize, document, analyze, and improve business processes. Its core symbols include a circle for an event, rounded rectangle for an activity, diamond for a gateway or decision, solid arrow for sequence flow, and dashed arrow for message flow. A pool represents a participant or organization; a lane represents a role or department. Artifacts include data objects and annotations.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "3099b55d-0081-4bf0-a81e-e8a9badb2b32",
+      "moduleId": "fe23628f-746e-4fcd-a942-293f3723435f",
+      "title": "Diagram Check",
+      "sequenceOrder": 4,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"Which diagram focuses on information and data flow?\",\"choices\":[\"Use Case Diagram\",\"Data Flow Diagram\",\"Class Diagram\",\"Sequence Diagram\"],\"correctIndex\":1}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "c0c88d56-e20a-41f3-9c9b-294b3f61d2c9",
+      "moduleId": "44d121ad-658d-478f-b622-a1857f738a46",
+      "title": "Patterns, Styles, and Layered Architecture",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "An architectural pattern is a reusable solution to commonly occurring software design problems, providing best practices, proven approaches, standard structures, and guidance. An architectural style is a system’s overall organization and communication strategy. Layered Architecture separates responsibilities into Presentation (UI), Business (rules and logic), Data Access (bridge to the database), and Database (permanent storage). Its order is UI → Logic → Access → DB, and it is useful for separation of concerns and organized structure.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "56ae5bd4-4b28-4a64-8776-5490decb3af7",
+      "moduleId": "44d121ad-658d-478f-b622-a1857f738a46",
+      "title": "SOA and Microservices",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "Service-Oriented Architecture (SOA) treats business functions as reusable services. Its main goal is reuse rather than rebuilding. A Service Consumer requests a service, an ESB acts as a communication hub or traffic controller, and a Service Provider provides business functionality. A Service Registry is a directory for locating services. Microservices Architecture divides an application into small, independent services, with one service for one business function. Components include a client, API Gateway, microservices, independent databases, and service discovery. Microservices are independent, deployable, replaceable, and scalable.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "930268fd-370b-470f-9b98-a01a36c5d243",
+      "moduleId": "44d121ad-658d-478f-b622-a1857f738a46",
+      "title": "Event-Driven Architecture and Style Comparison",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "In Event-Driven Architecture (EDA), components communicate through events, such as Order Placed, Payment Success, Ride Booked, or User Registered. An Event Producer generates an event; an Event Broker receives, routes, and distributes it; an Event Consumer responds to or processes it. An Event Channel or Topic is where events are published. The main style focuses are: Layered—separation; SOA—reuse; Microservices—independence; EDA—events; Client-Server—request-response communication.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "1f4d32eb-2d5a-4dc3-ae10-8a656a760757",
+      "moduleId": "44d121ad-658d-478f-b622-a1857f738a46",
+      "title": "Architectural Styles Check",
+      "sequenceOrder": 4,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"Which architecture uses reusable business services as its main idea?\",\"choices\":[\"Layered Architecture\",\"SOA\",\"Microservices Architecture\",\"Event-Driven Architecture\"],\"correctIndex\":1}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-02T21:34:59.267Z"
     }
   ],
   "enrollments": [
@@ -210,7 +535,7 @@
       "enrolledAt": "2026-09-22T08:19:26.263Z",
       "completedAt": null,
       "createdAt": "2026-09-22T08:19:26.263Z",
-      "updatedAt": "2026-09-22T08:19:26.263Z"
+      "updatedAt": "2026-10-02T21:36:05.700Z"
     },
     {
       "id": "1f1a0ad4-7189-468f-8e61-3419604ce96a",
@@ -221,6 +546,26 @@
       "completedAt": null,
       "createdAt": "2026-09-24T19:42:58.284Z",
       "updatedAt": "2026-09-24T19:42:58.284Z"
+    },
+    {
+      "id": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "studentId": "user-student-1",
+      "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+      "status": "active",
+      "enrolledAt": "2026-10-02T21:36:28.122Z",
+      "completedAt": null,
+      "createdAt": "2026-10-02T21:36:28.122Z",
+      "updatedAt": "2026-10-02T21:36:28.122Z"
+    },
+    {
+      "id": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "studentId": "2d148d77-8d7b-48d1-9ea6-259229fff327",
+      "courseId": "course-1",
+      "status": "completed",
+      "enrolledAt": "2026-10-02T22:06:57.384Z",
+      "completedAt": "2026-10-02T22:07:13.918Z",
+      "createdAt": "2026-10-02T22:06:57.384Z",
+      "updatedAt": "2026-10-02T22:07:13.918Z"
     }
   ],
   "lmsAccounts": [
@@ -250,6 +595,24 @@
       "externalLmsId": "lms-1f1a0ad4",
       "createdAt": "2026-09-24T19:42:58.284Z",
       "updatedAt": "2026-09-24T19:42:58.284Z"
+    },
+    {
+      "id": "232d552f-fa78-4fc7-84ff-66d927867b7d",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "provisionedAt": "2026-10-02T21:36:28.122Z",
+      "syncStatus": "provisioned",
+      "externalLmsId": "lms-f68b44d8",
+      "createdAt": "2026-10-02T21:36:28.122Z",
+      "updatedAt": "2026-10-02T21:36:28.122Z"
+    },
+    {
+      "id": "d8483176-cd12-4087-9f7d-c4e6e900203e",
+      "enrollmentId": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "provisionedAt": "2026-10-02T22:06:57.384Z",
+      "syncStatus": "provisioned",
+      "externalLmsId": "lms-42c4ffc1",
+      "createdAt": "2026-10-02T22:06:57.384Z",
+      "updatedAt": "2026-10-02T22:06:57.384Z"
     }
   ],
   "lessonProgress": [
@@ -277,11 +640,11 @@
       "id": "c956b0dc-7d67-429a-916c-f4ad86f1bc88",
       "enrollmentId": "d5273165-4944-4610-bbba-7c72bbf204c6",
       "lessonId": "a1937b14-33f8-476d-9928-3ebd1eda453a",
-      "status": "in_progress",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-10-02T21:36:05.700Z",
       "score": null,
       "createdAt": "2026-09-22T08:21:10.508Z",
-      "updatedAt": "2026-09-22T08:21:10.508Z"
+      "updatedAt": "2026-10-02T21:36:05.700Z"
     },
     {
       "id": "3daa180c-b7c7-4990-9edc-5bd7acd919e4",
@@ -312,6 +675,176 @@
       "score": null,
       "createdAt": "2026-09-24T19:43:09.234Z",
       "updatedAt": "2026-09-24T19:43:09.234Z"
+    },
+    {
+      "id": "708f6df7-85e9-41b0-b7c4-b4e8cd724849",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "lessonId": "b156eec8-c3cb-4d98-bd3c-6a4989b7328f",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T20:00:23.722Z",
+      "updatedAt": "2026-10-02T20:00:23.722Z"
+    },
+    {
+      "id": "8036435d-f50f-4acc-8d34-b06e5096b88c",
+      "enrollmentId": "d5273165-4944-4610-bbba-7c72bbf204c6",
+      "lessonId": "1902d8cf-80ea-42bb-a1d5-de8cf1895e8e",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:36:05.906Z",
+      "updatedAt": "2026-10-02T21:36:05.906Z"
+    },
+    {
+      "id": "aca432d7-68a3-46e4-9630-ca2fccd8daca",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "4c2c47d6-be11-4e95-83bd-412bfe0f6e6c",
+      "status": "completed",
+      "completedAt": "2026-10-02T21:36:37.837Z",
+      "score": null,
+      "createdAt": "2026-10-02T21:36:33.692Z",
+      "updatedAt": "2026-10-02T21:36:37.837Z"
+    },
+    {
+      "id": "9cf9d042-7eef-4e85-a310-fffe4f0e6934",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "8c5bd3ee-246b-4386-b362-17cbc592bc54",
+      "status": "completed",
+      "completedAt": "2026-10-02T21:36:40.894Z",
+      "score": null,
+      "createdAt": "2026-10-02T21:36:38.035Z",
+      "updatedAt": "2026-10-02T21:36:40.894Z"
+    },
+    {
+      "id": "cc33cd37-0f29-4c5f-8ca5-98cbae1c6de1",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "62cf569c-df01-4e86-ab7d-a91d93f6f5c5",
+      "status": "completed",
+      "completedAt": "2026-10-02T21:36:48.213Z",
+      "score": 100,
+      "createdAt": "2026-10-02T21:36:41.090Z",
+      "updatedAt": "2026-10-02T21:36:48.213Z"
+    },
+    {
+      "id": "5fb89588-2726-4978-866e-d6299b1de91f",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "2546d65d-332e-4bdc-bcf4-6fcbe15373c9",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:36:48.423Z",
+      "updatedAt": "2026-10-02T21:36:48.423Z"
+    },
+    {
+      "id": "52c2c8e1-ffba-477f-884c-a42c5cc4e16c",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "43beaf0b-6a6e-421e-84c5-ddd1e648eb63",
+      "status": "completed",
+      "completedAt": "2026-10-02T21:45:59.933Z",
+      "score": 100,
+      "createdAt": "2026-10-02T21:45:52.290Z",
+      "updatedAt": "2026-10-02T21:45:59.933Z"
+    },
+    {
+      "id": "ffb2d375-447e-46dc-a5b4-7ee2856020e8",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "a37ee4af-0933-4893-b5c7-030a964543fa",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:46:00.140Z",
+      "updatedAt": "2026-10-02T21:46:00.140Z"
+    },
+    {
+      "id": "af234176-9640-4693-9d5d-d6c20603df7a",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "63bf514c-9408-4a46-afae-e0df0b5383ad",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:46:03.699Z",
+      "updatedAt": "2026-10-02T21:46:03.699Z"
+    },
+    {
+      "id": "89f7588f-ec66-4500-bbd4-21c452ed91fa",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "94416ce8-ccb2-4538-9f26-47a52b645d9c",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:46:04.803Z",
+      "updatedAt": "2026-10-02T21:46:04.803Z"
+    },
+    {
+      "id": "b82cdbc1-c239-4068-9da2-8768ca88b974",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "111d77d6-28b3-4a1f-973c-d81974e52fd8",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:46:18.280Z",
+      "updatedAt": "2026-10-02T21:46:18.280Z"
+    },
+    {
+      "id": "d7062760-63d1-4a9a-bd07-591be670f320",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "3e006495-8d29-482d-8031-501ebc639104",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:46:28.865Z",
+      "updatedAt": "2026-10-02T21:46:28.865Z"
+    },
+    {
+      "id": "e982e143-cbd2-4de5-962b-e09c210ac180",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "a945a0a7-ea6a-4724-9352-3a3d9966670c",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:46:31.628Z",
+      "updatedAt": "2026-10-02T21:46:31.628Z"
+    },
+    {
+      "id": "3d284c23-68c3-471b-a277-bce098f06c8c",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "lessonId": "3099b55d-0081-4bf0-a81e-e8a9badb2b32",
+      "status": "in_progress",
+      "completedAt": null,
+      "score": null,
+      "createdAt": "2026-10-02T21:46:34.299Z",
+      "updatedAt": "2026-10-02T21:46:34.299Z"
+    },
+    {
+      "id": "fa948c41-9fdb-40b2-996d-b56b4b71701e",
+      "enrollmentId": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "lessonId": "lesson-2",
+      "status": "completed",
+      "completedAt": "2026-10-02T22:07:03.978Z",
+      "score": null,
+      "createdAt": "2026-10-02T22:07:00.516Z",
+      "updatedAt": "2026-10-02T22:07:03.978Z"
+    },
+    {
+      "id": "378fc616-81f0-44a9-87c9-aaa38ccf7576",
+      "enrollmentId": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "lessonId": "lesson-1",
+      "status": "completed",
+      "completedAt": "2026-10-02T22:07:11.541Z",
+      "score": null,
+      "createdAt": "2026-10-02T22:07:04.200Z",
+      "updatedAt": "2026-10-02T22:07:11.541Z"
+    },
+    {
+      "id": "6b24b484-f87b-4c4c-862d-2a3294cd925c",
+      "enrollmentId": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "lessonId": "b156eec8-c3cb-4d98-bd3c-6a4989b7328f",
+      "status": "completed",
+      "completedAt": "2026-10-02T22:07:13.918Z",
+      "score": null,
+      "createdAt": "2026-10-02T22:07:11.754Z",
+      "updatedAt": "2026-10-02T22:07:13.918Z"
     }
   ],
   "certificates": [
@@ -320,9 +853,18 @@
       "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
       "referenceNumber": "SSA-2026-U9FJQD",
       "issuedAt": "2026-08-27T09:41:51.925Z",
-      "fileUrl": "/verify/SSA-2026-U9FJQD",
+      "fileUrl": "/api/certificates/SSA-2026-U9FJQD",
       "verificationStatus": "valid",
       "createdAt": "2026-08-27T09:50:35.112Z"
+    },
+    {
+      "id": "d783328c-05d6-4df9-94e1-add14c4dd238",
+      "enrollmentId": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "referenceNumber": "SSA-2026-H6G4DF",
+      "issuedAt": "2026-10-02T22:07:13.918Z",
+      "fileUrl": "/api/certificates/SSA-2026-H6G4DF",
+      "verificationStatus": "valid",
+      "createdAt": "2026-10-02T22:07:13.918Z"
     }
   ],
   "integrationEvents": [
@@ -389,6 +931,54 @@
       "lastError": null,
       "createdAt": "2026-09-24T19:42:58.284Z",
       "processedAt": "2026-09-24T19:42:58.284Z"
+    },
+    {
+      "id": "fa24096e-bd65-47b5-a32c-025d56ab050e",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "eventType": "enrollment.confirmed",
+      "payload": {
+        "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+        "studentId": "user-student-1",
+        "lmsAccountId": "232d552f-fa78-4fc7-84ff-66d927867b7d",
+        "syncStatus": "provisioned"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-10-02T21:36:28.122Z",
+      "processedAt": "2026-10-02T21:36:28.122Z"
+    },
+    {
+      "id": "1e288152-8b43-4c6e-8966-7d97faf72e9e",
+      "enrollmentId": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "eventType": "enrollment.confirmed",
+      "payload": {
+        "courseId": "course-1",
+        "studentId": "2d148d77-8d7b-48d1-9ea6-259229fff327",
+        "lmsAccountId": "d8483176-cd12-4087-9f7d-c4e6e900203e",
+        "syncStatus": "provisioned"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-10-02T22:06:57.384Z",
+      "processedAt": "2026-10-02T22:06:57.384Z"
+    },
+    {
+      "id": "cd98c1a8-6ce0-4cbd-88d0-bdc24aaeec53",
+      "enrollmentId": "42c4ffc1-9ee2-4364-9c5c-c93cc6bc7743",
+      "eventType": "enrollment.completed",
+      "payload": {
+        "courseId": "course-1",
+        "studentId": "2d148d77-8d7b-48d1-9ea6-259229fff327",
+        "certificateId": "d783328c-05d6-4df9-94e1-add14c4dd238",
+        "referenceNumber": "SSA-2026-H6G4DF"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-10-02T22:07:13.918Z",
+      "processedAt": "2026-10-02T22:07:13.918Z"
     }
   ],
   "aiConversations": [
@@ -407,6 +997,102 @@
         "percent": 0,
         "nextLessonTitle": "Your First HTML Page"
       }
+    },
+    {
+      "id": "9081e900-20af-41c9-b088-2178796fb223",
+      "studentId": "user-student-1",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "startedAt": "2026-10-02T19:40:40.011Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "course-1",
+        "courseTitle": "Intro to Web Development",
+        "enrollmentStatus": "completed",
+        "completed": 2,
+        "total": 3,
+        "percent": 67,
+        "nextLessonTitle": "test"
+      }
+    },
+    {
+      "id": "0f53e386-be5c-4cbc-87fa-b5c4b6b04050",
+      "studentId": "user-student-1",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "startedAt": "2026-10-02T21:09:03.338Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "course-1",
+        "courseTitle": "Intro to Web Development",
+        "enrollmentStatus": "completed",
+        "completed": 2,
+        "total": 3,
+        "percent": 67,
+        "nextLessonTitle": "test"
+      }
+    },
+    {
+      "id": "d72ff557-c2f9-4b9a-8d92-a2fde399a8d2",
+      "studentId": "user-student-1",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "startedAt": "2026-10-02T21:09:06.367Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "course-1",
+        "courseTitle": "Intro to Web Development",
+        "enrollmentStatus": "completed",
+        "completed": 2,
+        "total": 3,
+        "percent": 67,
+        "nextLessonTitle": "test"
+      }
+    },
+    {
+      "id": "1c38c45d-c53e-4553-8b29-91f50b155102",
+      "studentId": "user-student-1",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "startedAt": "2026-10-02T21:16:04.092Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "course-1",
+        "courseTitle": "Intro to Web Development",
+        "enrollmentStatus": "completed",
+        "completed": 2,
+        "total": 3,
+        "percent": 67,
+        "nextLessonTitle": "test"
+      }
+    },
+    {
+      "id": "fd8214a1-0f45-4d0b-9a66-a4b2ad4300c5",
+      "studentId": "user-student-1",
+      "enrollmentId": "3638ae28-31d2-4154-a255-6d8a51fa93ae",
+      "startedAt": "2026-10-02T21:18:23.107Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "course-1",
+        "courseTitle": "Intro to Web Development",
+        "enrollmentStatus": "completed",
+        "completed": 2,
+        "total": 3,
+        "percent": 67,
+        "nextLessonTitle": "test"
+      }
+    },
+    {
+      "id": "3cfad2b2-9a80-47d4-a5c6-f8018ba484a5",
+      "studentId": "user-student-1",
+      "enrollmentId": "f68b44d8-945e-4489-a7b4-4325d3749903",
+      "startedAt": "2026-10-02T21:47:01.590Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+        "courseTitle": "Systems Integration & Architecture: Weeks 2–5 Cram Reviewer",
+        "enrollmentStatus": "active",
+        "completed": 4,
+        "total": 16,
+        "percent": 25,
+        "nextLessonTitle": "Software Development Life Cycle"
+      }
     }
   ],
   "aiMessages": [
@@ -416,17 +1102,84 @@
       "role": "student",
       "content": "Hello sir I have a question regarding to the system",
       "createdAt": "2026-09-24T19:52:08.880Z"
+    },
+    {
+      "id": "c81fd081-6527-4391-8808-8c4763fa91ab",
+      "conversationId": "9081e900-20af-41c9-b088-2178796fb223",
+      "role": "student",
+      "content": "asdasd",
+      "createdAt": "2026-10-02T19:40:40.011Z"
+    },
+    {
+      "id": "b4c72b4d-8dac-42a3-8336-120556b67357",
+      "conversationId": "0f53e386-be5c-4cbc-87fa-b5c4b6b04050",
+      "role": "student",
+      "content": "What does the body of an HTML page contain?",
+      "createdAt": "2026-10-02T21:09:03.338Z"
+    },
+    {
+      "id": "cfeabdaa-df97-4814-b242-546a506ab12a",
+      "conversationId": "0f53e386-be5c-4cbc-87fa-b5c4b6b04050",
+      "role": "assistant",
+      "content": "The body contains what people see on the page.",
+      "createdAt": "2026-10-02T21:09:06.299Z"
+    },
+    {
+      "id": "81d647b8-2088-4bfa-bd1d-0e382706f9aa",
+      "conversationId": "d72ff557-c2f9-4b9a-8d92-a2fde399a8d2",
+      "role": "student",
+      "content": "What is the capital of France?",
+      "createdAt": "2026-10-02T21:09:06.367Z"
+    },
+    {
+      "id": "4931205d-01fb-48b1-9ef5-dca06ddd5366",
+      "conversationId": "d72ff557-c2f9-4b9a-8d92-a2fde399a8d2",
+      "role": "assistant",
+      "content": "This course’s lessons do not include an answer to that.",
+      "createdAt": "2026-10-02T21:09:08.724Z"
+    },
+    {
+      "id": "f65f23ea-e337-4a10-a163-92ee16872d98",
+      "conversationId": "1c38c45d-c53e-4553-8b29-91f50b155102",
+      "role": "student",
+      "content": "What is HTML",
+      "createdAt": "2026-10-02T21:16:04.092Z"
+    },
+    {
+      "id": "a809ead6-7566-47e3-8f96-f4f67f445353",
+      "conversationId": "1c38c45d-c53e-4553-8b29-91f50b155102",
+      "role": "assistant",
+      "content": "HTML is the markup used to structure a web page, with elements such as headings, paragraphs, lists, links, and images.",
+      "createdAt": "2026-10-02T21:16:06.139Z"
+    },
+    {
+      "id": "11c93340-8a53-4c24-ab24-4ec00251d6a7",
+      "conversationId": "fd8214a1-0f45-4d0b-9a66-a4b2ad4300c5",
+      "role": "student",
+      "content": "What is web",
+      "createdAt": "2026-10-02T21:18:23.107Z"
+    },
+    {
+      "id": "bb69be1c-276f-421c-b8a0-f8e5f1397b63",
+      "conversationId": "fd8214a1-0f45-4d0b-9a66-a4b2ad4300c5",
+      "role": "assistant",
+      "content": "This course’s lessons do not include an answer to that.",
+      "createdAt": "2026-10-02T21:18:25.718Z"
+    },
+    {
+      "id": "ef3e9c1e-4d5b-4ca7-8925-50631e860a50",
+      "conversationId": "3cfad2b2-9a80-47d4-a5c6-f8018ba484a5",
+      "role": "student",
+      "content": "What is Project Life Cycle?",
+      "createdAt": "2026-10-02T21:47:01.590Z"
+    },
+    {
+      "id": "6ad3eca0-dd52-450b-bd54-1f6c85cfcf77",
+      "conversationId": "3cfad2b2-9a80-47d4-a5c6-f8018ba484a5",
+      "role": "assistant",
+      "content": "The Project Life Cycle (PLC) manages the entire project through five phases: Initiation, Planning, Execution, Monitoring and Controlling, and Closure.",
+      "createdAt": "2026-10-02T21:47:03.163Z"
     }
   ],
-  "escalations": [
-    {
-      "id": "5c80dbc2-29be-4bc0-8a1a-b5e01d52e752",
-      "conversationId": "a4758730-d5f4-42a3-b726-463246309ce4",
-      "instructorId": "user-instructor-1",
-      "status": "pending",
-      "resolutionNotes": null,
-      "createdAt": "2026-09-24T19:52:08.880Z",
-      "resolvedAt": null
-    }
-  ]
+  "escalations": []
 }

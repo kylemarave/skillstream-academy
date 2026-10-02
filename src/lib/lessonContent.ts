@@ -21,6 +21,7 @@ export type LessonDraft = {
   contentRef: string;
   quizPrompt: string;
   quizChoices: string[];
+  quizCorrectIndex: number;
 };
 
 export type LessonPayload = {
@@ -33,6 +34,7 @@ export type LessonPayload = {
 export type QuizConfig = {
   prompt: string;
   choices: string[];
+  correctIndex: number | null;
 };
 
 export function emptyLessonDraft(): LessonDraft {
@@ -43,6 +45,7 @@ export function emptyLessonDraft(): LessonDraft {
     contentRef: "",
     quizPrompt: "",
     quizChoices: ["", ""],
+    quizCorrectIndex: 0,
   };
 }
 
@@ -74,33 +77,46 @@ export function parseDurationMinutes(
 
 export function parseQuizConfig(contentRef: string): QuizConfig {
   const trimmed = contentRef.trim();
-  if (!trimmed) return { prompt: "", choices: [] };
+  if (!trimmed) return { prompt: "", choices: [], correctIndex: null };
 
   try {
     const parsed = JSON.parse(trimmed) as {
       prompt?: unknown;
       choices?: unknown;
+      correctIndex?: unknown;
     };
     if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
       const prompt = typeof parsed.prompt === "string" ? parsed.prompt : "";
       const choices = Array.isArray(parsed.choices)
         ? parsed.choices.filter((choice): choice is string => typeof choice === "string")
         : [];
-      return { prompt, choices };
+      const correctIndex =
+        typeof parsed.correctIndex === "number" &&
+        Number.isInteger(parsed.correctIndex) &&
+        parsed.correctIndex >= 0 &&
+        parsed.correctIndex < choices.length
+          ? parsed.correctIndex
+          : null;
+      return { prompt, choices, correctIndex };
     }
   } catch {
     // Plain-text prompts from older records.
   }
 
-  return { prompt: trimmed, choices: [] };
+  return { prompt: trimmed, choices: [], correctIndex: null };
 }
 
 export function serializeQuizConfig(config: QuizConfig): string {
   const prompt = config.prompt.trim();
-  const choices = config.choices.map((choice) => choice.trim()).filter(Boolean);
+  const pairs = config.choices
+    .map((choice, index) => ({ choice: choice.trim(), index }))
+    .filter((item) => item.choice);
+  const choices = pairs.map((item) => item.choice);
   if (!prompt && choices.length === 0) return "";
   if (choices.length === 0) return prompt;
-  return JSON.stringify({ prompt, choices });
+  const matched = pairs.findIndex((item) => item.index === config.correctIndex);
+  const correctIndex = matched >= 0 ? matched : 0;
+  return JSON.stringify({ prompt, choices, correctIndex });
 }
 
 export function draftFromLesson(
@@ -123,6 +139,7 @@ export function draftFromLesson(
     contentRef: lesson.contentType === "quiz" ? "" : lesson.contentRef,
     quizPrompt: lesson.contentType === "quiz" ? quiz.prompt : "",
     quizChoices: choices.length >= 2 ? choices : ["", ""],
+    quizCorrectIndex: quiz.correctIndex ?? 0,
   };
 }
 
@@ -140,6 +157,7 @@ export function draftToPayload(
       ? serializeQuizConfig({
           prompt: draft.quizPrompt,
           choices: draft.quizChoices,
+          correctIndex: draft.quizCorrectIndex,
         })
       : draft.contentRef.trim();
 
@@ -229,7 +247,7 @@ export function contentFieldHint(contentType: LessonContentType): string {
     case "video":
       return "A public http(s) link. This build does not host video files.";
     case "quiz":
-      return "Scoring is not live. Students see this question; submit still records complete.";
+      return "Students must choose the marked answer. A wrong choice does not complete the lesson.";
     case "assignment":
       return "File upload is not in this build. Students read the brief, then mark it complete.";
     default:

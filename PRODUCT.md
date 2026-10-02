@@ -35,7 +35,7 @@ V1 scope from the approved ERD: one academy, one instructor per course. The huma
 
 Working in this prototype: role login, instructor course/module/lesson create and publish, student catalog and enrollment, LMS account provisioned on enroll, lesson player with progress, enrollment completed when all lessons are done, certificate issued on completion, public `/verify` by reference.
 
-Not implemented and must not be presented as live: hashed production auth, relational database, PDF certificate files, the lesson chatbot, admin operations. The course question box still files a pending escalation; that is not the chatbot.
+Not implemented and must not be presented as live: hashed production auth, relational database, PDF certificate files, admin operations. A student question is answered by GPT-6 Luna from that course’s lesson text. If the lessons do not contain the answer, the reply says so and stops. If the key is missing or the call fails, the question stays saved and the reply stays empty.
 
 Open tension (confirmed both): the judged path must not fake completion; the full V1 story (including the lesson chatbot) stays visible where it is not built. Record planned work as planned. Do not invent an assistant answer before the model is connected.
 

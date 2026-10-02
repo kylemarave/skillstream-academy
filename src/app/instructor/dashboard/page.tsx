@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   BookOpen,
-  MessageSquareText,
+  FileText,
   PenLine,
   Plus,
 } from "lucide-react";
@@ -14,7 +14,7 @@ import { StatCard } from "@/components/dashboard/StatCard";
 import { instructorJourneySteps } from "@/components/dashboard/constants";
 import { StatusBadge } from "@/components/StatusBadge";
 import { requireRole } from "@/lib/auth";
-import { listCourses, listEscalationsForInstructor } from "@/lib/db";
+import { listCourses } from "@/lib/db";
 import { instructorNav } from "@/lib/nav";
 
 export default async function InstructorDashboardPage() {
@@ -22,16 +22,12 @@ export default async function InstructorDashboardPage() {
   const courses = await listCourses({ instructorId: session.id });
   const draftCount = courses.filter((c) => c.status === "draft").length;
   const publishedCount = courses.filter((c) => c.status === "published").length;
-  const escalations = await listEscalationsForInstructor(session.id);
-  const pendingEscalations = escalations.filter(
-    (row) => row.status === "pending",
-  ).length;
 
   return (
     <AppShell
       user={session}
       title={`Welcome, ${session.firstName}`}
-      subtitle="Author courses, publish them to the catalog, and support the students taking them."
+      subtitle="Author a course, submit it for review, and track the students taking it."
       nav={instructorNav}
       actions={
         <Link href="/instructor/courses/new" className="btn btn-primary">
@@ -50,7 +46,7 @@ export default async function InstructorDashboardPage() {
 
         <section
           aria-label="Your numbers"
-          className="card grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+          className="card grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0"
         >
           <StatCard
             label="Drafts"
@@ -65,13 +61,6 @@ export default async function InstructorDashboardPage() {
             hint="Live in the catalog"
             icon={BookOpen}
             tone="success"
-          />
-          <StatCard
-            label="Escalations"
-            value={pendingEscalations}
-            hint="Waiting on you"
-            icon={MessageSquareText}
-            tone="muted"
           />
         </section>
 
@@ -93,7 +82,7 @@ export default async function InstructorDashboardPage() {
               <p className="text-sm font-medium">No courses yet</p>
               <p className="mt-1 max-w-md text-sm text-muted">
                 Create one with a title and description, then add modules and
-                lessons before publishing it.
+                lessons, then submit it for review.
               </p>
               <Link
                 href="/instructor/courses/new"
@@ -146,16 +135,16 @@ export default async function InstructorDashboardPage() {
               icon={PenLine}
             />
             <QuickActionCard
-              title="Manage course content"
-              description="Add modules and lessons, then publish."
-              href="/instructor/courses"
-              icon={BookOpen}
+              title="Create from a PDF"
+              description="Turn a PDF into a draft course with modules and lessons."
+              href="/instructor/courses/from-pdf"
+              icon={FileText}
             />
             <QuickActionCard
-              title="Escalation inbox"
-              description="Questions students send from a course."
-              href="/instructor/escalations"
-              icon={MessageSquareText}
+              title="Manage course content"
+              description="Add modules and lessons, then submit the course for review."
+              href="/instructor/courses"
+              icon={BookOpen}
             />
           </div>
         </section>

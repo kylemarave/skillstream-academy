@@ -223,7 +223,7 @@ export default async function StudentDashboardPage() {
           {openCourses.length === 0 ? (
             <p className="px-5 py-8 text-sm text-muted">
               {catalog.length === 0
-                ? "No courses are published yet. They will appear here once an instructor opens one."
+                ? "No courses are published yet. They will appear here once an admin publishes one."
                 : "You are enrolled in every published course."}
             </p>
           ) : (

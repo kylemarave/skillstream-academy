@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { decodeSession, roleHomePath, SESSION_COOKIE } from "@/lib/session";
+import {
+  readSessionCookie,
+  roleHomePath,
+  SESSION_COOKIE,
+  sessionIsCurrent,
+} from "@/lib/session";
 import type { UserRole } from "@/lib/types";
 
 const PUBLIC_PATHS = ["/", "/login"];
@@ -12,7 +17,7 @@ function routeRequiresRole(pathname: string): UserRole | null {
   return null;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -31,9 +36,9 @@ export function middleware(request: NextRequest) {
   }
 
   const raw = request.cookies.get(SESSION_COOKIE)?.value;
-  const session = raw ? decodeSession(raw) : null;
+  const session = raw ? await readSessionCookie(raw) : null;
 
-  if (!session) {
+  if (!session || !sessionIsCurrent(session)) {
     const loginUrl = new URL(
       requiredRole === "admin" ? "/admin/login" : "/login",
       request.url,

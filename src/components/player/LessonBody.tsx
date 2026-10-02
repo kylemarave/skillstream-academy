@@ -78,8 +78,7 @@ function QuizFrame({ lesson }: { lesson: Lesson }) {
   return (
     <div className="space-y-4">
       <p className="text-sm leading-6 text-muted">
-        Scoring is not live. Submitting records a score of 100 and marks the
-        lesson complete.
+        Choose an answer. A wrong choice leaves this lesson incomplete.
       </p>
       {quiz.prompt ? (
         <fieldset className="card px-4 py-4">
@@ -90,7 +89,12 @@ function QuizFrame({ lesson }: { lesson: Lesson }) {
                 key={`${lesson.id}-choice-${index}`}
                 className="mt-3 flex items-start gap-2 text-sm first:mt-3"
               >
-                <input type="radio" name={name} className="mt-0.5" />
+                <input
+                  type="radio"
+                  name={name}
+                  value={index}
+                  className="mt-0.5"
+                />
                 {choice}
               </label>
             ))

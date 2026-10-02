@@ -10,7 +10,7 @@ const steps = [
   {
     title: "Learn",
     description:
-      "Work through modules and lessons. Completion is recorded per lesson. An in-course assistant is planned.",
+      "Work through modules and lessons. Completion is recorded per lesson. The course assistant answers from that course’s lesson text.",
     status: "Live" as const,
   },
   {

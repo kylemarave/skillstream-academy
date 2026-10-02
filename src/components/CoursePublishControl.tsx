@@ -7,13 +7,15 @@ import { Check, Circle, LoaderCircle, Minus } from "lucide-react";
 import type { ConfirmationKey } from "@/lib/confirmations";
 import { confirmationCopy } from "@/lib/confirmations";
 import type { PublishChecklist } from "@/lib/publishChecklist";
-import type { CourseStatus } from "@/lib/types";
+import type { CourseReviewStatus, CourseStatus } from "@/lib/types";
 import { ActionNotice } from "./feedback/ActionNotice";
 import { ConfirmDialog, useConfirmDialog } from "./feedback/ConfirmDialog";
 
 interface CoursePublishControlProps {
   courseId: string;
   status: CourseStatus;
+  reviewStatus: CourseReviewStatus;
+  reviewFeedback: string | null;
   checklist: PublishChecklist;
   modulesHref: string;
   enrolledCount: number;
@@ -28,6 +30,8 @@ function noticeForStatus(status: CourseStatus): ConfirmationKey {
 export function CoursePublishControl({
   courseId,
   status,
+  reviewStatus,
+  reviewFeedback,
   checklist,
   modulesHref,
   enrolledCount,
@@ -35,12 +39,15 @@ export function CoursePublishControl({
   const router = useRouter();
   const publishConfirm = useConfirmDialog();
   const archiveConfirm = useConfirmDialog();
+  const reviewConfirm = useConfirmDialog();
   const [error, setError] = useState("");
   const [notice, setNotice] = useState<ConfirmationKey | null>(null);
   const isPublished = status === "published";
   const isArchived = status === "archived";
+  const isSubmitted = reviewStatus === "submitted";
+  const isReturned = reviewStatus === "returned";
   const canPublish = checklist.ready;
-  const busy = publishConfirm.busy || archiveConfirm.busy;
+  const busy = publishConfirm.busy || archiveConfirm.busy || reviewConfirm.busy;
 
   async function setCourseStatus(
     nextStatus: CourseStatus,
@@ -75,6 +82,29 @@ export function CoursePublishControl({
     });
   }
 
+  async function sendReview(action: "submit" | "withdraw") {
+    setError("");
+    setNotice(null);
+    await reviewConfirm.run(async () => {
+      try {
+        const response = await fetch(`/api/courses/${courseId}/review`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action }),
+        });
+        if (!response.ok) {
+          const data = (await response.json()) as { error?: string };
+          setError(data.error ?? "The review request could not be saved.");
+          return;
+        }
+        setNotice(action === "submit" ? "submitted" : "withdrawn");
+        router.refresh();
+      } catch {
+        setError("The review request could not be saved. Check your connection.");
+      }
+    });
+  }
+
   return (
     <section aria-labelledby="visibility-title" className="card p-5">
       <h2 id="visibility-title" className="section-title">
@@ -85,7 +115,9 @@ export function CoursePublishControl({
           ? "This course is archived. It is not listed in the catalog."
           : isPublished
             ? "This course is listed in the student catalog."
-            : "This draft is only visible to you."}
+            : isSubmitted
+              ? "Submitted for review. An admin will publish it or send it back."
+              : "This draft is only visible to you. An admin publishes it after review."}
       </p>
       {isArchived && enrolledCount > 0 ? (
         <p className="mt-1 text-sm text-muted">
@@ -97,13 +129,13 @@ export function CoursePublishControl({
 
       {isArchived ? (
         <p className="mt-4 rounded-lg bg-subtle px-3 py-2 text-sm text-muted">
-          Restore it to a draft if you want to keep editing. Publish again to
-          put it back in the catalog.
+          Restore it to a draft if you want to keep editing. Submit it for review
+          to put it back in the catalog.
         </p>
       ) : (
         <>
           <h3 id="publish-checklist-heading" className="mt-5 text-sm font-medium">
-            Ready to publish
+            Ready for review
           </h3>
           <ul
             className="mt-3 space-y-2.5"
@@ -166,10 +198,16 @@ export function CoursePublishControl({
 
           {!canPublish ? (
             <p className="mt-4 text-sm text-muted">
-              Finish the required items, then publish.{" "}
+              Finish the required items, then submit for review.{" "}
               <Link href={modulesHref} className="font-medium text-brand">
                 Open modules and lessons
               </Link>
+            </p>
+          ) : null}
+
+          {isReturned && reviewFeedback ? (
+            <p className="mt-4 rounded-lg bg-warn-soft px-3 py-2 text-sm text-warn">
+              An admin sent this back: {reviewFeedback}
             </p>
           ) : null}
 
@@ -199,25 +237,45 @@ export function CoursePublishControl({
             ) : null}
             {publishConfirm.busy ? "Saving…" : "Restore to draft"}
           </button>
+        ) : isSubmitted ? (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={reviewConfirm.request}
+            className="btn btn-secondary"
+          >
+            {reviewConfirm.busy ? (
+              <LoaderCircle aria-hidden="true" size={16} className="animate-spin" />
+            ) : null}
+            {reviewConfirm.busy ? "Saving…" : "Withdraw submission"}
+          </button>
+        ) : isPublished ? (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={publishConfirm.request}
+            className="btn btn-secondary"
+          >
+            {publishConfirm.busy ? (
+              <LoaderCircle aria-hidden="true" size={16} className="animate-spin" />
+            ) : null}
+            {publishConfirm.busy ? "Saving…" : "Return to draft"}
+          </button>
         ) : (
           <button
             type="button"
-            disabled={busy || (!isPublished && !canPublish)}
-            onClick={publishConfirm.request}
-            className={isPublished ? "btn btn-secondary" : "btn btn-primary"}
+            disabled={busy || !canPublish}
+            onClick={reviewConfirm.request}
+            className="btn btn-primary"
           >
-            {publishConfirm.busy ? (
-              <LoaderCircle
-                aria-hidden="true"
-                size={16}
-                className="animate-spin"
-              />
+            {reviewConfirm.busy ? (
+              <LoaderCircle aria-hidden="true" size={16} className="animate-spin" />
             ) : null}
-            {publishConfirm.busy
+            {reviewConfirm.busy
               ? "Saving…"
-              : isPublished
-                ? "Return to draft"
-                : "Publish course"}
+              : isReturned
+                ? "Submit again"
+                : "Submit for review"}
           </button>
         )}
 
@@ -257,30 +315,17 @@ export function CoursePublishControl({
       <ConfirmDialog
         open={publishConfirm.open}
         title={
-          isArchived
-            ? "Restore this course to draft?"
-            : isPublished
-              ? "Return this course to draft?"
-              : "Publish this course?"
+          isArchived ? "Restore this course to draft?" : "Return this course to draft?"
         }
         description={
           isArchived
-            ? "It stays off the catalog until you publish. Enrollments stay in place."
-            : isPublished
-              ? "Students will no longer see it in the catalog. Existing enrollments stay in place. Publish again when you are ready."
-              : "Students will see this course in the catalog and can enroll immediately."
+            ? "It stays off the catalog until an admin publishes it. Enrollments stay in place."
+            : "Students will no longer see it in the catalog. Existing enrollments stay in place. Submit it for review when you want it listed again."
         }
-        confirmLabel={
-          isArchived ? "Restore to draft" : isPublished ? "Return to draft" : "Publish"
-        }
+        confirmLabel={isArchived ? "Restore to draft" : "Return to draft"}
         tone={isPublished ? "danger" : "brand"}
         busy={publishConfirm.busy}
-        onConfirm={() =>
-          setCourseStatus(
-            isPublished || isArchived ? "draft" : "published",
-            publishConfirm,
-          )
-        }
+        onConfirm={() => setCourseStatus("draft", publishConfirm)}
         onCancel={publishConfirm.cancel}
       />
 
@@ -297,6 +342,20 @@ export function CoursePublishControl({
         busy={archiveConfirm.busy}
         onConfirm={() => setCourseStatus("archived", archiveConfirm)}
         onCancel={archiveConfirm.cancel}
+      />
+
+      <ConfirmDialog
+        open={reviewConfirm.open}
+        title={isSubmitted ? "Withdraw this submission?" : "Submit this course for review?"}
+        description={
+          isSubmitted
+            ? "It leaves the admin queue and stays a private draft."
+            : "An admin will publish it or send it back with feedback. Students will not see it until it is published."
+        }
+        confirmLabel={isSubmitted ? "Withdraw" : "Submit"}
+        busy={reviewConfirm.busy}
+        onConfirm={() => sendReview(isSubmitted ? "withdraw" : "submit")}
+        onCancel={reviewConfirm.cancel}
       />
     </section>
   );

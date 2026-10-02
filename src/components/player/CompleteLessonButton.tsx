@@ -34,8 +34,32 @@ export function CompleteLessonButton({
     : courseHref;
   const actionLabel = completeActionLabel(lesson.contentType);
 
+  function selectedQuizChoice() {
+    if (lesson.contentType !== "quiz") return undefined;
+    const selected = document.querySelector<HTMLInputElement>(
+      `input[name="quiz-${lesson.id}"]:checked`,
+    );
+    if (!selected) return null;
+    const choiceIndex = Number(selected.value);
+    return Number.isInteger(choiceIndex) ? choiceIndex : null;
+  }
+
+  function handleRequest() {
+    if (lesson.contentType === "quiz" && selectedQuizChoice() == null) {
+      setError("Choose an answer first.");
+      return;
+    }
+    setError("");
+    confirm.request();
+  }
+
   async function handleComplete() {
     setError("");
+    const choiceIndex = selectedQuizChoice();
+    if (lesson.contentType === "quiz" && choiceIndex == null) {
+      setError("Choose an answer first.");
+      return;
+    }
     await confirm.run(async () => {
       try {
         const response = await fetch(
@@ -43,7 +67,10 @@ export function CompleteLessonButton({
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "completed" }),
+            body: JSON.stringify({
+              status: "completed",
+              choiceIndex: lesson.contentType === "quiz" ? choiceIndex : undefined,
+            }),
           },
         );
         const data = (await response.json()) as {
@@ -93,7 +120,7 @@ export function CompleteLessonButton({
     <div>
       <button
         type="button"
-        onClick={confirm.request}
+        onClick={handleRequest}
         disabled={confirm.busy}
         className="btn btn-primary"
       >
@@ -112,9 +139,11 @@ export function CompleteLessonButton({
         open={confirm.open}
         title={finishesCourse ? "Finish the course?" : "Mark this lesson complete?"}
         description={
-          finishesCourse
-            ? `${lesson.title} is the last lesson. Confirming issues your certificate.`
-            : `${lesson.title} will be saved as complete. You can still reopen it afterwards.`
+          lesson.contentType === "quiz"
+            ? "The lesson is marked complete only if this answer is right."
+            : finishesCourse
+              ? `${lesson.title} is the last lesson. Confirming issues your certificate.`
+              : `${lesson.title} will be saved as complete. You can still reopen it afterwards.`
         }
         confirmLabel={finishesCourse ? "Complete and certify" : actionLabel}
         busy={confirm.busy}

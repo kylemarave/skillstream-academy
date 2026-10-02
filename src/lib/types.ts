@@ -2,6 +2,8 @@ export type UserRole = "student" | "instructor" | "admin";
 
 export type CourseStatus = "draft" | "published" | "archived";
 
+export type CourseReviewStatus = "none" | "submitted" | "returned";
+
 export type LessonContentType = "video" | "text" | "quiz" | "assignment";
 
 export type EnrollmentStatus =
@@ -30,10 +32,18 @@ export type IntegrationEventStatus =
 export interface User {
   id: string;
   email: string;
-  password: string;
+  passwordHash: string;
   firstName: string;
   lastName: string;
   role: UserRole;
+}
+
+export interface UserSession {
+  id: string;
+  userId: string;
+  expiresAt: string;
+  createdAt: string;
+  revokedAt: string | null;
 }
 
 export interface SessionUser {
@@ -50,6 +60,9 @@ export interface Course {
   title: string;
   description: string;
   status: CourseStatus;
+  reviewStatus: CourseReviewStatus;
+  reviewFeedback: string | null;
+  submittedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -168,6 +181,7 @@ export interface IntegrationEvent {
 
 export interface DataStore {
   users: User[];
+  sessions: UserSession[];
   courses: Course[];
   modules: CourseModule[];
   lessons: Lesson[];

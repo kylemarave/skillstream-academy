@@ -25,17 +25,17 @@ export const instructorJourneySteps = [
   {
     id: "publish",
     title: "Publish",
-    description: "Open the course for enrollment.",
+    description: "Submit it for an admin to publish.",
   },
   {
     id: "support",
     title: "Support",
-    description: "Track progress and see student questions.",
+    description: "Track progress on each course.",
   },
 ] as const;
 
 /*
-  Enrollment and certification run in this prototype. Student questions reach the instructor inbox. Assistant replies do not.
+  Enrollment and certification run in this prototype. The lesson chatbot answers from that course’s lesson text.
 */
 export const integrations = [
   {
@@ -52,9 +52,9 @@ export const integrations = [
   },
   {
     id: "portal-ai",
-    label: "AI assistant → Instructor",
-    detail: "Unanswered questions escalate to the course instructor.",
-    status: "Planned",
+    label: "Lesson chatbot",
+    detail: "Answers a lesson question from that course’s lesson text. If the lessons do not contain the answer, it says so and stops.",
+    status: "Live",
   },
 ] as const;
 

@@ -8,7 +8,6 @@ import {
   BookOpen,
   LayoutDashboard,
   Library,
-  MessageSquareText,
   ShieldCheck,
 } from "lucide-react";
 import type { SessionUser } from "@/lib/types";
@@ -28,7 +27,6 @@ const navIcons = {
   Courses: BookOpen,
   "My courses": BookOpen,
   Certificates: Award,
-  Escalations: MessageSquareText,
   Overview: ShieldCheck,
 };
 

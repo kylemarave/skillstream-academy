@@ -50,7 +50,7 @@ export async function POST(request: Request) {
 
   if (body.status === "published") {
     return NextResponse.json(
-      { error: "Cannot publish yet. Add modules and lessons first." },
+      { error: "An admin publishes a course after review." },
       { status: 400 },
     );
   }

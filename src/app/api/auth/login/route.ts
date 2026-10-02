@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { startSession } from "@/lib/auth";
 import { getUserByEmail } from "@/lib/db";
+import { verifyPassword } from "@/lib/passwords";
 
 export async function POST(request: Request) {
   const body = (await request.json()) as {
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
   }
 
   const user = await getUserByEmail(email);
-  if (!user || user.password !== password) {
+  if (!user || !(await verifyPassword(password, user.passwordHash))) {
     return NextResponse.json(
       { error: "Invalid email or password." },
       { status: 401 },
@@ -36,13 +37,19 @@ export async function POST(request: Request) {
     );
   }
 
-  await startSession({
+  const started = await startSession({
     id: user.id,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
     role: user.role,
   });
+  if (!started) {
+    return NextResponse.json(
+      { error: "Sign-in is not available right now." },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({
     role: user.role,

@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { CourseDetailsForm } from "@/components/CourseDetailsForm";
 import { CoursePublishControl } from "@/components/CoursePublishControl";
-import { StatusBadge } from "@/components/StatusBadge";
+import { ReviewBadge, StatusBadge } from "@/components/StatusBadge";
 import { requireRole } from "@/lib/auth";
 import { instructorNav } from "@/lib/nav";
 import { getCourseWithContent, listEnrollments } from "@/lib/db";
@@ -33,7 +33,12 @@ export default async function InstructorCourseDetailPage({ params }: PageProps) 
       title={course.title}
       subtitle={course.description || "No description yet."}
       nav={instructorNav}
-      actions={<StatusBadge status={course.status} />}
+      actions={
+        <span className="flex flex-wrap items-center gap-2">
+          <StatusBadge status={course.status} />
+          <ReviewBadge status={course.reviewStatus} />
+        </span>
+      }
     >
       <div className="space-y-6">
         <section
@@ -117,6 +122,8 @@ export default async function InstructorCourseDetailPage({ params }: PageProps) 
         <CoursePublishControl
           courseId={course.id}
           status={course.status}
+          reviewStatus={course.reviewStatus}
+          reviewFeedback={course.reviewFeedback}
           checklist={coursePublishChecklist(course)}
           modulesHref={`/instructor/courses/${course.id}/modules`}
           enrolledCount={enrollments.length}

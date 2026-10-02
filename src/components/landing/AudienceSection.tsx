@@ -11,8 +11,8 @@ const audiences = [
         status: "Live" as const,
       },
       {
-        text: "Ask an assistant and reach an instructor when needed",
-        status: "Planned" as const,
+        text: "Ask the course assistant about a lesson",
+        status: "Live" as const,
       },
     ],
   },
@@ -20,12 +20,8 @@ const audiences = [
     title: "Instructors",
     items: [
       { text: "Build courses from modules and lessons", status: "Live" as const },
-      { text: "Publish to the catalog when content is ready", status: "Live" as const },
+      { text: "Submit a course for an admin to publish", status: "Live" as const },
       { text: "Follow student progress per course", status: "Live" as const },
-      {
-        text: "Answer escalated questions from one inbox",
-        status: "Planned" as const,
-      },
     ],
   },
 ];

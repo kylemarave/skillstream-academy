@@ -8,6 +8,10 @@ export function normalizeReference(value: string) {
   return value.trim().toUpperCase().replace(/\s+/g, "");
 }
 
+export function certificateFilePath(referenceNumber: string) {
+  return `/api/certificates/${encodeURIComponent(referenceNumber)}`;
+}
+
 export function formatIssuedDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "long",

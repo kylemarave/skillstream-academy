@@ -91,10 +91,18 @@ export function LessonContentFields({
           />
           <div>
             <p className="label">Choices</p>
-            <p className="hint mt-0.5">Optional. Up to four. Scoring does not use these yet.</p>
+            <p className="hint mt-0.5">Mark the correct choice. A wrong answer does not complete the lesson.</p>
             <ul className="mt-2 space-y-2">
               {values.quizChoices.map((choice, index) => (
                 <li key={`${idPrefix}-choice-${index}`} className="flex gap-2">
+                  <input
+                    type="radio"
+                    name={`${idPrefix}-correct`}
+                    className="mt-3"
+                    checked={values.quizCorrectIndex === index}
+                    onChange={() => onChange({ quizCorrectIndex: index })}
+                    aria-label={`Mark choice ${index + 1} as correct`}
+                  />
                   <label className="sr-only" htmlFor={`${idPrefix}-choice-${index}`}>
                     Choice {index + 1}
                   </label>
@@ -113,13 +121,18 @@ export function LessonContentFields({
                     <button
                       type="button"
                       className="btn-icon"
-                      onClick={() =>
-                        onChange({
-                          quizChoices: values.quizChoices.filter(
-                            (_, choiceIndex) => choiceIndex !== index,
-                          ),
-                        })
-                      }
+                      onClick={() => {
+                        const next = values.quizChoices.filter(
+                          (_, choiceIndex) => choiceIndex !== index,
+                        );
+                        const correctIndex =
+                          values.quizCorrectIndex === index
+                            ? 0
+                            : values.quizCorrectIndex > index
+                              ? values.quizCorrectIndex - 1
+                              : values.quizCorrectIndex;
+                        onChange({ quizChoices: next, quizCorrectIndex: correctIndex });
+                      }}
                       aria-label={`Remove choice ${index + 1}`}
                     >
                       <X aria-hidden="true" size={16} />

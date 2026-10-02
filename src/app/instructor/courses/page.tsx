@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { StatusBadge } from "@/components/StatusBadge";
+import { ReviewBadge, StatusBadge } from "@/components/StatusBadge";
 import { requireRole } from "@/lib/auth";
 import { listCourses } from "@/lib/db";
 import { instructorNav } from "@/lib/nav";
@@ -14,13 +14,19 @@ export default async function InstructorCoursesPage() {
     <AppShell
       user={session}
       title="My courses"
-      subtitle="Drafts are private. Published courses appear in the catalog. Archived courses stay in your library, and enrollments stay intact."
+      subtitle="Drafts stay private until an admin publishes them. Archived courses stay in your library, and enrollments stay intact."
       nav={instructorNav}
       actions={
-        <Link href="/instructor/courses/new" className="btn btn-primary">
-          <Plus aria-hidden="true" size={16} />
-          New course
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/instructor/courses/from-pdf" className="btn btn-secondary">
+            <FileText aria-hidden="true" size={16} />
+            Create from PDF
+          </Link>
+          <Link href="/instructor/courses/new" className="btn btn-primary">
+            <Plus aria-hidden="true" size={16} />
+            New course
+          </Link>
+        </div>
       }
     >
       {courses.length === 0 ? (
@@ -28,12 +34,18 @@ export default async function InstructorCoursesPage() {
           <p className="text-sm font-medium">No courses yet</p>
           <p className="mt-1 max-w-md text-sm text-muted">
             Start with a title and description. You can add modules and
-            lessons before publishing.
+            lessons, then submit it for review.
           </p>
-          <Link href="/instructor/courses/new" className="btn btn-primary mt-4">
-            <Plus aria-hidden="true" size={16} />
-            Create a course
-          </Link>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link href="/instructor/courses/new" className="btn btn-primary">
+              <Plus aria-hidden="true" size={16} />
+              Create a course
+            </Link>
+            <Link href="/instructor/courses/from-pdf" className="btn btn-secondary">
+              <FileText aria-hidden="true" size={16} />
+              Create from PDF
+            </Link>
+          </div>
         </div>
       ) : (
         <section aria-labelledby="library-title" className="card">
@@ -56,6 +68,7 @@ export default async function InstructorCoursesPage() {
                         {course.title}
                       </h3>
                       <StatusBadge status={course.status} />
+                      <ReviewBadge status={course.reviewStatus} />
                     </div>
                     <p className="mt-0.5 line-clamp-1 text-sm text-muted">
                       {course.description || "No description yet."}

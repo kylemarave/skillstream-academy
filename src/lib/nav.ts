@@ -1,7 +1,11 @@
 export const instructorNav = [
   { href: "/instructor/dashboard", label: "Home" },
   { href: "/instructor/courses", label: "Courses" },
-  { href: "/instructor/escalations", label: "Escalations" },
+];
+
+export const adminNav = [
+  { href: "/admin", label: "Overview" },
+  { href: "/admin/courses", label: "Review" },
 ];
 
 export const studentNav = [

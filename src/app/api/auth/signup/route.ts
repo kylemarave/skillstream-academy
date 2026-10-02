@@ -31,13 +31,19 @@ export async function POST(request: Request) {
   }
 
   const { user } = result;
-  await startSession({
+  const started = await startSession({
     id: user.id,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
     role: user.role,
   });
+  if (!started) {
+    return NextResponse.json(
+      { error: "Sign-in is not available right now." },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({
     role: user.role,

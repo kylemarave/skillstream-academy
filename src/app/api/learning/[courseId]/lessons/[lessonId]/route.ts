@@ -15,7 +15,10 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   const { courseId, lessonId } = await context.params;
-  const body = (await request.json().catch(() => ({}))) as { status?: string };
+  const body = (await request.json().catch(() => ({}))) as {
+    status?: string;
+    choiceIndex?: number;
+  };
 
   if (body.status !== "completed") {
     return NextResponse.json(
@@ -24,7 +27,12 @@ export async function POST(request: Request, context: RouteContext) {
     );
   }
 
-  const result = await completeLesson(session.id, courseId, lessonId);
+  const result = await completeLesson(
+    session.id,
+    courseId,
+    lessonId,
+    body.choiceIndex,
+  );
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }

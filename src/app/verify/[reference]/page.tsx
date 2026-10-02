@@ -35,8 +35,8 @@ export default async function VerifyCertificatePage({ params }: PageProps) {
                 : "Certificate verified"}
             </h1>
             <p className="mx-auto mt-2 max-w-xl text-center text-sm leading-6 text-muted">
-              Issued by Skillstream Academy. No PDF is stored in this prototype
-              — the reference is the credential.
+              Issued by Skillstream Academy. The reference on this page is the
+              record. The PDF is a copy of it.
             </p>
             <div className="mt-8">
               <CertificateRecord
@@ -47,6 +47,11 @@ export default async function VerifyCertificatePage({ params }: PageProps) {
                 status={record.certificate.verificationStatus}
               />
             </div>
+            <p className="mt-6 text-center">
+              <a href={record.certificate.fileUrl} className="btn btn-primary">
+                Download PDF
+              </a>
+            </p>
           </>
         ) : (
           <>

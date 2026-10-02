@@ -87,7 +87,7 @@ export function CreateCourseForm() {
         </div>
 
         <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-4">
-          <p className="hint">Saved as a draft until you publish it.</p>
+          <p className="hint">Saved as a draft until an admin publishes it.</p>
           <div className="flex gap-2">
             <Link href="/instructor/courses" className="btn btn-quiet">
               Cancel
@@ -106,7 +106,7 @@ export function CreateCourseForm() {
       <ConfirmDialog
         open={confirm.open}
         title="Create this course?"
-        description={`${title || "Untitled course"} will be saved as a draft. Students will not see it until you publish.`}
+        description={`${title || "Untitled course"} will be saved as a draft. Students will not see it until an admin publishes it.`}
         confirmLabel="Create draft"
         busy={confirm.busy}
         onConfirm={handleCreate}

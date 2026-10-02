@@ -131,11 +131,10 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
 
           <section aria-labelledby="question-title" className="card px-5 py-5">
             <h2 id="question-title" className="section-title">
-              Ask your instructor
+              Ask about this course
             </h2>
             <p className="mt-1 text-sm text-muted">
-              This goes to the course instructor as pending. An assistant reply
-              is not wired yet.
+              The assistant answers from this course’s lesson text.
             </p>
             <div className="mt-4">
               <AskQuestionForm courseId={course.id} courseTitle={course.title} />
@@ -144,16 +143,14 @@ export default async function CoursePlayerOverviewPage({ params }: PageProps) {
               <ul className="mt-5 divide-y divide-line border-t border-line">
                 {questions.map((question) => (
                   <li key={question.id} className="py-3">
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-sm">{question.content}</p>
-                      <span className="shrink-0 rounded-md border border-line bg-subtle px-1.5 py-0.5 text-xs font-medium text-muted">
-                        {question.status === "pending"
-                          ? "Pending"
-                          : question.status === "in_progress"
-                            ? "In progress"
-                            : "Resolved"}
-                      </span>
-                    </div>
+                    <p className="text-sm">{question.content}</p>
+                    {question.reply ? (
+                      <p className="mt-2 text-sm text-muted">{question.reply}</p>
+                    ) : (
+                      <p className="mt-2 text-sm text-muted">
+                        The assistant did not reply. Your question is saved.
+                      </p>
+                    )}
                   </li>
                 ))}
               </ul>

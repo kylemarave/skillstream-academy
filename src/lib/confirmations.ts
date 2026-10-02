@@ -8,6 +8,7 @@ export const confirmationKeys = [
   "lesson-complete",
   "certified",
   "course-created",
+  "course-from-pdf",
   "module-added",
   "lesson-added",
   "published",
@@ -19,6 +20,9 @@ export const confirmationKeys = [
   "order-saved",
   "revoked",
   "question-sent",
+  "submitted",
+  "withdrawn",
+  "sent-back",
 ] as const;
 
 export type ConfirmationKey = (typeof confirmationKeys)[number];
@@ -62,7 +66,11 @@ export const confirmationCopy: Record<
   },
   "course-created": {
     title: "Course created",
-    detail: "Saved as a draft. Add modules and lessons before you publish.",
+    detail: "Saved as a draft. Add modules and lessons, then submit it for review.",
+  },
+  "course-from-pdf": {
+    title: "Draft course created",
+    detail: "Review the modules and lessons from the PDF, then submit the course for review.",
   },
   "module-added": {
     title: "Module added",
@@ -74,6 +82,18 @@ export const confirmationCopy: Record<
     title: "Published",
     detail: "Students can now see this course in the catalog.",
   },
+  submitted: {
+    title: "Submitted for review",
+    detail: "An admin will publish it or send it back with feedback.",
+  },
+  withdrawn: {
+    title: "Submission withdrawn",
+    detail: "This draft is private again.",
+  },
+  "sent-back": {
+    title: "Sent back",
+    detail: "The instructor can read the feedback and submit again.",
+  },
   unpublished: {
     title: "Returned to draft",
     detail: "Students can no longer see this course in the catalog.",
@@ -84,7 +104,7 @@ export const confirmationCopy: Record<
   },
   restored: {
     title: "Restored to draft",
-    detail: "This is a private draft again. Publish when you want it in the catalog.",
+    detail: "This is a private draft again. Submit it for review when you want it in the catalog.",
   },
   saved: {
     title: "Saved",
@@ -96,8 +116,8 @@ export const confirmationCopy: Record<
     title: "Order saved",
   },
   "question-sent": {
-    title: "Question sent",
-    detail: "Your instructor can see it as pending.",
+    title: "Question saved",
+    detail: "The assistant answers from this course’s lessons.",
   },
   revoked: {
     title: "Certificate revoked",

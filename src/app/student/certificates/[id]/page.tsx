@@ -62,14 +62,16 @@ export default async function StudentCertificateDetailPage({
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
           <CopyReferenceButton referenceNumber={certificate.referenceNumber} />
-          <Link href={certificate.fileUrl} className="btn btn-primary">
+          <a href={certificate.fileUrl} className="btn btn-primary">
+            Download PDF
+          </a>
+          <Link
+            href={`/verify/${certificate.referenceNumber}`}
+            className="btn btn-secondary"
+          >
             Open public verification
           </Link>
         </div>
-        <p className="mt-3 text-center text-sm text-muted">
-          This prototype does not store a PDF. The public page is the
-          verifiable record.
-        </p>
       </div>
     </AppShell>
   );

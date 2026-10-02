@@ -8,7 +8,6 @@ import {
   updateCourse,
 } from "@/lib/db";
 import type { CourseStatus } from "@/lib/types";
-import { coursePublishChecklist } from "@/lib/publishChecklist";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -90,31 +89,17 @@ export async function PUT(request: Request, context: RouteContext) {
     if (!isCourseStatus(body.status)) {
       return NextResponse.json({ error: "Invalid course status." }, { status: 400 });
     }
-    updates.status = body.status;
-  }
-
-  if (updates.status === "published") {
-    const withContent = await getCourseWithContent(id);
-    if (!withContent) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-
-    const checklist = coursePublishChecklist({
-      ...withContent,
-      title: updates.title ?? withContent.title,
-      description: updates.description ?? withContent.description,
-    });
-
-    if (!checklist.ready) {
-      const missing = checklist.items.find((item) => item.required && !item.done);
+    if (body.status === "published") {
       return NextResponse.json(
-        {
-          error: missing?.detail
-            ? `Cannot publish yet. ${missing.label}. ${missing.detail}`
-            : `Cannot publish yet. ${missing?.label ?? "Finish the checklist first."}`,
-        },
-        { status: 400 },
+        { error: "An admin publishes a course after review." },
+        { status: 403 },
       );
+    }
+    updates.status = body.status;
+    if (body.status === "draft" || body.status === "archived") {
+      updates.reviewStatus = "none";
+      updates.reviewFeedback = null;
+      updates.submittedAt = null;
     }
   }
 

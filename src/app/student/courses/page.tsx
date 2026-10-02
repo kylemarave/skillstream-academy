@@ -79,8 +79,8 @@ export default async function StudentCoursesPage({ searchParams }: PageProps) {
         <div className="card px-5 py-10">
           <p className="text-sm font-medium">Nothing is open for enrollment</p>
           <p className="mt-1 max-w-md text-sm text-muted">
-            Instructors publish courses from their own workspace. Published
-            courses show up here straight away.
+            An admin publishes a course after review. Published courses show
+            up here.
           </p>
         </div>
       ) : (

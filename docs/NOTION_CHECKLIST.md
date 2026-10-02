@@ -7,7 +7,7 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 **Integrations**
 - Enrollment → LMS access — Live
 - Completion → Certificate — Live
-- Lesson chatbot — Planned. Answers a student’s lesson question from that course’s lesson text only. If the lessons do not contain the answer, it says so and stops. It does not send the question to the instructor.
+- Lesson chatbot — Live. Answers a student’s lesson question from that course’s lesson text only, using GPT-6 Luna. If the lessons do not contain the answer, it says so and stops. It does not send the question to the instructor.
 
 **Rule:** Planned work stays labeled Planned. Do not ship UI that looks finished if it is not wired.
 
@@ -31,13 +31,14 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 
 ## Already working
 - Role login (student, instructor, admin)
+- Passwords are bcrypt hashes. The session cookie is signed, expires in 7 days, and logout revokes it.
 - Instructor create course, modules, lessons, publish
 - Student catalog and enrollment
 - LMS account created on enroll; course is active only after access is provisioned
 - Student provisioning states: in progress, failed, and player blocked until access is ready
 - Lesson player with progress
 - Completing all lessons marks enrollment completed
-- Certificate issued on completion
+- Certificate issued on completion. The student and the public verify page can download a PDF of that record.
 - Public /verify by reference
 - Basic instructor roster
 - Landing page
@@ -51,12 +52,13 @@ Single-academy learning platform. Job: connect enrollment, course access, comple
 - Instructor roster last activity, needs-attention, and student detail
 - Instructor can revoke a certificate; public verify still finds the reference and shows it as revoked
 - Student catalog title search
+- Lesson chatbot on an enrolled course. GPT-6 Luna answers from that course’s lesson text. If the lessons do not contain the answer, it says so and stops.
+- Instructor can create a draft course from a PDF. The draft has modules and lessons from that PDF text. It stays private until the instructor submits it and an admin publishes it.
+- An instructor submits a draft for review. An admin publishes it or sends it back with feedback.
 
 ## Not built — keep labeled Planned
-- Hashed production auth
+- Password recovery
 - Relational database
-- PDF certificate files
-- Lesson chatbot (thread and knowledge-base rule first; model reply later, with no invented answer)
 - Admin operations
 - Notifications
 - Integration-event retries
@@ -117,7 +119,7 @@ Keep this path real. A student must be able to enroll, finish lessons, and verif
 - [x] Public /verify with no login
 - [x] Confirm before looking up a reference; result page is the after-confirm
 - [x] Copy reference confirms with “Copied”
-- [ ] PDF file + real file_url (today file_url points at /verify/...)
+- [x] PDF file. `file_url` points at `/api/certificates/...`, which downloads a PDF of the saved record. A revoked certificate’s PDF says revoked.
 - [x] Revoke / verification_status = revoked
 - [x] Emit enrollment.completed into integration_events
 
@@ -125,12 +127,12 @@ Keep this path real. A student must be able to enroll, finish lessons, and verif
 - [x] Role login + role-based route protection
 - [x] Logout
 - [x] Confirm before sign in and log out; success banners after
-- [ ] Hash passwords (bcrypt/Argon2) — store still has plaintext password
-- [ ] Signed, expiring sessions (user_sessions)
-- [ ] Revoke session on logout
+- [x] Hash passwords (bcrypt). `store.json` stores `passwordHash`, not the password.
+- [x] Signed, expiring sessions (`user_sessions`, 7 days)
+- [x] Revoke session on logout
 - [ ] Password recovery
-- [ ] Remove plaintext credentials from data/store.json
-- [ ] Stop encoding session as a client-readable Base64 cookie
+- [x] Remove plaintext credentials from data/store.json
+- [x] Session cookie is signed. Editing the role or user id makes it invalid.
 
 Done when: role access cannot be changed by editing a cookie.
 
@@ -162,13 +164,14 @@ Done when: two simultaneous edits cannot clobber each other.
 - [x] Explicit save confirmation (“Saved”)
 - [x] Completeness checklist before publish
 - [x] Archive course without deleting enrollments
+- [x] Create a draft course from a PDF (modules and lessons; stays private until publish)
 
 ## 2.2 Admin course review
-- [ ] Submit for review
-- [ ] Approve / return with feedback
+- [x] Submit for review
+- [x] Approve / return with feedback
 - [ ] Archive and reassign instructor
-- [ ] Review state separate from public draft | published | archived
-- [ ] Move publish permission from instructor to admin (if that stays the V1 rule)
+- [x] Review state separate from public draft | published | archived
+- [x] An admin publishes a submitted course. An instructor cannot publish it directly.
 
 ## 2.3 Roster and progress
 - [x] List enrolled students per course
@@ -186,14 +189,14 @@ The chatbot answers a student’s question about a lesson. The knowledge base is
 
 It does not use the instructor, the escalation inbox, or anything outside that course. If the lessons do not contain the answer, the chatbot says so and stops.
 
-- [ ] Course chat thread: the student’s question, then a place for the assistant reply
-- [ ] Save the question on ai_conversations and ai_messages
-- [ ] Answer only from that course’s lesson text
-- [ ] If the lessons do not contain the answer, say so and stop
-- [ ] Do not create an instructor escalation for a lesson question
-- [ ] Connect GPT-6 Luna later. Until then, leave the assistant reply empty. Do not invent an answer.
+- [x] Course chat thread: the student’s question, then the assistant reply
+- [x] Save the question on ai_conversations and ai_messages
+- [x] Answer only from that course’s lesson text
+- [x] If the lessons do not contain the answer, say so and stop
+- [x] Do not create an instructor escalation for a lesson question
+- [x] GPT-6 Luna answers on the server. If the key is missing or the call fails, the question stays saved and the reply stays empty.
 
-The question box on the course page still files a pending escalation. That is not this chatbot.
+The instructor Escalations page is removed. Lesson questions stay on the course.
 
 ## 2.5 Interaction feedback
 - [x] Confirm dialog before every live mutating action
@@ -267,7 +270,7 @@ Check these before calling a phase done.
 - [ ] Student can finish enroll → learn → certify without editing seed data
 - [ ] Instructor can publish a course and see roster progress
 - [ ] Public verify works with no account
-- [ ] Planned features (lesson chatbot, PDF, admin) are labeled Planned
+- [ ] Planned features (admin) are labeled Planned
 - [ ] No invented testimonials or AI answers
 - [ ] Certificate reference is never client-supplied
 - [ ] Role changes only via admin
@@ -401,5 +404,5 @@ Check these before calling a phase done.
 
 1. Auth + database
 2. Integration-event retries (write of confirmed/completed is live)
-3. Lesson chatbot
+3. Lesson chatbot — Live
 4. Admin ops + notifications

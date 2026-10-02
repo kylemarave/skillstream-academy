@@ -67,7 +67,7 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 - Generate a certificate record when course completion occurs.
 - Add student certificate history and a public reference-number verification page.
-- Instructor revoke is live: confirm, keep the reference, public verify shows revoked. Cannot undo in the product UI. Enrollment stays completed. PDF files stay Planned.
+- Instructor revoke is live: confirm, keep the reference, public verify shows revoked. Cannot undo in the product UI. Enrollment stays completed. The PDF download shows the same status.
 - Acceptance: a completed enrollment produces a certificate that can be verified without signing in. Revoking it does not delete the public record.
 
 ### Record live integration events
@@ -77,10 +77,10 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Replace demo authentication
 
-- Hash passwords and use signed, expiring sessions.
-- Add logout revocation, route protection, and password recovery.
-- Remove plaintext credentials from `data/store.json`.
-- Acceptance: role access cannot be changed by modifying a client-readable cookie.
+- Passwords are bcrypt hashes. Demo sign-in still uses the published passwords; the file stores only the hash.
+- Sessions are signed, expire after 7 days, and logout sets `revokedAt` so that cookie cannot be reused.
+- Password recovery stays Planned.
+- Acceptance for the cookie: role access cannot be changed by editing it. A hosted database is still a separate task.
 
 ### Replace the JSON file store
 
@@ -99,24 +99,20 @@ the reading surface quiet. All text pairs clear 4.5:1 on both `--canvas` and
 
 ### Add admin course review
 
-- Move publishing permission from instructors to admins.
-- Add submit-for-review, approve, return-with-feedback, archive, and reassign actions.
-- Display review state separately from public course status.
+### Add admin course review
+
+- Instructors submit a ready draft. An admin approves it, which publishes the course, or sends it back with feedback. Instructors cannot publish directly.
+- Archive and reassign stay Planned.
+- Review state (`none`, `submitted`, `returned`) is separate from draft, published, and archived.
 
 ### Build roster and progress monitoring
 
 - List enrolled students by course.
 - Last activity, completion date, needs-attention (no lesson started, idle 7 days, or LMS provision failed), and student detail with lesson status are live.
 
-### Build the lesson chatbot
+### Lesson chatbot
 
-The chatbot answers a student’s question about a lesson. The knowledge base is that course’s lessons only: reading text, and a quiz’s prompt and choices. A video is a link, so it has no transcript to answer from. If the lessons do not contain the answer, the chatbot says so and stops. It does not send the question to the instructor.
-
-- Show a course chat thread: the student’s question, then a place for the assistant reply.
-- Save the question on ai_conversations and ai_messages.
-- Answer only from that course’s lesson text.
-- Connect GPT-6 Luna later. Until then, leave the assistant reply empty. Do not invent an answer.
-- The question box on the course page still files a pending escalation. That is not this chatbot.
+The course assistant is live. It answers a student’s question from that course’s lessons only: reading text, and a quiz’s prompt and choices. A video is a link, so it has no transcript. GPT-6 Luna writes the reply. If the lessons do not contain the answer, the reply says so and stops. The question is not sent to the instructor. If the API key is missing or the call fails, the question stays saved and the reply stays empty.
 
 ### Add complete interaction feedback
 

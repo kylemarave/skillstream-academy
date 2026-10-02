@@ -64,7 +64,7 @@ export function AskQuestionForm({
           rows={4}
           className="field"
           style={{ minHeight: "6rem" }}
-          placeholder="What do you need help with?"
+          placeholder="Ask about a lesson in this course"
           maxLength={2000}
           required
         />
@@ -84,7 +84,7 @@ export function AskQuestionForm({
       <ConfirmDialog
         open={confirm.open}
         title="Send this question?"
-        description={`${courseTitle}: your instructor will see it as pending.`}
+        description={`${courseTitle}. The assistant answers from this course’s lesson text.`}
         confirmLabel="Send question"
         busy={confirm.busy}
         onConfirm={handleConfirm}

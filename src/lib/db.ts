@@ -9,40 +9,81 @@ import type {
   CourseModule,
   DataStore,
   Enrollment,
-  Escalation,
   Lesson,
   LessonProgress,
   LmsAccount,
   User,
+  UserSession,
 } from "./types";
-import { normalizeReference } from "./certificates";
+import { normalizeReference, certificateFilePath } from "./certificates";
 import { recordIntegrationEvent } from "./integrationEvents";
 import { canAccessLessons } from "./access";
+import { answerFromLessons } from "./lessonAssistant";
+import { parseQuizConfig } from "./lessonContent";
+import { hashPassword } from "./passwords";
+import { coursePublishChecklist, type CourseForPublish } from "./publishChecklist";
 import { attentionReason, lastActivityAt, needsAttention } from "./roster";
 
 const DATA_PATH = path.join(process.cwd(), "data", "store.json");
 
-async function readStore(): Promise<DataStore> {
-  const raw = await fs.readFile(DATA_PATH, "utf-8");
-  const parsed = JSON.parse(raw) as Partial<DataStore>;
+let storeLock: Promise<void> = Promise.resolve();
+
+function withStoreLock<T>(task: () => Promise<T>): Promise<T> {
+  const run = storeLock.then(task, task);
+  storeLock = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
+function normalizeCourse(course: Course): Course {
+  const reviewStatus =
+    course.reviewStatus === "submitted" || course.reviewStatus === "returned"
+      ? course.reviewStatus
+      : "none";
   return {
-    users: parsed.users ?? [],
-    courses: parsed.courses ?? [],
-    modules: parsed.modules ?? [],
-    lessons: parsed.lessons ?? [],
-    enrollments: parsed.enrollments ?? [],
-    lmsAccounts: parsed.lmsAccounts ?? [],
-    lessonProgress: parsed.lessonProgress ?? [],
-    certificates: parsed.certificates ?? [],
-    integrationEvents: parsed.integrationEvents ?? [],
-    aiConversations: parsed.aiConversations ?? [],
-    aiMessages: parsed.aiMessages ?? [],
-    escalations: parsed.escalations ?? [],
+    ...course,
+    reviewStatus,
+    reviewFeedback: course.reviewFeedback ?? null,
+    submittedAt: course.submittedAt ?? null,
   };
 }
 
+async function readStore(): Promise<DataStore> {
+  return withStoreLock(async () => {
+    const raw = await fs.readFile(DATA_PATH, "utf-8");
+    const parsed = JSON.parse(raw) as Partial<DataStore>;
+    return {
+      users: parsed.users ?? [],
+      sessions: parsed.sessions ?? [],
+      courses: (parsed.courses ?? []).map((course) => normalizeCourse(course)),
+      modules: parsed.modules ?? [],
+      lessons: parsed.lessons ?? [],
+      enrollments: parsed.enrollments ?? [],
+      lmsAccounts: parsed.lmsAccounts ?? [],
+      lessonProgress: parsed.lessonProgress ?? [],
+      certificates: parsed.certificates ?? [],
+      integrationEvents: parsed.integrationEvents ?? [],
+      aiConversations: parsed.aiConversations ?? [],
+      aiMessages: parsed.aiMessages ?? [],
+      escalations: parsed.escalations ?? [],
+    };
+  });
+}
+
 async function writeStore(store: DataStore): Promise<void> {
-  await fs.writeFile(DATA_PATH, JSON.stringify(store, null, 2), "utf-8");
+  return withStoreLock(async () => {
+    const payload = JSON.stringify(store, null, 2);
+    const tempPath = `${DATA_PATH}.tmp`;
+    await fs.writeFile(tempPath, payload, "utf-8");
+    try {
+      await fs.rename(tempPath, DATA_PATH);
+    } catch {
+      await fs.copyFile(tempPath, DATA_PATH);
+      await fs.unlink(tempPath).catch(() => undefined);
+    }
+  });
 }
 
 export async function registerUser(input: {
@@ -89,7 +130,7 @@ export async function registerUser(input: {
   const user: User = {
     id: randomUUID(),
     email,
-    password,
+    passwordHash: await hashPassword(password),
     firstName,
     lastName,
     role: input.role,
@@ -109,6 +150,36 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 export async function getUserById(id: string): Promise<User | undefined> {
   const store = await readStore();
   return store.users.find((user) => user.id === id);
+}
+
+export async function createUserSession(
+  userId: string,
+  expiresAt: string,
+): Promise<UserSession> {
+  const store = await readStore();
+  const session: UserSession = {
+    id: randomUUID(),
+    userId,
+    expiresAt,
+    createdAt: new Date().toISOString(),
+    revokedAt: null,
+  };
+  store.sessions.push(session);
+  await writeStore(store);
+  return session;
+}
+
+export async function getUserSession(id: string): Promise<UserSession | undefined> {
+  const store = await readStore();
+  return store.sessions.find((session) => session.id === id);
+}
+
+export async function revokeUserSession(id: string): Promise<void> {
+  const store = await readStore();
+  const session = store.sessions.find((item) => item.id === id);
+  if (!session || session.revokedAt) return;
+  session.revokedAt = new Date().toISOString();
+  await writeStore(store);
 }
 
 export async function listCourses(filters?: {
@@ -133,12 +204,23 @@ export async function getCourseById(id: string): Promise<Course | undefined> {
 }
 
 export async function createCourse(
-  input: Omit<Course, "id" | "createdAt" | "updatedAt">,
+  input: Omit<
+    Course,
+    | "id"
+    | "createdAt"
+    | "updatedAt"
+    | "reviewStatus"
+    | "reviewFeedback"
+    | "submittedAt"
+  >,
 ): Promise<Course> {
   const store = await readStore();
   const now = new Date().toISOString();
   const course: Course = {
     ...input,
+    reviewStatus: "none",
+    reviewFeedback: null,
+    submittedAt: null,
     id: randomUUID(),
     createdAt: now,
     updatedAt: now,
@@ -150,7 +232,17 @@ export async function createCourse(
 
 export async function updateCourse(
   id: string,
-  input: Partial<Pick<Course, "title" | "description" | "status">>,
+  input: Partial<
+    Pick<
+      Course,
+      | "title"
+      | "description"
+      | "status"
+      | "reviewStatus"
+      | "reviewFeedback"
+      | "submittedAt"
+    >
+  >,
 ): Promise<Course | undefined> {
   const store = await readStore();
   const index = store.courses.findIndex((course) => course.id === id);
@@ -163,6 +255,104 @@ export async function updateCourse(
   };
   await writeStore(store);
   return store.courses[index];
+}
+
+function checklistError(course: CourseForPublish) {
+  const checklist = coursePublishChecklist(course);
+  if (checklist.ready) return null;
+  const missing = checklist.items.find((item) => item.required && !item.done);
+  return missing?.detail
+    ? `Finish the checklist first. ${missing.label}. ${missing.detail}`
+    : `Finish the checklist first. ${missing?.label ?? "Required items are still open."}`;
+}
+
+export async function listCoursesForReview(): Promise<Course[]> {
+  const store = await readStore();
+  return store.courses
+    .filter(
+      (course) => course.status === "draft" && course.reviewStatus === "submitted",
+    )
+    .sort((left, right) => (left.submittedAt ?? "").localeCompare(right.submittedAt ?? ""));
+}
+
+export async function submitCourseForReview(instructorId: string, courseId: string) {
+  const course = await getCourseWithContent(courseId);
+  if (!course || course.instructorId !== instructorId) {
+    return { ok: false as const, error: "Not found", status: 404 };
+  }
+  if (course.status !== "draft") {
+    return { ok: false as const, error: "Only a draft can be submitted.", status: 400 };
+  }
+  if (course.reviewStatus === "submitted") {
+    return { ok: false as const, error: "This course is already in review.", status: 400 };
+  }
+  const error = checklistError(course);
+  if (error) return { ok: false as const, error, status: 400 };
+
+  const updated = await updateCourse(courseId, {
+    reviewStatus: "submitted",
+    reviewFeedback: null,
+    submittedAt: new Date().toISOString(),
+  });
+  if (!updated) return { ok: false as const, error: "Not found", status: 404 };
+  return { ok: true as const, course: updated };
+}
+
+export async function withdrawCourseReview(instructorId: string, courseId: string) {
+  const course = await getCourseById(courseId);
+  if (!course || course.instructorId !== instructorId) {
+    return { ok: false as const, error: "Not found", status: 404 };
+  }
+  if (course.reviewStatus !== "submitted") {
+    return { ok: false as const, error: "This course is not in review.", status: 400 };
+  }
+  const updated = await updateCourse(courseId, {
+    reviewStatus: "none",
+    reviewFeedback: null,
+    submittedAt: null,
+  });
+  if (!updated) return { ok: false as const, error: "Not found", status: 404 };
+  return { ok: true as const, course: updated };
+}
+
+export async function decideCourseReview(
+  courseId: string,
+  decision: "approve" | "return",
+  feedback?: string,
+) {
+  const course = await getCourseWithContent(courseId);
+  if (!course) return { ok: false as const, error: "Not found", status: 404 };
+  if (course.status !== "draft" || course.reviewStatus !== "submitted") {
+    return { ok: false as const, error: "This course is not waiting for review.", status: 400 };
+  }
+
+  if (decision === "approve") {
+    const error = checklistError(course);
+    if (error) return { ok: false as const, error, status: 400 };
+    const updated = await updateCourse(courseId, {
+      status: "published",
+      reviewStatus: "none",
+      reviewFeedback: null,
+      submittedAt: null,
+    });
+    if (!updated) return { ok: false as const, error: "Not found", status: 404 };
+    return { ok: true as const, course: updated };
+  }
+
+  const note = feedback?.trim() ?? "";
+  if (!note) {
+    return { ok: false as const, error: "Write feedback before sending the course back.", status: 400 };
+  }
+  if (note.length > 1000) {
+    return { ok: false as const, error: "Feedback must be 1000 characters or fewer.", status: 400 };
+  }
+  const updated = await updateCourse(courseId, {
+    reviewStatus: "returned",
+    reviewFeedback: note,
+    submittedAt: null,
+  });
+  if (!updated) return { ok: false as const, error: "Not found", status: 404 };
+  return { ok: true as const, course: updated };
 }
 
 export async function listModulesByCourse(
@@ -316,6 +506,65 @@ export async function updateLesson(
   };
   await writeStore(store);
   return store.lessons[index];
+}
+
+export async function createDraftCourseFromOutline(
+  instructorId: string,
+  input: {
+    title: string;
+    description: string;
+    modules: Array<{
+      title: string;
+      lessons: Array<{
+        title: string;
+        contentType: "text" | "quiz";
+        contentRef: string;
+      }>;
+    }>;
+  },
+): Promise<Course> {
+  const store = await readStore();
+  const now = new Date().toISOString();
+  const course: Course = {
+    id: randomUUID(),
+    instructorId,
+    title: input.title,
+    description: input.description,
+    status: "draft",
+    reviewStatus: "none",
+    reviewFeedback: null,
+    submittedAt: null,
+    createdAt: now,
+    updatedAt: now,
+  };
+  store.courses.push(course);
+
+  input.modules.forEach((moduleInput, moduleIndex) => {
+    const courseModule: CourseModule = {
+      id: randomUUID(),
+      courseId: course.id,
+      title: moduleInput.title,
+      sequenceOrder: moduleIndex + 1,
+      createdAt: now,
+    };
+    store.modules.push(courseModule);
+    moduleInput.lessons.forEach((lessonInput, lessonIndex) => {
+      const lesson: Lesson = {
+        id: randomUUID(),
+        moduleId: courseModule.id,
+        title: lessonInput.title,
+        sequenceOrder: lessonIndex + 1,
+        contentType: lessonInput.contentType,
+        contentRef: lessonInput.contentRef,
+        durationMinutes: null,
+        createdAt: now,
+      };
+      store.lessons.push(lesson);
+    });
+  });
+
+  await writeStore(store);
+  return course;
 }
 
 export async function deleteLesson(moduleId: string, lessonId: string) {
@@ -808,6 +1057,7 @@ export async function completeLesson(
   studentId: string,
   courseId: string,
   lessonId: string,
+  choiceIndex?: number,
 ) {
   const started = await startLesson(studentId, courseId, lessonId);
   if (!started.ok) return started;
@@ -829,6 +1079,24 @@ export async function completeLesson(
   const lesson = store.lessons.find((item) => item.id === lessonId);
   const needsScore =
     lesson?.contentType === "quiz" || lesson?.contentType === "assignment";
+
+  if (lesson?.contentType === "quiz") {
+    const quiz = parseQuizConfig(lesson.contentRef);
+    if (quiz.correctIndex == null) {
+      return {
+        ok: false as const,
+        error: "This quiz does not have a correct choice yet.",
+        status: 400,
+      };
+    }
+    if (choiceIndex !== quiz.correctIndex) {
+      return {
+        ok: false as const,
+        error: "That answer is not right. Try again.",
+        status: 400,
+      };
+    }
+  }
 
   store.lessonProgress[progressIndex] = {
     ...store.lessonProgress[progressIndex],
@@ -939,7 +1207,7 @@ function issueCertificateIfEligible(
     enrollmentId: enrollment.id,
     referenceNumber,
     issuedAt,
-    fileUrl: `/verify/${referenceNumber}`,
+    fileUrl: certificateFilePath(referenceNumber),
     verificationStatus: "valid",
     createdAt: now,
   };
@@ -1144,77 +1412,44 @@ export async function askCourseQuestion(
     content: question,
     createdAt: now,
   };
-  const escalation: Escalation = {
-    id: randomUUID(),
-    conversationId: conversation.id,
-    instructorId: course.instructorId,
-    status: "pending",
-    resolutionNotes: null,
-    createdAt: now,
-    resolvedAt: null,
-  };
 
   store.aiConversations.push(conversation);
   store.aiMessages.push(message);
-  store.escalations.push(escalation);
   await writeStore(store);
 
-  return { ok: true as const, escalation, message };
+  const reply = await answerFromLessons(question, lessons);
+  if (reply) {
+    store.aiMessages.push({
+      id: randomUUID(),
+      conversationId: conversation.id,
+      role: "assistant",
+      content: reply,
+      createdAt: new Date().toISOString(),
+    });
+    await writeStore(store);
+  }
+
+  return { ok: true as const, conversation, message };
 }
 
 export async function listQuestionsForEnrollment(enrollmentId: string) {
   const store = await readStore();
-  return store.escalations
-    .filter((escalation) => {
-      const conversation = store.aiConversations.find(
-        (item) => item.id === escalation.conversationId,
-      );
-      return conversation?.enrollmentId === enrollmentId;
-    })
-    .map((escalation) => {
+  return store.aiConversations
+    .filter((conversation) => conversation.enrollmentId === enrollmentId)
+    .map((conversation) => {
       const message = store.aiMessages.find(
         (item) =>
-          item.conversationId === escalation.conversationId &&
-          item.role === "student",
+          item.conversationId === conversation.id && item.role === "student",
+      );
+      const reply = store.aiMessages.find(
+        (item) =>
+          item.conversationId === conversation.id && item.role === "assistant",
       );
       return {
-        id: escalation.id,
-        status: escalation.status,
-        createdAt: escalation.createdAt,
+        id: conversation.id,
+        createdAt: message?.createdAt ?? conversation.startedAt,
         content: message?.content ?? "",
-      };
-    })
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-}
-
-export async function listEscalationsForInstructor(instructorId: string) {
-  const store = await readStore();
-  return store.escalations
-    .filter((escalation) => escalation.instructorId === instructorId)
-    .map((escalation) => {
-      const conversation = store.aiConversations.find(
-        (item) => item.id === escalation.conversationId,
-      );
-      const message = store.aiMessages.find(
-        (item) =>
-          item.conversationId === escalation.conversationId &&
-          item.role === "student",
-      );
-      const student = store.users.find(
-        (item) => item.id === conversation?.studentId,
-      );
-      const course = store.courses.find(
-        (item) => item.id === conversation?.contextSnapshot?.courseId,
-      );
-      return {
-        id: escalation.id,
-        status: escalation.status,
-        createdAt: escalation.createdAt,
-        question: message?.content ?? "",
-        studentName: student
-          ? `${student.firstName} ${student.lastName}`
-          : "Student",
-        courseTitle: course?.title ?? conversation?.contextSnapshot?.courseTitle ?? "Course",
+        reply: reply?.content ?? null,
       };
     })
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
