@@ -39,6 +39,14 @@
       "firstName": "Kyle",
       "lastName": "Marave",
       "role": "student"
+    },
+    {
+      "id": "c5878637-657c-4606-a411-215035bfe0c9",
+      "email": "d@gmail.com",
+      "passwordHash": "$2b$10$BQCjYJtmdxrImP5Ld7C1PuLRRXeE.xcKbYGt5q8s82RU84HZQVh0i",
+      "firstName": "Sean",
+      "lastName": "D",
+      "role": "student"
     }
   ],
   "sessions": [
@@ -68,7 +76,56 @@
       "userId": "user-instructor-1",
       "expiresAt": "2026-10-09T22:15:28.606Z",
       "createdAt": "2026-10-02T22:15:28.608Z",
+      "revokedAt": "2026-10-03T06:43:20.056Z"
+    },
+    {
+      "id": "66f7b415-9716-41ce-bdb6-6fec2f8e841a",
+      "userId": "c5878637-657c-4606-a411-215035bfe0c9",
+      "expiresAt": "2026-10-10T06:43:53.675Z",
+      "createdAt": "2026-10-03T06:43:53.678Z",
+      "revokedAt": "2026-10-03T06:45:29.337Z"
+    },
+    {
+      "id": "8c83a7ae-2f87-409e-8599-dce5f8c83a60",
+      "userId": "user-instructor-1",
+      "expiresAt": "2026-10-10T06:45:41.121Z",
+      "createdAt": "2026-10-03T06:45:41.124Z",
       "revokedAt": null
+    },
+    {
+      "id": "978a1a85-3bad-4f06-9f1c-492b147632a6",
+      "userId": "user-admin-1",
+      "expiresAt": "2026-10-10T06:48:18.918Z",
+      "createdAt": "2026-10-03T06:48:18.921Z",
+      "revokedAt": "2026-10-03T06:49:03.635Z"
+    },
+    {
+      "id": "450ac81a-8822-4c7b-89c2-b0b080717f6b",
+      "userId": "user-instructor-1",
+      "expiresAt": "2026-10-10T06:49:14.768Z",
+      "createdAt": "2026-10-03T06:49:14.771Z",
+      "revokedAt": null
+    },
+    {
+      "id": "bf6136a2-d795-44cf-9114-83b3f48c5f2b",
+      "userId": "user-admin-1",
+      "expiresAt": "2026-10-10T06:54:25.723Z",
+      "createdAt": "2026-10-03T06:54:25.726Z",
+      "revokedAt": "2026-10-03T06:54:48.220Z"
+    },
+    {
+      "id": "6cff972d-0f45-4447-bfe0-4a713d49bf6d",
+      "userId": "user-instructor-1",
+      "expiresAt": "2026-10-10T06:55:02.698Z",
+      "createdAt": "2026-10-03T06:55:02.701Z",
+      "revokedAt": "2026-10-03T06:55:25.221Z"
+    },
+    {
+      "id": "d42c6a6c-6170-4dec-86d7-459d9834e366",
+      "userId": "user-student-1",
+      "expiresAt": "2026-10-10T06:55:36.742Z",
+      "createdAt": "2026-10-03T06:55:36.745Z",
+      "revokedAt": "2026-10-03T06:57:27.203Z"
     }
   ],
   "courses": [
@@ -100,10 +157,10 @@
       "instructorId": "user-instructor-1",
       "title": "Intro to Nigga",
       "description": "asdasd",
-      "status": "draft",
+      "status": "archived",
       "id": "2a227af0-8241-4bcb-be90-93367d9869e7",
       "createdAt": "2026-09-22T09:45:22.639Z",
-      "updatedAt": "2026-09-22T09:45:22.639Z",
+      "updatedAt": "2026-10-03T06:50:54.588Z",
       "reviewStatus": "none",
       "reviewFeedback": null,
       "submittedAt": null
@@ -143,6 +200,42 @@
       "id": "0827b986-247f-4633-b142-fab4daadccf6",
       "createdAt": "2026-10-02T22:15:37.848Z",
       "updatedAt": "2026-10-02T22:15:57.257Z"
+    },
+    {
+      "id": "1d1ed095-6716-40e5-a853-6e8751e19bb4",
+      "instructorId": "user-instructor-1",
+      "title": "HTML & CSS Fundamentals",
+      "description": "A course based on the reviewer covering modern HTML structure and elements, CSS fundamentals, and advanced CSS properties and effects.",
+      "status": "published",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null,
+      "createdAt": "2026-10-03T06:47:16.899Z",
+      "updatedAt": "2026-10-03T06:48:59.998Z"
+    },
+    {
+      "id": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+      "instructorId": "user-instructor-1",
+      "title": "HirangLikha: Weaver Mentorship and Digital Promotion",
+      "description": "A draft course based on the HirangLikha capstone proposal. It covers the project’s purpose, platform features, intended users, limitations, supporting studies, and development plan.",
+      "status": "published",
+      "reviewStatus": "none",
+      "reviewFeedback": null,
+      "submittedAt": null,
+      "createdAt": "2026-10-03T06:51:50.032Z",
+      "updatedAt": "2026-10-03T06:54:43.958Z"
+    },
+    {
+      "id": "80c32c90-53a7-48d0-8bf4-12569a38bff6",
+      "instructorId": "user-instructor-1",
+      "title": "HirangLikha: AI-Based Weaver Mentorship and Digital Promotion",
+      "description": "An introduction to HirangLikha, a proposed platform for supporting the preservation of Filipino weaving knowledge, connecting master weavers with apprentices, and promoting woven products digitally.",
+      "status": "draft",
+      "reviewStatus": "submitted",
+      "reviewFeedback": null,
+      "submittedAt": "2026-10-03T06:53:49.008Z",
+      "createdAt": "2026-10-03T06:53:14.915Z",
+      "updatedAt": "2026-10-03T06:53:49.010Z"
     }
   ],
   "modules": [
@@ -222,6 +315,90 @@
       "sequenceOrder": 1,
       "id": "432fd33f-d808-466a-8cac-c919d7993f42",
       "createdAt": "2026-10-02T22:15:44.157Z"
+    },
+    {
+      "id": "b17b1c44-8766-4fb3-ab98-3d93fadfd02e",
+      "courseId": "1d1ed095-6716-40e5-a853-6e8751e19bb4",
+      "title": "HTML Fundamentals",
+      "sequenceOrder": 1,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "3ea84ca3-0762-4912-8653-844052c3439c",
+      "courseId": "1d1ed095-6716-40e5-a853-6e8751e19bb4",
+      "title": "CSS Fundamentals",
+      "sequenceOrder": 2,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "fbce35ef-6b71-4f06-9719-8c9def8693cf",
+      "courseId": "1d1ed095-6716-40e5-a853-6e8751e19bb4",
+      "title": "CSS Layout and Appearance",
+      "sequenceOrder": 3,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "8d8c256b-9004-4219-8425-42646c58ea06",
+      "courseId": "1d1ed095-6716-40e5-a853-6e8751e19bb4",
+      "title": "Advanced CSS Effects",
+      "sequenceOrder": 4,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "394741dd-602c-4c8d-b8ec-0df0dc422f10",
+      "courseId": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+      "title": "Project Context and Purpose",
+      "sequenceOrder": 1,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "f598eef5-0502-40b5-a5ac-728d0665d4a9",
+      "courseId": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+      "title": "Users and Platform Features",
+      "sequenceOrder": 2,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "c0cd9da2-4460-496e-8c1b-38a27f9c5716",
+      "courseId": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+      "title": "Scope and Limitations",
+      "sequenceOrder": 3,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "aa23ec63-cf9f-4e42-8e7e-9b502cd9884d",
+      "courseId": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+      "title": "Supporting Studies and Development Plan",
+      "sequenceOrder": 4,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "84fa3d7d-497c-4b63-b076-d6e4a4c9e559",
+      "courseId": "80c32c90-53a7-48d0-8bf4-12569a38bff6",
+      "title": "Weaving Challenges and HirangLikha",
+      "sequenceOrder": 1,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "a26e7b71-e6f3-47fc-9369-fc25721849f1",
+      "courseId": "80c32c90-53a7-48d0-8bf4-12569a38bff6",
+      "title": "Profiles, Mentorship, and Matching",
+      "sequenceOrder": 2,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "06b3eef6-0ef7-4504-a420-1dcffe84a7aa",
+      "courseId": "80c32c90-53a7-48d0-8bf4-12569a38bff6",
+      "title": "Digital Promotion and Marketplace",
+      "sequenceOrder": 3,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "9302b584-5c3f-43e2-be87-08bfaa4c1fe2",
+      "courseId": "80c32c90-53a7-48d0-8bf4-12569a38bff6",
+      "title": "Scope, Limitations, and Development",
+      "sequenceOrder": 4,
+      "createdAt": "2026-10-03T06:53:14.915Z"
     }
   ],
   "lessons": [
@@ -514,6 +691,376 @@
       "contentRef": "{\"prompt\":\"Which architecture uses reusable business services as its main idea?\",\"choices\":[\"Layered Architecture\",\"SOA\",\"Microservices Architecture\",\"Event-Driven Architecture\"],\"correctIndex\":1}",
       "durationMinutes": null,
       "createdAt": "2026-10-02T21:34:59.267Z"
+    },
+    {
+      "id": "620b95e4-15a9-4524-8e96-4d954f73e75b",
+      "moduleId": "b17b1c44-8766-4fb3-ab98-3d93fadfd02e",
+      "title": "HTML and Document Structure",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "HTML (Hyper Text Markup Language) is the standard markup language for creating web pages. It describes a page’s structure and uses elements to display and label content such as headings, paragraphs, and links. A basic document has a <!DOCTYPE html> declaration, a root <html> element, a <head> for meta information, a <title> for the tab name, and a <body> for visible content. An HTML element consists of a start tag, content, and an end tag.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "25606f4a-97ab-4da7-9283-216083767e65",
+      "moduleId": "b17b1c44-8766-4fb3-ab98-3d93fadfd02e",
+      "title": "Links, Images, and Formatting",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "Links use the <a> tag; the href attribute gives the destination. Target values include _self (same tab, the default), _blank (new tab), _parent (parent frame), and _top (full window). A mailto: link opens an email program. Images use <img> with attributes such as src, alt, width, and height. Empty elements have no closing tag; <br> is an example. Formatting tags include <b> for bold, <strong> for important text, <i> for italic, <em> for emphasized text, <mark> for highlighted text, <small> for smaller text, <del> for deleted text, <ins> for inserted text, <sub> for subscript, and <sup> for superscript. HTML comments use <!-- comment text --> and are not displayed in the browser.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "b5ff5b9d-4eff-45e3-8203-d02e0287359d",
+      "moduleId": "b17b1c44-8766-4fb3-ab98-3d93fadfd02e",
+      "title": "Tables and Lists",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "In HTML tables, <tr> represents a table row, <th> a table header, and <td> table data. Unordered lists use <ul> with list items marked by <li>. Ordered lists use <ol> with <li> items.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "f7ab1048-61c9-44d8-bbc3-4ab50796dd0e",
+      "moduleId": "3ea84ca3-0762-4912-8653-844052c3439c",
+      "title": "CSS, Syntax, and Selectors",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "CSS (Cascading Style Sheets) styles HTML elements and controls layout, design, and responsiveness. It can style multiple pages at once. CSS defines design, layout, and display on different devices. Its syntax is selector { property: value; }. The selector targets an HTML element; the declaration block contains properties; and a property-value pair defines a style. Five selector types are simple (name, id, class), combinator (relationships), pseudo-class (state), pseudo-element (part of an element), and attribute (attribute/value). An element selector can target an element name, such as p. An ID selector uses # and is unique per page.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "be700964-c8b8-4b62-839b-757a68ca0245",
+      "moduleId": "3ea84ca3-0762-4912-8653-844052c3439c",
+      "title": "Ways to Use CSS",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "CSS can be used in three ways. External CSS is stored in a .css file and linked with <link rel=\"stylesheet\" href=\"style.css\">; it is best for multiple pages. Internal CSS goes inside a <style> element in the <head>. Inline CSS is applied directly to an element, such as <p style=\"color:red;\">Text</p>. CSS comments use /* comment text */ and are ignored by the browser.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "05dcba39-c839-40fc-8eaa-ec1bc28e1e1c",
+      "moduleId": "3ea84ca3-0762-4912-8653-844052c3439c",
+      "title": "Colors, Backgrounds, Borders, Margins, and Padding",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "CSS colors can use color names, RGB, HEX, HSL, RGBA, or HSLA. Backgrounds add background effects. Border properties include style, width, and color; border width can be thin, medium, thick, or a specific unit such as px or em. Margin is space outside an element, with margin-top, margin-right, margin-bottom, and margin-left properties. Values include auto, lengths such as px or %, and inherit. Padding is space inside an element, with corresponding top, right, bottom, and left properties; values include lengths and inherit. Both support a top-right-bottom-left shorthand.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "e6e9f7e1-1bcd-486d-8495-5b395a0f2c35",
+      "moduleId": "fbce35ef-6b71-4f06-9719-8c9def8693cf",
+      "title": "Box Model and Dimensions",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "The CSS box model wraps every HTML element. From inner to outer, its parts are content (the actual text or image), padding (space inside the border), border (surrounding padding and content), and margin (space outside the border). Padding and margin are transparent. Total element size equals content plus padding plus border plus margin. Width and height control the content area; actual rendered size includes padding and border unless box-sizing is used.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "7506238d-3f14-4def-b639-f65c44ef7e53",
+      "moduleId": "fbce35ef-6b71-4f06-9719-8c9def8693cf",
+      "title": "Text and Fonts",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "The text-align property accepts left (the default), right, center, and justify; justify gives lines equal width by stretching them. The font-size property can use px, a fixed-size unit described as most common, or keywords: xx-small, x-small, small, medium (the default), large, x-large, and xx-large.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "bdcc725e-328c-4e21-87a8-0b2a40ed4bfe",
+      "moduleId": "fbce35ef-6b71-4f06-9719-8c9def8693cf",
+      "title": "Corners, Border Images, and Background Size",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "The border-radius property creates curved edges and works with borders, background-color, and images. The border-image shorthand has sub-properties: border-image-source (image path), border-image-slice (how the image is cut), border-image-width (thickness), border-image-outset (extends the border outward), and border-image-repeat (stretch, repeat, or round). The background-size property accepts auto (the default), contain (fit inside the container), cover (fill the entire container), or a custom length such as px or %.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "e8ec0d36-19da-4ed0-92ab-264a2ccd0565",
+      "moduleId": "8d8c256b-9004-4219-8425-42646c58ea06",
+      "title": "Transforms and Transitions",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "The transform property includes 2D functions: translate(x, y) to move, rotate(angle) to rotate, scale(x, y) to resize, scaleX(), scaleY(), skewX(), skewY(), skew(), and matrix() for an advanced combination. 3D transform functions include rotateX(), rotateY(), and rotateZ(). Transitions make changes to property values smooth. The transition shorthand includes transition-property, transition-duration, transition-timing-function, and transition-delay.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "4f578bf8-355d-4df8-9fc4-5a63aee23aba",
+      "moduleId": "8d8c256b-9004-4219-8425-42646c58ea06",
+      "title": "Animations, Tooltips, and Images",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "CSS animations change styles over time without JavaScript. @keyframes defines animation stages. Key concepts include animation-name and animation-duration; the default duration is 0s, which means no animation. The animation must be bound to an element. A tooltip is text shown when a mouse hovers over an element and is used for extra information. Images can be styled with border-radius for rounded images and can be combined with borders or backgrounds.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "189e5856-2550-4495-b72a-f780ea9eba17",
+      "moduleId": "8d8c256b-9004-4219-8425-42646c58ea06",
+      "title": "CSS Fundamentals Check",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"According to the reviewer, which part of the box model is space outside an element?\",\"choices\":[\"Content\",\"Padding\",\"Border\",\"Margin\"],\"correctIndex\":3}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:47:16.899Z"
+    },
+    {
+      "id": "8c04806c-ef05-418e-9a41-2be1e2520bdd",
+      "moduleId": "394741dd-602c-4c8d-b8ec-0df0dc422f10",
+      "title": "Challenges Facing Filipino Weaving Communities",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "Traditional Filipino weaving communities may face difficulties preserving cultural knowledge and sustaining livelihoods. Master weavers may have limited opportunities to pass their skills to younger generations, while aspiring learners may struggle to find experienced teachers. Weavers may also have limited digital visibility due to low digital literacy, limited online promotion, poor product presentation, and a lack of accessible ways to share cultural stories.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "bfc9f38f-2f21-4bf0-ba61-4584d08dc03e",
+      "moduleId": "394741dd-602c-4c8d-b8ec-0df0dc422f10",
+      "title": "The HirangLikha Proposal",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "HirangLikha is proposed as an AI-based platform for weaving mentorship and digital promotion of Filipino weaving. It is intended to connect master weavers with aspiring apprentices and provide digital tools that help weavers promote products and support their livelihoods. The project theme is AI-powered cultural preservation and sustainable livelihood for traditional crafts.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "fac80d58-3ea1-4100-9356-683a5460f87e",
+      "moduleId": "394741dd-602c-4c8d-b8ec-0df0dc422f10",
+      "title": "Project Goal",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"What is the general objective of HirangLikha?\",\"choices\":[\"To connect master weavers with aspiring apprentices and provide digital tools to promote and support Filipino weavers’ l\",\"To replace direct cultural instruction with an online system\",\"To cover every weaving tradition and community in the Philippines\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "72c4e7a1-e623-435d-9b43-2610a0569a4b",
+      "moduleId": "f598eef5-0502-40b5-a5ac-728d0665d4a9",
+      "title": "Profiles and AI-Based Matching",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "Master weavers can create profiles describing their weaving expertise, availability, and location. Apprentices can register their interests and preferred learning arrangements. HirangLikha is intended to match apprentices with suitable master weavers using factors such as location, schedule, availability, and weaving interests. The effectiveness of matching depends on the accuracy and completeness of user-provided information.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "c4bf9bad-5d8c-4cbc-a934-01a7d02452d6",
+      "moduleId": "f598eef5-0502-40b5-a5ac-728d0665d4a9",
+      "title": "Mentorship Management",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "The platform is intended to support mentorship through session scheduling and apprenticeship progress tracking. These tools facilitate mentorship activities and track learning milestones. HirangLikha supports knowledge transmission but does not replace direct cultural instruction from master weavers.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "bc47ce9b-8c2d-4e53-8e66-5d49ff2d7c49",
+      "moduleId": "f598eef5-0502-40b5-a5ac-728d0665d4a9",
+      "title": "Digital Promotion and Marketplace",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "HirangLikha’s digital promotion tools include AI-assisted product photo enhancement, product description generation, and pattern or motif tagging. Its online showcase and marketplace are intended to let weavers display products, share cultural stories and techniques, and connect with potential buyers. AI-generated descriptions, enhancements, and tags may contain errors or misrepresent cultural context.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "129770ca-d260-4caf-ac9d-17f463b79eed",
+      "moduleId": "f598eef5-0502-40b5-a5ac-728d0665d4a9",
+      "title": "Intended Beneficiaries",
+      "sequenceOrder": 4,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"Which group is identified as a beneficiary that can find suitable master weavers based on location, availability, and weaving interests?\",\"choices\":[\"Apprentices\",\"Program chairs\",\"Course instructors\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "353a530e-dea4-48b0-8f2b-2fb24d32d9ca",
+      "moduleId": "c0cd9da2-4460-496e-8c1b-38a27f9c5716",
+      "title": "Project Scope",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "HirangLikha is proposed as an AI-based platform for the preservation, mentorship, and digital promotion of Filipino traditional weaving. Its scope includes master weaver and apprentice profiles, AI-based matching, mentorship progress tracking and session scheduling, AI-powered promotion tools, and a digital showcase and marketplace. The proposal states that the system supports SDG 4 – Quality Education and SDG 8 – Decent Work and Economic Growth.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "5b3b5750-e142-4b30-82b5-3fbe3b9ea8f9",
+      "moduleId": "c0cd9da2-4460-496e-8c1b-38a27f9c5716",
+      "title": "Project Limitations",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "The system will focus on a selected range of Filipino traditional weaving practices and may not cover every tradition, technique, or community. AI-generated content and tags may be inaccurate. Some functions may depend on a user’s device, internet connection, and available technology. HirangLikha is intended to support mentorship and knowledge transmission, not replace direct instruction from master weavers.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "855375c6-004c-4a3e-979e-ee1b87d26694",
+      "moduleId": "c0cd9da2-4460-496e-8c1b-38a27f9c5716",
+      "title": "Limitations Check",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"According to the proposal, what does HirangLikha not replace?\",\"choices\":[\"Direct cultural instruction from master weavers\",\"The need for user profiles\",\"The digital showcase\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "c0c7ca06-a1ba-457f-acfc-5b93b3a64bf3",
+      "moduleId": "aa23ec63-cf9f-4e42-8e7e-9b502cd9884d",
+      "title": "Studies on Technology and Livelihood",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "The proposal describes Concepcion et al. (2023) as finding that CAD helped local handloom weavers reduce production time and costs, archive designs, increase demand for value-added products, and improve income. Milgram (2026) discussed how social enterprises and distribution networks can help textile producers access markets, strengthen producer-buyer relationships, and generate income while maintaining cultural value. Villagomez (2022) highlighted sustainable business practices, inclusive economic opportunities, and support for textile entrepreneurs.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "1bf79228-0b43-4557-bf9c-203ba34ca3a0",
+      "moduleId": "aa23ec63-cf9f-4e42-8e7e-9b502cd9884d",
+      "title": "Studies on Marketing and Knowledge Transfer",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "The proposal reports that Cuyangoan (2026) found textile artisans in Mountain Province commonly rely on word-of-mouth, community relationships, kinship networks, and cultural activities for promotion. The study also identified limited accessibility, income uncertainty, digital exclusion, and lack of branding. Cacho et al. (2025) found that traditional weaving is a source of livelihood and cultural identity, while generational disinterest, migration, and modernization challenge the transfer of knowledge to younger generations.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "cee7fff8-5ecc-4036-955f-48b9c5aaece4",
+      "moduleId": "aa23ec63-cf9f-4e42-8e7e-9b502cd9884d",
+      "title": "Development and Evaluation",
+      "sequenceOrder": 3,
+      "contentType": "text",
+      "contentRef": "The development plan begins with planning and requirements analysis, followed by system and database design, backend development, and user-interface and front-end development. The team will develop user profiles, matching, session scheduling, and progress tracking, along with AI matching and digital promotion features. The completed components will undergo system integration, testing, and evaluation of functionality, usability, AI-generated results, matching accuracy, marketplace features, and overall performance. After improvements, the system will proceed to deployment for controlled use and evaluation.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:51:50.032Z"
+    },
+    {
+      "id": "afdc4dcc-149b-4d9b-8e06-dd96f867a886",
+      "moduleId": "84fa3d7d-497c-4b63-b076-d6e4a4c9e559",
+      "title": "Challenges Facing Filipino Weaving",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "Traditional Filipino weaving communities may face difficulties preserving cultural knowledge and sustaining livelihoods. Older master weavers may have limited opportunities to pass on their skills, while young learners may struggle to find experienced teachers. Weavers can also have limited digital visibility due to low digital literacy, limited online promotion, poor product presentation, and a lack of accessible ways to share cultural stories.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "5fc1aff2-1627-4cb7-914e-7e63986ae5b9",
+      "moduleId": "84fa3d7d-497c-4b63-b076-d6e4a4c9e559",
+      "title": "What HirangLikha Proposes",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "HirangLikha is an AI-based platform intended to connect master weavers, aspiring apprentices, and potential buyers. Master weavers can share their expertise, availability, and location through profiles. Apprentices can register their interests and preferred learning arrangements. AI-based matching is intended to connect apprentices with suitable weavers, while digital promotion tools help present woven products and their cultural stories.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "67bb0583-fabe-4a90-9014-ffc3f634d158",
+      "moduleId": "84fa3d7d-497c-4b63-b076-d6e4a4c9e559",
+      "title": "Platform Purpose",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"Which group is HirangLikha intended to connect through AI-based matching?\",\"choices\":[\"Apprentices and suitable master weavers\",\"Buyers and university designers\",\"Textile producers and distribution networks\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "9497519a-67a5-4ca9-bb55-97e59eb1f3f2",
+      "moduleId": "a26e7b71-e6f3-47fc-9369-fc25721849f1",
+      "title": "User Profiles",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "HirangLikha's master weaver and apprentice profiles are intended to identify information relevant to mentorship. Master weaver profiles include weaving expertise, location, and availability. Apprentice profiles include learning interests, location, and preferred learning arrangements.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "5ece61bd-f72d-4217-9e64-c30a0eaf69cc",
+      "moduleId": "a26e7b71-e6f3-47fc-9369-fc25721849f1",
+      "title": "Mentorship Management",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "The platform is intended to include session scheduling and apprenticeship progress tracking. These features support mentorship activities by helping users arrange sessions and track learning milestones. HirangLikha supports mentorship and knowledge transmission; it does not replace direct cultural instruction from master weavers.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "30ba99c0-1c9a-4e2d-b598-68d7d4fe4b5d",
+      "moduleId": "a26e7b71-e6f3-47fc-9369-fc25721849f1",
+      "title": "Matching Factors",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"Which factors are named for matching apprentices with master weavers?\",\"choices\":[\"Location, schedule, and weaving interests\",\"Product price, buyer reviews, and sales\",\"Photo quality, product descriptions, and motifs\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "9a626ba3-d9f6-4d71-9482-9a6e684bc976",
+      "moduleId": "06b3eef6-0ef7-4504-a420-1dcffe84a7aa",
+      "title": "AI-Assisted Promotion Tools",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "HirangLikha's proposed promotion tools include AI-assisted product photo enhancement, product description generation, and pattern or motif tagging. These tools are intended to help weavers present their products digitally and share information about them.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "b9032974-1675-4d9c-ae3f-0ace839a0684",
+      "moduleId": "06b3eef6-0ef7-4504-a420-1dcffe84a7aa",
+      "title": "Showcase and Marketplace",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "The digital showcase and marketplace are intended to let weavers display products, share cultural stories and techniques, and connect with potential buyers. Buyers and customers can access authentic Filipino woven products and learn about the stories, techniques, and motifs behind them.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "d79cd884-8d06-4792-a752-5986fa053424",
+      "moduleId": "06b3eef6-0ef7-4504-a420-1dcffe84a7aa",
+      "title": "Limits of AI Promotion",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"What limitation does the project identify for AI-generated descriptions, photo enhancements, and motif tags?\",\"choices\":[\"They may contain errors or misrepresent cultural context\",\"They cannot be used to display woven products\",\"They replace instruction from master weavers\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "5124b7f4-54d2-422a-8728-abb59e317ce7",
+      "moduleId": "9302b584-5c3f-43e2-be87-08bfaa4c1fe2",
+      "title": "Project Scope and Limitations",
+      "sequenceOrder": 1,
+      "contentType": "text",
+      "contentRef": "HirangLikha focuses on a selected range of Filipino traditional weaving practices and may not cover every tradition, technique, or community. Matching effectiveness depends on the accuracy and completeness of user information. Some features may depend on a user's device, internet connection, and available technology. The platform supports, but does not replace, direct cultural instruction from master weavers.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "e5fe67b8-00fa-4f67-821b-2fd84acea6ac",
+      "moduleId": "9302b584-5c3f-43e2-be87-08bfaa4c1fe2",
+      "title": "Development Plan",
+      "sequenceOrder": 2,
+      "contentType": "text",
+      "contentRef": "The development plan includes planning and requirements analysis; system and database design; UI/UX and front-end work; mentorship and apprenticeship features; AI matching and digital promotion tools; system integration, testing, and evaluation; and deployment after necessary improvements. Evaluation is intended to assess functionality, usability, AI-generated results, matching accuracy, marketplace features, and overall system performance.",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
+    },
+    {
+      "id": "7bb8c035-ccb3-421a-9dc0-97153bea58c0",
+      "moduleId": "9302b584-5c3f-43e2-be87-08bfaa4c1fe2",
+      "title": "Project Goals",
+      "sequenceOrder": 3,
+      "contentType": "quiz",
+      "contentRef": "{\"prompt\":\"Which Sustainable Development Goals does the project say it supports?\",\"choices\":[\"SDG 4 – Quality Education and SDG 8 – Decent Work and Economic Growth\",\"SDG 4 – Quality Education and SDG 12 – Responsible Consumption and Production\",\"SDG 8 – Decent Work and Economic Growth and SDG 13 – Climate Action\"],\"correctIndex\":0}",
+      "durationMinutes": null,
+      "createdAt": "2026-10-03T06:53:14.915Z"
     }
   ],
   "enrollments": [
@@ -566,6 +1113,26 @@
       "completedAt": "2026-10-02T22:07:13.918Z",
       "createdAt": "2026-10-02T22:06:57.384Z",
       "updatedAt": "2026-10-02T22:07:13.918Z"
+    },
+    {
+      "id": "1943b627-2ea3-4809-96fe-9c81534e96ce",
+      "studentId": "c5878637-657c-4606-a411-215035bfe0c9",
+      "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+      "status": "active",
+      "enrolledAt": "2026-10-03T06:44:24.817Z",
+      "completedAt": null,
+      "createdAt": "2026-10-03T06:44:24.817Z",
+      "updatedAt": "2026-10-03T06:44:24.817Z"
+    },
+    {
+      "id": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "studentId": "user-student-1",
+      "courseId": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+      "status": "completed",
+      "enrolledAt": "2026-10-03T06:55:51.521Z",
+      "completedAt": "2026-10-03T06:56:55.625Z",
+      "createdAt": "2026-10-03T06:55:51.521Z",
+      "updatedAt": "2026-10-03T06:56:55.625Z"
     }
   ],
   "lmsAccounts": [
@@ -613,6 +1180,24 @@
       "externalLmsId": "lms-42c4ffc1",
       "createdAt": "2026-10-02T22:06:57.384Z",
       "updatedAt": "2026-10-02T22:06:57.384Z"
+    },
+    {
+      "id": "f67cc726-a098-4fc0-96e4-982905359433",
+      "enrollmentId": "1943b627-2ea3-4809-96fe-9c81534e96ce",
+      "provisionedAt": "2026-10-03T06:44:24.817Z",
+      "syncStatus": "provisioned",
+      "externalLmsId": "lms-1943b627",
+      "createdAt": "2026-10-03T06:44:24.817Z",
+      "updatedAt": "2026-10-03T06:44:24.817Z"
+    },
+    {
+      "id": "8bd5288e-275b-497f-b266-711ada27d145",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "provisionedAt": "2026-10-03T06:55:51.521Z",
+      "syncStatus": "provisioned",
+      "externalLmsId": "lms-f82a3955",
+      "createdAt": "2026-10-03T06:55:51.521Z",
+      "updatedAt": "2026-10-03T06:55:51.521Z"
     }
   ],
   "lessonProgress": [
@@ -845,6 +1430,136 @@
       "score": null,
       "createdAt": "2026-10-02T22:07:11.754Z",
       "updatedAt": "2026-10-02T22:07:13.918Z"
+    },
+    {
+      "id": "e1a623a8-d6b0-4f47-b7de-038cbf16b598",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "8c04806c-ef05-418e-9a41-2be1e2520bdd",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:03.164Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:55:57.056Z",
+      "updatedAt": "2026-10-03T06:56:03.164Z"
+    },
+    {
+      "id": "442feda4-d6fd-4de3-9306-50a53478c3a7",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "bfc9f38f-2f21-4bf0-ba61-4584d08dc03e",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:05.876Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:03.441Z",
+      "updatedAt": "2026-10-03T06:56:05.876Z"
+    },
+    {
+      "id": "de6b2ac5-eb1a-4d47-826c-43967ada8ae6",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "fac80d58-3ea1-4100-9356-683a5460f87e",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:17.541Z",
+      "score": 100,
+      "createdAt": "2026-10-03T06:56:06.172Z",
+      "updatedAt": "2026-10-03T06:56:17.541Z"
+    },
+    {
+      "id": "9cb99a0f-ce14-4f2f-8db8-0b81da9d9cad",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "72c4e7a1-e623-435d-9b43-2610a0569a4b",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:20.706Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:17.890Z",
+      "updatedAt": "2026-10-03T06:56:20.706Z"
+    },
+    {
+      "id": "1f5392dd-67c4-4b4d-bfec-31dc57259048",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "c4bf9bad-5d8c-4cbc-a934-01a7d02452d6",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:22.930Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:21.059Z",
+      "updatedAt": "2026-10-03T06:56:22.930Z"
+    },
+    {
+      "id": "d8f1aec4-5cd6-43c7-98a8-78b0346a74f9",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "bc47ce9b-8c2d-4e53-8e66-5d49ff2d7c49",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:24.741Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:23.284Z",
+      "updatedAt": "2026-10-03T06:56:24.741Z"
+    },
+    {
+      "id": "c094ce84-df3b-4670-a266-cc9c08e6f0ce",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "129770ca-d260-4caf-ac9d-17f463b79eed",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:38.021Z",
+      "score": 100,
+      "createdAt": "2026-10-03T06:56:25.188Z",
+      "updatedAt": "2026-10-03T06:56:38.021Z"
+    },
+    {
+      "id": "477365df-3d7e-4087-a9e9-a740bea94764",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "353a530e-dea4-48b0-8f2b-2fb24d32d9ca",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:40.100Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:38.334Z",
+      "updatedAt": "2026-10-03T06:56:40.100Z"
+    },
+    {
+      "id": "29000301-08ec-4ce2-9e84-c5e39d229663",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "5b3b5750-e142-4b30-82b5-3fbe3b9ea8f9",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:41.878Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:40.436Z",
+      "updatedAt": "2026-10-03T06:56:41.878Z"
+    },
+    {
+      "id": "009b7dde-aee2-47cc-8a6d-bf6f126ef184",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "855375c6-004c-4a3e-979e-ee1b87d26694",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:48.806Z",
+      "score": 100,
+      "createdAt": "2026-10-03T06:56:42.285Z",
+      "updatedAt": "2026-10-03T06:56:48.806Z"
+    },
+    {
+      "id": "e38ad0e7-c0e6-4e1a-a31d-9705c7c8c13f",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "c0c7ca06-a1ba-457f-acfc-5b93b3a64bf3",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:51.487Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:49.132Z",
+      "updatedAt": "2026-10-03T06:56:51.487Z"
+    },
+    {
+      "id": "3e450bc8-fa4a-4ae2-8efc-c9752126b4b2",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "1bf79228-0b43-4557-bf9c-203ba34ca3a0",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:53.830Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:51.795Z",
+      "updatedAt": "2026-10-03T06:56:53.830Z"
+    },
+    {
+      "id": "4989a2cc-6b40-4897-9748-369d45e2cb74",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "lessonId": "cee7fff8-5ecc-4036-955f-48b9c5aaece4",
+      "status": "completed",
+      "completedAt": "2026-10-03T06:56:55.625Z",
+      "score": null,
+      "createdAt": "2026-10-03T06:56:54.202Z",
+      "updatedAt": "2026-10-03T06:56:55.625Z"
     }
   ],
   "certificates": [
@@ -865,6 +1580,15 @@
       "fileUrl": "/api/certificates/SSA-2026-H6G4DF",
       "verificationStatus": "valid",
       "createdAt": "2026-10-02T22:07:13.918Z"
+    },
+    {
+      "id": "3d74cd54-f4cd-4c49-ba58-3957cd2b9755",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "referenceNumber": "SSA-2026-CVS7WZ",
+      "issuedAt": "2026-10-03T06:56:55.625Z",
+      "fileUrl": "/api/certificates/SSA-2026-CVS7WZ",
+      "verificationStatus": "valid",
+      "createdAt": "2026-10-03T06:56:55.625Z"
     }
   ],
   "integrationEvents": [
@@ -979,6 +1703,54 @@
       "lastError": null,
       "createdAt": "2026-10-02T22:07:13.918Z",
       "processedAt": "2026-10-02T22:07:13.918Z"
+    },
+    {
+      "id": "a73a2ebf-91fb-410e-8ea5-459d410b636d",
+      "enrollmentId": "1943b627-2ea3-4809-96fe-9c81534e96ce",
+      "eventType": "enrollment.confirmed",
+      "payload": {
+        "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+        "studentId": "c5878637-657c-4606-a411-215035bfe0c9",
+        "lmsAccountId": "f67cc726-a098-4fc0-96e4-982905359433",
+        "syncStatus": "provisioned"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-10-03T06:44:24.817Z",
+      "processedAt": "2026-10-03T06:44:24.817Z"
+    },
+    {
+      "id": "0ba05af2-d51b-4822-85f5-953abc2e7273",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "eventType": "enrollment.confirmed",
+      "payload": {
+        "courseId": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+        "studentId": "user-student-1",
+        "lmsAccountId": "8bd5288e-275b-497f-b266-711ada27d145",
+        "syncStatus": "provisioned"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-10-03T06:55:51.521Z",
+      "processedAt": "2026-10-03T06:55:51.521Z"
+    },
+    {
+      "id": "eda59443-c974-4179-b012-270f015cabb4",
+      "enrollmentId": "f82a3955-5483-4c3b-bafd-e0b505201660",
+      "eventType": "enrollment.completed",
+      "payload": {
+        "courseId": "d2f286dd-42a2-44d5-abc7-d3dad3fa8768",
+        "studentId": "user-student-1",
+        "certificateId": "3d74cd54-f4cd-4c49-ba58-3957cd2b9755",
+        "referenceNumber": "SSA-2026-CVS7WZ"
+      },
+      "status": "succeeded",
+      "retryCount": 0,
+      "lastError": null,
+      "createdAt": "2026-10-03T06:56:55.625Z",
+      "processedAt": "2026-10-03T06:56:55.625Z"
     }
   ],
   "aiConversations": [
@@ -1093,6 +1865,38 @@
         "percent": 25,
         "nextLessonTitle": "Software Development Life Cycle"
       }
+    },
+    {
+      "id": "cdb97aa5-23f0-426d-84bd-d15cdb9ad7fe",
+      "studentId": "c5878637-657c-4606-a411-215035bfe0c9",
+      "enrollmentId": "1943b627-2ea3-4809-96fe-9c81534e96ce",
+      "startedAt": "2026-10-03T06:44:44.250Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+        "courseTitle": "Systems Integration & Architecture: Weeks 2–5 Cram Reviewer",
+        "enrollmentStatus": "active",
+        "completed": 0,
+        "total": 16,
+        "percent": 0,
+        "nextLessonTitle": "Project Life Cycle"
+      }
+    },
+    {
+      "id": "14c702e5-e425-4fc0-b5fb-bea32933f71c",
+      "studentId": "c5878637-657c-4606-a411-215035bfe0c9",
+      "enrollmentId": "1943b627-2ea3-4809-96fe-9c81534e96ce",
+      "startedAt": "2026-10-03T06:44:59.341Z",
+      "endedAt": null,
+      "contextSnapshot": {
+        "courseId": "c7c1ac74-874c-4016-b374-017fd6841101",
+        "courseTitle": "Systems Integration & Architecture: Weeks 2–5 Cram Reviewer",
+        "enrollmentStatus": "active",
+        "completed": 0,
+        "total": 16,
+        "percent": 0,
+        "nextLessonTitle": "Project Life Cycle"
+      }
     }
   ],
   "aiMessages": [
@@ -1179,6 +1983,34 @@
       "role": "assistant",
       "content": "The Project Life Cycle (PLC) manages the entire project through five phases: Initiation, Planning, Execution, Monitoring and Controlling, and Closure.",
       "createdAt": "2026-10-02T21:47:03.163Z"
+    },
+    {
+      "id": "51d94dd4-1339-4b5f-854c-9d0cf0fec659",
+      "conversationId": "cdb97aa5-23f0-426d-84bd-d15cdb9ad7fe",
+      "role": "student",
+      "content": "What is Project Life Cycle",
+      "createdAt": "2026-10-03T06:44:44.250Z"
+    },
+    {
+      "id": "d4bdeea2-87ce-4621-86e2-5561a00e1b2d",
+      "conversationId": "cdb97aa5-23f0-426d-84bd-d15cdb9ad7fe",
+      "role": "assistant",
+      "content": "The Project Life Cycle (PLC) manages an entire project through five phases: Initiation, Planning, Execution, Monitoring and Controlling, and Closure.",
+      "createdAt": "2026-10-03T06:44:46.843Z"
+    },
+    {
+      "id": "7be37901-eddc-4a27-954b-b1e3c669a59f",
+      "conversationId": "14c702e5-e425-4fc0-b5fb-bea32933f71c",
+      "role": "student",
+      "content": "What is World Map",
+      "createdAt": "2026-10-03T06:44:59.341Z"
+    },
+    {
+      "id": "53c701a3-04b0-4a2a-8111-4a4bd8014651",
+      "conversationId": "14c702e5-e425-4fc0-b5fb-bea32933f71c",
+      "role": "assistant",
+      "content": "This course’s lessons do not include an answer to that.",
+      "createdAt": "2026-10-03T06:45:00.458Z"
     }
   ],
   "escalations": []
